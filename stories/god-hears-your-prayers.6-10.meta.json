@@ -1,0 +1,13 @@
+{
+  "id": "god-hears-your-prayers",
+  "title": "God Hears Your Prayers",
+  "subtitle": "A true story of childlike faith and God’s faithfulness.",
+  "age": "6-10",
+  "series": "prayer-on-the-steps",
+  "order": 1,
+  "scripture_refs": ["Psalm 34:17", "Isaiah 65:24"],
+  "version": "NKJV",
+  "tags": ["prayer", "family", "faith", "testimony", "kids"],
+  "author": "Beyond the Message",
+  "status": "draft"
+}

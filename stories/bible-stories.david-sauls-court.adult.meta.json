@@ -1,0 +1,14 @@
+{
+  "id": "bible-stories.david-sauls-court.adult",
+  "title": "David in King Saul’s Court (Adult)",
+  "series": "bible-stories",
+  "age": "adult",
+  "scripture_refs": [
+    "1 Samuel 16:21-23",
+    "1 Samuel 18:6-12",
+    "Psalm 37:7",
+    "Romans 12:19"
+  ],
+  "tags": ["jealousy", "humility", "leadership", "faithfulness"],
+  "safe_for_kids": false
+}

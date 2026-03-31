@@ -1,0 +1,14 @@
+{
+  "id": "bible-stories.death-of-saul.adult",
+  "title": "The Death of King Saul (Adult)",
+  "series": "bible-stories",
+  "age": "adult",
+  "scripture_refs": [
+    "1 Samuel 24",
+    "1 Samuel 31",
+    "Psalm 75:7",
+    "Romans 12:19"
+  ],
+  "tags": ["leadership", "justice", "obedience", "integrity", "warning"],
+  "safe_for_kids": false
+}

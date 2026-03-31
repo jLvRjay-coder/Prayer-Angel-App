@@ -1,0 +1,24 @@
+{
+  "id": "god-answered-my-prayer",
+  "series": "prayer-on-the-steps",
+  "title": "God Answered My Prayer",
+  "age_range": "6-10",
+  "summary": "A gentle testimony showing that God hears prayers and answers them with love.",
+  "tone": "gentle, hopeful, faith-building",
+  "themes": [
+    "answered prayer",
+    "trusting God",
+    "faith",
+    "hope",
+    "heaven"
+  ],
+  "scripture_refs": [
+    "Psalm 34:18 (NKJV)",
+    "2 Corinthians 5:8 (NKJV)"
+  ],
+  "content_type": "story",
+  "audience": "children",
+  "guardian_guided": true,
+  "order_hint": 1,
+  "status": "published"
+}

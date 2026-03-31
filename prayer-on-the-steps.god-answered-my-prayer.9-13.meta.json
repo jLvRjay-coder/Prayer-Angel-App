@@ -1,0 +1,24 @@
+{
+  "id": "god-answered-my-prayer",
+  "series": "prayer-on-the-steps",
+  "title": "God Answered My Prayer",
+  "age_range": "9-13",
+  "summary": "A testimony of childlike faith that explains how God answers prayer through eternal hope.",
+  "tone": "reflective, honest, faith-anchored",
+  "themes": [
+    "answered prayer",
+    "faith",
+    "loss",
+    "trust",
+    "eternal hope"
+  ],
+  "scripture_refs": [
+    "Psalm 34:18 (NKJV)",
+    "2 Corinthians 5:8 (NKJV)"
+  ],
+  "content_type": "story",
+  "audience": "children",
+  "guardian_guided": true,
+  "order_hint": 1,
+  "status": "published"
+}

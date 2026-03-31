@@ -1,0 +1,24 @@
+{
+  "id": "getting-ready-for-god",
+  "series": "prayer-on-the-steps",
+  "title": "Getting Ready for God",
+  "age_range": "6-10",
+  "summary": "A simple story about pausing on the church steps and preparing our hearts to meet with God.",
+  "tone": "gentle, calm, faith-building",
+  "themes": [
+    "prayer",
+    "stillness",
+    "preparing the heart",
+    "church",
+    "listening to God"
+  ],
+  "scripture_refs": [
+    "Psalm 46:10 (KJV)",
+    "Proverbs 4:23 (KJV)"
+  ],
+  "content_type": "story",
+  "audience": "children",
+  "guardian_guided": true,
+  "order_hint": 2,
+  "status": "published"
+}
