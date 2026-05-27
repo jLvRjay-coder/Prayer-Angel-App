@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # FULL app.py â€” Beyond the Message / Prayer Angel (Single File)
 # UI POLISH UPDATE (NO CACHE / PWA TROUBLESHOOTING)
 # FIX INCLUDED: f-string braces crash in inject_css() (try{ ... } in JS)
@@ -1695,7 +1695,7 @@ def inject_premium_layout_css():
           display: flex;
           align-items: baseline;
           justify-content: center;
-          gap: 10px;
+          gap: 7px;
         }
         .btm-dropcap{
           font-family: 'Cormorant Garamond', serif;
