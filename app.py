@@ -1,5 +1,5 @@
-# ============================================================
-# FULL app.py — Beyond the Message / Prayer Angel (Single File)
+﻿# ============================================================
+# FULL app.py â€” Beyond the Message / Prayer Angel (Single File)
 # UI POLISH UPDATE (NO CACHE / PWA TROUBLESHOOTING)
 # FIX INCLUDED: f-string braces crash in inject_css() (try{ ... } in JS)
 # FIX INCLUDED: Streamlit session_state crash in Angel composer
@@ -32,10 +32,10 @@ try:
     from PIL import Image
     _ICON = Image.open("icon-192.png")  # keep this file at repo root
 except Exception:
-    _ICON = "🕯️"
+    _ICON = "ðŸ•¯ï¸"
 
 st.set_page_config(
-    page_title="Prayer Angel — Beyond the Message",
+    page_title="Prayer Angel â€” Beyond the Message",
     page_icon=_ICON,
     layout="centered",
 )
@@ -47,7 +47,7 @@ def inject_pwa():
     st.markdown(
         """
         <link rel="manifest" href="./manifest.json">
-        <meta name="theme-color" content="#1e3a8a">
+        <meta name="theme-color" content="#1A1B26">
         <link rel="icon" href="./icon-192.png">
         <link rel="apple-touch-icon" href="./icon-192.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -70,17 +70,18 @@ def inject_pwa():
 inject_pwa()
 
 # =========================
-# COLORS / TOKENS
+# COLORS / TOKENS â€” VIRTUAL SANCTUARY PALETTE
+# Deep Scholarly Navy (Ink) Â· Muted Altar Gold Â· Vellum
 # =========================
-NAVY   = "#1e3a8a"
-GOLD   = "#facc15"
-SLATE  = "#334155"
-LIGHT  = "#f8fafc"
-MID    = "#475569"
-BORDER = "#e5e7eb"
-INK    = "#0b1220"
+NAVY   = "#1A1B26"   # Deep Scholarly Navy (Ink)
+GOLD   = "#A68966"   # Muted Altar Gold (Accents)
+SLATE  = "#3A3B45"   # Deeper slate
+LIGHT  = "#F9F7F2"   # Vellum
+MID    = "#5C5A5E"   # Muted scholar grey
+BORDER = "rgba(26,27,38,0.10)"
+INK    = "#1A1B26"
 
-PROD_FOOTER = "BEYOND THE MESSAGE • angel.beyondthemessage.org"
+PROD_FOOTER = "BEYOND THE MESSAGE â€¢ angel.beyondthemessage.org"
 
 # =========================
 # ROUTER STATE
@@ -179,6 +180,9 @@ def _save_angel_state():
             "angel_share": st.session_state.get("angel_share", {"caption": "", "hashtags": "", "kjv_ref": ""}),
             "angel_prefill": st.session_state.get("angel_prefill", ""),
             "privacy_ack": st.session_state.get("privacy_ack", False),
+            # Relational Memory â€” what the person is carrying this week.
+            "burden": st.session_state.get("burden", ""),
+            "mode_pinned": st.session_state.get("mode_pinned", False),
         }
         with open(_session_path(sid), "w", encoding="utf-8") as f:
             json.dump(payload, f, ensure_ascii=False)
@@ -206,6 +210,9 @@ def _load_angel_state_if_any():
         st.session_state.angel_share = payload.get("angel_share", {"caption": "", "hashtags": "", "kjv_ref": ""})
         st.session_state.angel_prefill = payload.get("angel_prefill", "")
         st.session_state.privacy_ack = payload.get("privacy_ack", False)
+        # Relational Memory restore.
+        st.session_state.burden = payload.get("burden", "")
+        st.session_state.mode_pinned = payload.get("mode_pinned", False)
     except Exception:
         pass
 
@@ -217,312 +224,424 @@ def _load_angel_state_if_any():
 def _theme_tokens(theme: str) -> dict:
     if theme == "dark":
         return {
-            "bg": "#020617",
-            "card": "#0b1220",
-            "text": "#e5e7eb",
-            "muted": "#94a3b8",
-            "border": "rgba(148,163,184,.20)",
-            "card_glow": "rgba(250,204,21,.06)",
-            "chip_bg": "rgba(30,58,138,.20)",
-            "chip_border": "rgba(148,163,184,.35)",
+            "bg": "#0F1014",
+            "card": "#1A1B26",
+            "text": "#EDE7DA",
+            "muted": "#9E9A92",
+            "border": "rgba(237,231,218,0.10)",
+            "card_glow": "rgba(166,137,102,0.08)",
+            "chip_bg": "rgba(166,137,102,0.14)",
+            "chip_border": "rgba(166,137,102,0.30)",
         }
     return {
         "bg": LIGHT,
-        "card": "#ffffff",
-        "text": "#0f172a",
+        "card": "#FFFFFF",
+        "text": "#1A1B26",
         "muted": MID,
         "border": BORDER,
-        "card_glow": "rgba(30,58,138,.05)",
-        "chip_bg": "rgba(250,204,21,.22)",
-        "chip_border": "rgba(30,58,138,.20)",
+        "card_glow": "rgba(166,137,102,0.06)",
+        "chip_bg": "rgba(166,137,102,0.12)",
+        "chip_border": "rgba(166,137,102,0.22)",
     }
 
 def inject_css(theme: str):
     tokens = _theme_tokens(theme)
+    # NOTE: Plain triple-quoted string (NOT f-string). Tokens like __NAVY__ are
+    # substituted via .replace() below â€” so JS/CSS braces {...} are 100% safe.
     css = """
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap');
-      /* ========= THEME TOKENS ========= */
+      /* ========= TYPOGRAPHY â€” Cormorant Garamond (serif, Scripture + headings)
+         paired with Inter (variable, utility) ========= */
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+      /* ========= THEME TOKENS â€” VIRTUAL SANCTUARY ========= */
       :root{
         --bg: __BG__;
         --card: __CARD__;
         --text: __TEXT__;
         --muted: __MUTED__;
         --navy: __NAVY__;
+        --ink: __NAVY__;
         --gold: __GOLD__;
+        --gold-soft:   rgba(166,137,102,0.14);
+        --gold-glow:   rgba(166,137,102,0.28);
+        --gold-strong: rgba(166,137,102,0.55);
+        --vellum:         #F9F7F2;
+        --vellum-raised:  #FBFAF5;
+        --vellum-pressed: #F3EFE6;
         --border: __BORDER__;
-        --card-glow: __CARD_GLOW__;
-        --chip-bg: __CHIP_BG__;
+        --border-strong: rgba(26,27,38,0.16);
+        --card-glow:   __CARD_GLOW__;
+        --chip-bg:     __CHIP_BG__;
         --chip-border: __CHIP_BORDER__;
-        --success: #16a34a;
-        --warning: #ea580c;
-        --error: #dc2626;
-        --ink: #0f172a;
-        --focus: rgba(30,58,138,.35);
-      }
-      html, body, .stApp{
-        background: var(--bg) !important;
-        color: var(--text) !important;
-        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-      h1, h2, h3, h4, h5 {
-        letter-spacing: -0.02em;
-      }
-      a {
-        color: var(--navy);
-      }
-      :focus-visible {
-        outline: 3px solid var(--focus);
-        outline-offset: 2px;
-        border-radius: 8px;
+        --success: #4F7A4B;
+        --warning: #B47A3A;
+        --error:   #9C3B3B;
+        --focus:   rgba(166,137,102,0.45);
+        /* Dual-layer shadow system */
+        --shadow-low:   0 1px 0 rgba(255,255,255,0.6) inset, 0 1px 2px rgba(26,27,38,0.05), 0 18px 52px rgba(26,27,38,0.06);
+        --shadow-mid:   0 1px 0 rgba(255,255,255,0.7) inset, 0 1px 2px rgba(26,27,38,0.06), 0 28px 72px rgba(26,27,38,0.09);
+        --shadow-high:  0 1px 0 rgba(255,255,255,0.75) inset, 0 1px 2px rgba(26,27,38,0.08), 0 42px 96px rgba(26,27,38,0.12);
+        --serif: "Cormorant Garamond", "Cormorant", "EB Garamond", Georgia, serif;
+        --sans:  "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      /* Layout */
+      /* ========= VELLUM BASE â€” paper texture + altar-gold halo ========= */
+      html, body, .stApp{
+        background:
+          radial-gradient(1100px 520px at 10% -8%, rgba(166,137,102,0.07), transparent 44%),
+          radial-gradient(900px 460px at 92% 4%, rgba(26,27,38,0.04), transparent 36%),
+          linear-gradient(180deg, rgba(251,250,245,0.72), rgba(249,247,242,0.92)),
+          var(--vellum) !important;
+        color: var(--text) !important;
+        font-family: var(--sans);
+        font-feature-settings: "ss01","cv11","tnum";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Vellum noise â€” SVG data URI, fixed so it never scrolls */
+      .stApp:before{
+        content:"";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: .55;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0 0.10  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-size: 320px 320px;
+        mix-blend-mode: multiply;
+      }
+      .stApp > *{ position: relative; z-index: 1; }
+
+      /* ========= SCHOLARLY-MODERN TYPOGRAPHY ========= */
+      h1, h2, h3, h4, h5 {
+        font-family: var(--serif);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+        text-wrap: balance;
+      }
+      h1 em, h2 em, h3 em, .btm-serif-italic{
+        font-style: italic;
+        color: var(--gold);
+      }
+      a {
+        color: var(--ink);
+        text-decoration-color: var(--gold);
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1.5px;
+      }
+      a:hover{ color: var(--gold); }
+      :focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 3px;
+        border-radius: 10px;
+      }
+
       .block-container {
         padding-top: 2.25rem;
         padding-bottom: 2.25rem;
         max-width: 980px;
       }
 
-      /* Kill Streamlit chrome */
       #MainMenu { visibility: hidden; }
-      header { visibility: hidden; }
-      footer { visibility: hidden; }
+      header    { visibility: hidden; }
+      footer    { visibility: hidden; }
 
-      /* Brand wrapper */
       .btm-wrap {
         max-width: 980px;
         margin: 0 auto;
         color: var(--text);
       }
 
-      /* Hero (matches Study Hub vibe) */
+      /* ========= LEGACY HERO â€” still used on the How It Works view ========= */
       .btm-hero {
-        padding: 22px 22px 18px 22px;
-        border-radius: 22px;
+        padding: 28px 26px 24px 26px;
+        border-radius: 24px;
         background:
-          radial-gradient(1200px 380px at 20% -12%, rgba(250,204,21,.20), transparent),
-          linear-gradient(150deg, #0b1220 0%, #0f172a 62%, #0b1220 100%);
-        box-shadow: 0 24px 60px rgba(15,23,42,.35);
-        margin-bottom: 16px;
+          radial-gradient(1200px 380px at 18% -12%, rgba(166,137,102,0.22), transparent 58%),
+          linear-gradient(155deg, #121319 0%, #1A1B26 58%, #121319 100%);
+        box-shadow: var(--shadow-high);
+        margin-bottom: 18px;
         overflow: hidden;
+        border: 1px solid rgba(237,231,218,0.06);
       }
       .btm-hero h1 {
         margin: 0;
-        font-size: 44px;
-        font-weight: 900;
-        letter-spacing: -0.02em;
-        color: __LIGHT__;
+        font-family: var(--serif);
+        font-size: 46px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        color: #F4EFE3;
       }
-      .btm-hero h1 span { color: __GOLD__; }
-
+      .btm-hero h1 span { color: __GOLD__; font-style: italic; }
       .btm-hero p {
-        margin: 10px 0 0 0;
-        color: #cbd5e1;
-        font-size: 14px;
+        margin: 12px 0 0 0;
+        color: #CFC7B6;
+        font-size: 15px;
+        line-height: 1.62;
+      }
+      .btm-hero-title{
+        font-family: var(--serif);
+        font-size: 38px; font-weight: 700; color: #F4EFE3;
+        letter-spacing: -0.02em; line-height:1.05;
+      }
+      .btm-hero-sub{
+        margin-top: 10px;
+        color: #CFC7B6;
+        font-size: 15px;
         line-height: 1.6;
+        font-family: var(--serif);
+        font-style: italic;
       }
       .btm-note {
-        color: #a8b3c5;
+        color: var(--muted);
         font-size: 13px;
         margin: 8px 0 0 0;
       }
 
       .btm-page-title {
-        font-size: 34px;
-        font-weight: 900;
-        letter-spacing: -0.02em;
+        font-family: var(--serif);
+        font-size: 40px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
         margin: 6px 0 2px 0;
-        color: __NAVY__;
+        color: var(--ink);
+        text-wrap: balance;
       }
       .btm-sub {
         color: var(--muted);
-        font-size: 14px;
-        margin-bottom: 12px;
-      }
-
-      /* Fortune-500-ish section title underline (subtle) */
-      .btm-sec-title{
-        font-weight: 950;
-        color: __NAVY__;
-        letter-spacing: -0.01em;
-        margin: 2px 0 12px 0;
-        display:inline-block;
-        padding-bottom: 6px;
-        border-bottom: 3px solid rgba(30,58,138,.18);
-      }
-      .btm-sec-title.is-serif{
-        font-family: "Playfair Display", "Libre Baskerville", serif;
-      }
-
-      /* Cards */
-      .btm-card {
-        background: linear-gradient(180deg, var(--card-glow), transparent 55%), var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 18px;
-        box-shadow: 0 18px 40px rgba(15,23,42,.10);
+        font-size: 14.5px;
         margin-bottom: 14px;
+        font-style: italic;
+        font-family: var(--serif);
+      }
+
+      /* Section title â€” hairline gold underline */
+      .btm-sec-title{
+        font-family: var(--serif);
+        font-weight: 700;
+        color: var(--ink);
+        font-size: 22px;
+        letter-spacing: -0.01em;
+        margin: 2px 0 14px 0;
+        display:inline-block;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--gold-strong);
+      }
+      .btm-sec-title.is-serif{ font-family: var(--serif); }
+
+      /* ========= CARDS â€” Floating Vellum (dual-layer shadow) ========= */
+      .btm-card {
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.94)),
+          var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: var(--shadow-mid);
+        margin-bottom: 16px;
+        animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
       }
       .btm-card-tight {
-        background: linear-gradient(180deg, var(--card-glow), transparent 60%), var(--card);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.76), rgba(255,255,255,0.92)),
+          var(--card);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 14px;
-        box-shadow: 0 12px 24px rgba(15,23,42,.08);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: var(--shadow-low);
         margin-bottom: 14px;
       }
 
       .btm-hr {
         height: 1px;
         border: 0;
-        background: var(--border);
-        margin: 18px 0;
+        background: linear-gradient(90deg, rgba(166,137,102,0), rgba(166,137,102,0.32), rgba(166,137,102,0));
+        margin: 22px 0;
       }
 
       .btm-small {
-        font-size: 12px;
-        color: #64748b;
+        font-size: 12.5px;
+        color: var(--muted);
+        font-style: italic;
+        font-family: var(--serif);
       }
       .btm-kicker{
         text-transform: uppercase;
-        letter-spacing: .16em;
-        font-size: 11px;
-        font-weight: 800;
-        color: rgba(148,163,184,.85);
+        letter-spacing: .22em;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--gold);
+        font-family: var(--sans);
       }
       .btm-badge{
         display:inline-flex;
         align-items:center;
         gap:6px;
-        padding: 4px 10px;
+        padding: 5px 11px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 700;
-        border: 1px solid var(--border);
-        background: rgba(250,204,21,.18);
+        font-weight: 600;
+        letter-spacing: .06em;
+        border: 1px solid var(--gold-soft);
+        background: rgba(166,137,102,0.10);
         color: var(--ink);
       }
-      .btm-badge.success{ background: rgba(22,163,74,.15); color: var(--success); }
-      .btm-badge.warn{ background: rgba(234,88,12,.15); color: var(--warning); }
-      .btm-badge.error{ background: rgba(220,38,38,.15); color: var(--error); }
+      .btm-badge.success{ background: rgba(79,122,75,0.12);  color: var(--success); border-color: rgba(79,122,75,0.25); }
+      .btm-badge.warn{    background: rgba(180,122,58,0.12); color: var(--warning); border-color: rgba(180,122,58,0.25); }
+      .btm-badge.error{   background: rgba(156,59,59,0.12);  color: var(--error);   border-color: rgba(156,59,59,0.25); }
 
-      /* Scripture box */
+      /* ========= SCRIPTURE BOX â€” ink ground, gilded anchor ========= */
       .btm-scripture {
-        background: __NAVY__;
-        border-radius: 16px;
-        padding: 18px 18px 16px 18px;
-        color: __LIGHT__;
-        box-shadow: 0 18px 36px rgba(15,23,42,.26);
-        margin-bottom: 14px;
+        background:
+          radial-gradient(600px 220px at 0% 0%, rgba(166,137,102,0.20), transparent 60%),
+          linear-gradient(160deg, #16171F 0%, #1A1B26 55%, #101118 100%);
+        border: 1px solid rgba(237,231,218,0.06);
+        border-radius: 20px;
+        padding: 22px 22px 20px 22px;
+        color: #F2ECDE;
+        box-shadow: var(--shadow-high);
+        margin-bottom: 16px;
+        animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
       }
       .btm-scripture h3 {
-        margin: 0 0 10px 0;
-        font-size: 16px;
+        margin: 0 0 12px 0;
+        font-size: 17px;
         color: __GOLD__;
-        letter-spacing: .01em;
-        font-family: "Playfair Display", "Libre Baskerville", serif;
+        font-weight: 600;
+        letter-spacing: .04em;
+        font-family: var(--serif);
+        font-style: italic;
       }
       .btm-scripture a {
-        color: __GOLD__;
-        font-weight: 800;
-        text-decoration: underline;
+        color: #E6D4B3;
+        font-family: var(--serif);
+        font-weight: 600;
+        font-style: italic;
+        font-size: 17px;
+        text-decoration-color: rgba(166,137,102,0.55);
       }
+      .btm-scripture a:hover{ color: #F5E7C9; }
+      .btm-scripture ul{ margin: 4px 0 0 0; padding-left: 18px; }
+      .btm-scripture li{ margin: 6px 0; }
 
-      /* Rhythm callout */
+      /* ========= RHYTHM CALLOUT â€” altar strip ========= */
       .btm-rhythm {
-        border: 2px solid rgba(250,204,21,.75);
-        background: rgba(250,204,21,.10);
-        border-radius: 16px;
-        padding: 14px 16px;
-        box-shadow: 0 12px 28px rgba(15,23,42,.10);
+        border: 1px solid var(--gold-soft);
+        background:
+          linear-gradient(180deg, rgba(166,137,102,0.08), rgba(166,137,102,0.02)),
+          var(--vellum-raised);
+        border-radius: 18px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow-low);
       }
       .btm-rhythm h4 {
         margin: 0 0 6px 0;
-        color: __NAVY__;
-        font-size: 16px;
-        font-weight: 900;
+        color: var(--ink);
+        font-size: 20px;
+        font-family: var(--serif);
+        font-weight: 600;
+        letter-spacing: -0.01em;
       }
       .btm-rhythm p {
         margin: 0;
         color: var(--muted);
-        font-size: 13px;
-        line-height: 1.4;
+        font-size: 13.5px;
+        line-height: 1.55;
+        font-family: var(--serif);
+        font-style: italic;
       }
       .btm-rhythm .btm-rhythm-steps {
-        margin-top: 10px;
-        font-weight: 900;
-        color: __NAVY__;
-        letter-spacing: .01em;
+        margin-top: 12px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: .14em;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        font-family: var(--sans);
       }
       .btm-rhythm .dot {
         display:inline-block;
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
         border-radius: 999px;
-        background: rgba(30,58,138,.55);
-        margin: 0 10px 1px 10px;
+        background: var(--gold);
+        margin: 0 12px 2px 12px;
+        opacity: 0.85;
       }
 
-      /* ===== Share Card Preview (Study Notes vibe) ===== */
+      /* ========= SHARE CARD PREVIEW ========= */
       .btm-sharecard {
-        background: __NAVY__;
-        border-radius: 16px;
-        padding: 16px;
-        color: __LIGHT__;
-        box-shadow: 0 18px 40px rgba(15,23,42,.26);
-        border: 1px solid rgba(255,255,255,.10);
+        background:
+          radial-gradient(500px 200px at 100% 0%, rgba(166,137,102,0.22), transparent 60%),
+          linear-gradient(160deg, #16171F 0%, #1A1B26 60%, #0F1016 100%);
+        border-radius: 20px;
+        padding: 22px;
+        color: #F2ECDE;
+        box-shadow: var(--shadow-high);
+        border: 1px solid rgba(237,231,218,0.07);
         overflow:hidden;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
       }
       .btm-sharecard .bar {
-        background: rgba(250,204,21,.98);
-        color: #0b1220;
-        font-weight: 900;
-        letter-spacing: .08em;
-        font-size: 12px;
-        padding: 10px 12px;
-        border-radius: 12px;
+        background: linear-gradient(90deg, #B59877, #A68966);
+        color: #1A1B26;
+        font-weight: 700;
+        letter-spacing: .22em;
+        font-size: 11px;
+        padding: 9px 14px;
+        border-radius: 999px;
         display:inline-block;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         text-transform: uppercase;
+        font-family: var(--sans);
+        box-shadow: 0 8px 20px rgba(166,137,102,0.28);
       }
       .btm-sharecard .body {
-        font-size: 15px;
-        line-height: 1.45;
-        color: #e2e8f0;
-        margin-bottom: 12px;
+        font-family: var(--serif);
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 1.55;
+        color: #EAE2D1;
+        margin-bottom: 14px;
         white-space: pre-wrap;
+        font-style: italic;
       }
       .btm-sharecard .ref {
-        font-weight: 900;
+        font-family: var(--serif);
+        font-weight: 700;
         color: __GOLD__;
-        margin-top: 6px;
-        font-size: 13px;
+        margin-top: 8px;
+        font-size: 14px;
+        letter-spacing: .02em;
       }
       .btm-sharecard .foot {
-        margin-top: 14px;
-        font-size: 11px;
-        color: rgba(248,250,252,.75);
-        letter-spacing: .08em;
+        margin-top: 18px;
+        font-size: 10.5px;
+        color: rgba(242,236,222,0.65);
+        letter-spacing: .2em;
         text-transform: uppercase;
+        font-family: var(--sans);
       }
 
-      /* Inputs */
+      /* ========= INPUTS ========= */
       input, textarea, select {
-        border-radius: 12px !important;
-        border: 1px solid var(--border) !important;
-        background: var(--card) !important;
+        border-radius: 14px !important;
+        border: 1px solid var(--border-strong) !important;
+        background: var(--vellum-raised) !important;
         color: var(--text) !important;
-        padding: 10px 12px !important;
+        padding: 12px 14px !important;
+        font-family: var(--sans) !important;
       }
       input:focus, textarea:focus, select:focus {
-        border-color: var(--navy) !important;
-        box-shadow: 0 0 0 3px rgba(30,58,138,.18) !important;
+        border-color: var(--gold) !important;
+        box-shadow: 0 0 0 3px rgba(166,137,102,0.18) !important;
+        background: #FFFFFF !important;
       }
 
-      
-      /* Hide Streamlit inline input instructions (they can overlap on mobile) */
+      /* Hide Streamlit inline input instructions */
       div[data-testid="stTextInput"] [data-testid="InputInstructions"],
       div[data-testid="stTextArea"]  [data-testid="InputInstructions"],
       div[data-testid="stTextInput"] div[aria-live="polite"],
@@ -533,172 +652,197 @@ def inject_css(theme: str):
         padding: 0 !important;
       }
 
-/* ========= BUTTON SYSTEM ========= */
+      /* ========= BUTTON SYSTEM â€” Ink primary / Vellum-outlined secondary ========= */
+      div[data-testid="stButton"] > button{
+        font-family: var(--sans) !important;
+        letter-spacing: .04em !important;
+        transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease !important;
+      }
       div[data-testid="stButton"] > button[kind="primary"] {
-        background: __NAVY__ !important;
-        color: __LIGHT__ !important;
-        font-weight: 900 !important;
-        border: 1px solid rgba(0,0,0,.06) !important;
+        background: linear-gradient(180deg, #22232E, #1A1B26) !important;
+        color: #F4EFE3 !important;
+        font-weight: 600 !important;
+        border: 1px solid #0E0F14 !important;
         border-radius: 14px !important;
-        padding: 12px 18px !important;
-        box-shadow: 0 12px 24px rgba(30,58,138,.25) !important;
+        padding: 13px 20px !important;
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.05) inset,
+          0 1px 2px rgba(26,27,38,0.24),
+          0 18px 44px rgba(26,27,38,0.24) !important;
       }
       div[data-testid="stButton"] > button[kind="primary"]:hover {
         transform: translateY(-1px);
-        box-shadow: 0 16px 32px rgba(30,58,138,.35) !important;
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.07) inset,
+          0 1px 2px rgba(26,27,38,0.28),
+          0 24px 56px rgba(26,27,38,0.30),
+          0 0 0 1px rgba(166,137,102,0.45) !important;
       }
       div[data-testid="stButton"] > button[kind="primary"].gold-cta {
-        background: __GOLD__ !important;
-        color: __NAVY__ !important;
-        box-shadow: 0 12px 24px rgba(250,204,21,.30) !important;
+        background: linear-gradient(180deg, #B59877, #A68966) !important;
+        color: #1A1B26 !important;
+        box-shadow: 0 14px 32px rgba(166,137,102,0.30) !important;
       }
 
-      /* OUTLINED SECONDARY */
       div[data-testid="stButton"] > button[kind="secondary"] {
-        background: var(--card) !important;
-        color: __NAVY__ !important;
-        font-weight: 900 !important;
-        border: 2px solid rgba(30,58,138,.55) !important;
+        background: var(--vellum-raised) !important;
+        color: var(--ink) !important;
+        font-weight: 600 !important;
+        border: 1px solid var(--border-strong) !important;
         border-radius: 14px !important;
-        padding: 12px 18px !important;
-        box-shadow: 0 10px 22px rgba(15,23,42,.08) !important;
+        padding: 13px 20px !important;
+        box-shadow: var(--shadow-low) !important;
       }
       div[data-testid="stButton"] > button[kind="secondary"]:hover {
         transform: translateY(-1px);
-        background: __NAVY__ !important;
-        color: __LIGHT__ !important;
-        border-color: rgba(250,204,21,.85) !important;
-        box-shadow: 0 14px 28px rgba(15,23,42,.12) !important;
+        background: var(--ink) !important;
+        color: #F4EFE3 !important;
+        border-color: var(--gold) !important;
+        box-shadow: 0 20px 44px rgba(26,27,38,0.22) !important;
       }
 
-      /* Mail link button (more compatible than st.link_button on some WebViews) */
+      /* Mail link button */
       .btm-mail {
         display:block;
         width:100%;
         text-align:center;
         text-decoration:none;
-        font-weight:900;
-        color: __NAVY__;
-        background:#fff;
-        border:2px solid rgba(30,58,138,.35);
+        font-weight:600;
+        font-family: var(--sans);
+        letter-spacing: .04em;
+        color: var(--ink);
+        background: var(--vellum-raised);
+        border:1px solid var(--border-strong);
         border-radius:14px;
-        padding:12px 18px;
-        box-shadow: 0 10px 22px rgba(15,23,42,.08);
+        padding:13px 18px;
+        box-shadow: var(--shadow-low);
+        transition: all .18s ease;
       }
       .btm-mail:hover{
-        background: __NAVY__;
-        color: __LIGHT__;
-        border-color: rgba(250,204,21,.85);
+        background: var(--ink);
+        color: #F4EFE3;
+        border-color: var(--gold);
       }
 
-      /* Inline Q&A bubble styles */
+      /* ========= INLINE Q&A BUBBLES ========= */
       .btm-qa-wrap{
-        border: 1px solid rgba(15,23,42,.08);
-        border-radius: 16px;
-        padding: 14px;
-        background: rgba(248,250,252,.92);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--gold);
+        border-radius: 0 16px 16px 0;
+        padding: 16px 18px;
+        background:
+          linear-gradient(90deg, rgba(166,137,102,0.08), rgba(166,137,102,0.01)),
+          var(--vellum-raised);
+        animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
       }
       .btm-qa-q{
-        font-weight: 900;
-        color: __NAVY__;
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 600;
+        font-size: 17px;
+        color: var(--ink);
         margin: 0 0 8px 0;
+        letter-spacing: -0.005em;
       }
       .btm-qa-a{
         margin: 0;
-        color: var(--muted);
-        line-height: 1.5;
+        color: var(--text);
+        line-height: 1.65;
+        font-size: 15px;
+        font-family: var(--sans);
       }
 
-      /* ===== Pill Controls ===== */
-      div[data-testid="stRadio"] div[role="radiogroup"] {
-        gap: 8px;
-      }
+      /* ========= PILL RADIO CONTROLS ========= */
+      div[data-testid="stRadio"] div[role="radiogroup"] { gap: 8px; }
       div[data-testid="stRadio"] div[role="radiogroup"] > label {
         border-radius: 999px;
-        padding: 6px 16px;
+        padding: 7px 16px;
         border: 1px solid var(--chip-border);
         background: var(--chip-bg);
-        color: var(--muted);
-        font-weight: 800;
-        box-shadow: 0 10px 24px rgba(15,23,42,.10);
+        color: var(--ink);
+        font-weight: 600;
+        font-family: var(--sans);
+        letter-spacing: .04em;
+        font-size: 12.5px;
+        box-shadow: var(--shadow-low);
+        transition: all .18s ease;
       }
       div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-        border-color: rgba(30,58,138,.6);
-        background: rgba(30,58,138,.12);
-        color: __NAVY__;
+        border-color: var(--gold);
+        background: rgba(166,137,102,0.12);
       }
       div[data-testid="stRadio"] div[role="radiogroup"] > label input:checked + div {
-        background: __NAVY__;
-        color: __LIGHT__;
+        background: var(--ink);
+        color: #F4EFE3;
         border-radius: 999px;
-        padding: 6px 16px;
-        box-shadow: 0 12px 28px rgba(30,58,138,.32);
-      }
-
-      /* Subtle separators for Fortune-500 polish */
-      .btm-hr {
-        height: 1px;
-        border: 0;
-        background: linear-gradient(90deg, rgba(226,232,240,0), var(--border), rgba(226,232,240,0));
-        margin: 18px 0;
+        padding: 7px 16px;
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.06) inset,
+          0 12px 28px rgba(26,27,38,0.28);
       }
 
       /* ========= MOBILE BUTTON SIZING ========= */
       @media (max-width: 520px){
         div[data-testid="stButton"] > button{
-          padding: 10px 12px !important;
+          padding: 11px 14px !important;
           border-radius: 12px !important;
           font-size: 0.95rem !important;
           line-height: 1.15 !important;
         }
-        .btm-card{ padding: 14px !important; }
-        .btm-card-tight{ padding: 12px !important; }
+        .btm-card{ padding: 18px !important; border-radius: 18px !important; }
+        .btm-card-tight{ padding: 14px !important; }
+        .btm-page-title{ font-size: 32px !important; }
       }
 
       /* ========= PRIVACY REASSURANCE ========= */
       .btm-privacy{
-        border: 1px solid rgba(148,163,184,.28);
-        background: rgba(30,58,138,.06);
-        border-radius: 16px;
-        padding: 14px 14px;
-        margin: 10px 0 14px 0;
+        border: 1px solid var(--gold-soft);
+        background:
+          linear-gradient(180deg, rgba(166,137,102,0.06), rgba(166,137,102,0.01)),
+          var(--vellum-raised);
+        border-radius: 18px;
+        padding: 18px 18px;
+        margin: 10px 0 16px 0;
+        box-shadow: var(--shadow-low);
       }
       .btm-privacy .title{
-        font-weight: 950;
-        color: __NAVY__;
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 19px;
+        color: var(--ink);
         letter-spacing: -0.01em;
-        margin: 0 0 6px 0;
+        margin: 0 0 8px 0;
       }
       .btm-privacy .line{
         margin: 0;
-        font-size: 13px;
-        line-height: 1.45;
+        font-size: 14px;
+        line-height: 1.55;
         color: var(--muted);
+        font-family: var(--sans);
       }
-      .btm-privacy .strong{
-        color: var(--text);
-        font-weight: 900;
-      }
+      .btm-privacy .strong{ color: var(--text); font-weight: 700; }
       .btm-privacy .bullets{
-        margin: 10px 0 0 0;
-        padding-left: 18px;
+        margin: 12px 0 0 0;
+        padding-left: 20px;
         color: var(--muted);
-        font-size: 13px;
-        line-height: 1.5;
+        font-size: 13.5px;
+        line-height: 1.65;
+        font-family: var(--sans);
       }
       .btm-privacy-mini{
-        margin-top: 10px;
-        padding: 10px 12px;
+        margin-top: 12px;
+        padding: 11px 14px;
         border-radius: 14px;
-        border: 1px dashed rgba(148,163,184,.35);
-        background: rgba(250,204,21,.10);
+        border: 1px dashed var(--gold-soft);
+        background: rgba(166,137,102,0.06);
         color: var(--muted);
         font-size: 12.5px;
-        line-height: 1.45;
+        line-height: 1.55;
+        font-family: var(--serif);
+        font-style: italic;
       }
 
-    
-      /* ========= BOTTOM NAV ========= */
+      /* ========= BOTTOM NAV â€” Vellum glass ========= */
       .btm-bottom-nav{
         position: fixed;
         left: 0;
@@ -708,84 +852,96 @@ def inject_css(theme: str):
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 10px;
-        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-        background: rgba(0,0,0,0);
-        backdrop-filter: blur(10px);
+        padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+        background: linear-gradient(180deg, rgba(249,247,242,0), rgba(249,247,242,0.86));
+        backdrop-filter: blur(14px) saturate(1.05);
       }
       .btm-nav-item{
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none !important;
-        border: 1px solid rgba(148,163,184,.55);
-        background: rgba(255,255,255,.78);
+        border: 1px solid var(--border-strong);
+        background: rgba(255,255,255,0.85);
         color: var(--text);
         border-radius: 14px;
         height: 54px;
-        box-shadow: 0 10px 30px rgba(2,6,23,.08);
+        box-shadow: var(--shadow-low);
         padding: 0 10px;
+        font-family: var(--sans);
+        transition: all .22s ease;
+      }
+      .btm-nav-item:hover{
+        border-color: var(--gold);
+        transform: translateY(-1px);
       }
       .btm-nav-item .btm-nav-label{
-        font-weight: 800;
-        font-size: 14px;
+        font-weight: 600;
+        font-size: 13.5px;
+        letter-spacing: .04em;
         line-height: 1.1;
         text-align: center;
       }
       .btm-nav-item.active{
-        background: var(--navy);
-        color: #ffffff !important;
-        border-color: rgba(250,204,21,.55);
-        box-shadow: 0 14px 36px rgba(2,6,23,.18);
+        background: var(--ink);
+        color: #F4EFE3 !important;
+        border-color: var(--gold);
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.06) inset,
+          0 20px 44px rgba(26,27,38,0.22);
       }
-      .btm-nav-item.active .btm-nav-label{
-        text-decoration: none !important;
-      }
+      .btm-nav-item.active .btm-nav-label{ text-decoration: none !important; }
 
-      /* Keep content visible above fixed nav */
-      section.main > div{
-        padding-bottom: 120px !important;
-      }
+      section.main > div{ padding-bottom: 130px !important; }
 
       /* ========= HOW IT WORKS ========= */
       .btm-grid-2{
         display: grid;
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 16px;
       }
-      @media (min-width: 900px){
-        .btm-grid-2{ grid-template-columns: 1fr 1fr; }
-      }
+      @media (min-width: 900px){ .btm-grid-2{ grid-template-columns: 1fr 1fr; } }
       .btm-section-title{
-        font-size: 18px;
-        font-weight: 900;
-        margin-bottom: 8px;
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin-bottom: 10px;
+        color: var(--ink);
       }
       .btm-step{
-        padding: 12px 0;
-        border-top: 1px solid rgba(148,163,184,.35);
+        padding: 14px 0;
+        border-top: 1px solid var(--border);
       }
       .btm-step:first-of-type{ border-top: none; padding-top: 2px; }
       .btm-step-title{
-        font-weight: 900;
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 18px;
         margin-bottom: 4px;
+        color: var(--ink);
       }
       .btm-step-desc{
         color: var(--muted);
-        font-weight: 600;
+        font-weight: 400;
+        font-size: 14.5px;
+        line-height: 1.6;
+        font-family: var(--sans);
       }
-      .btm-bullets{ display: grid; gap: 10px; }
-      .btm-bullet{ display:flex; gap:10px; align-items:flex-start; }
+      .btm-bullets{ display: grid; gap: 12px; }
+      .btm-bullet{ display:flex; gap:12px; align-items:flex-start; font-size: 14px; color: var(--text); line-height:1.55; }
       .btm-bullet .dot{
-        width: 10px; height: 10px; border-radius: 999px;
+        width: 6px; height: 6px; border-radius: 999px;
         background: var(--gold);
-        margin-top: 6px;
+        margin-top: 9px;
         flex: 0 0 auto;
+        box-shadow: 0 0 0 3px rgba(166,137,102,0.18);
       }
 
-      .btm-note{ border: 1px solid rgba(250,204,21,.35); }
-      .btm-note-text{ font-weight: 650; color: var(--text); }
+      .btm-note{ border: 1px solid var(--gold-soft); }
+      .btm-note-text{ font-weight: 500; color: var(--text); line-height: 1.6; }
 
-      /* ===== External CTA pills ===== */
+      /* ========= External CTA pills ========= */
       .btm-pill-link {
         display: flex;
         align-items: center;
@@ -793,49 +949,136 @@ def inject_css(theme: str):
         min-height: 48px;
         width: 100%;
         text-decoration: none !important;
-        font-weight: 900;
+        font-weight: 600;
+        font-family: var(--sans);
+        letter-spacing: .04em;
         border-radius: 14px;
         padding: 12px 18px;
         box-sizing: border-box;
-        transition: all .18s ease;
+        transition: all .22s ease;
       }
       .btm-pill-link.secondary {
-        background: var(--card);
-        color: __NAVY__ !important;
-        border: 2px solid rgba(30,58,138,.55);
-        box-shadow: 0 10px 22px rgba(15,23,42,.08);
+        background: var(--vellum-raised);
+        color: var(--ink) !important;
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--shadow-low);
       }
       .btm-pill-link.secondary:hover {
         transform: translateY(-1px);
-        background: __NAVY__;
-        color: __LIGHT__ !important;
-        border-color: rgba(250,204,21,.85);
-        box-shadow: 0 14px 28px rgba(15,23,42,.12);
+        background: var(--ink);
+        color: #F4EFE3 !important;
+        border-color: var(--gold);
+        box-shadow: 0 20px 44px rgba(26,27,38,0.22);
       }
       .btm-pill-link.primary {
-        background: __NAVY__;
-        color: __LIGHT__ !important;
-        border: 1px solid rgba(0,0,0,.06);
-        box-shadow: 0 12px 24px rgba(30,58,138,.25);
+        background: linear-gradient(180deg, #22232E, #1A1B26);
+        color: #F4EFE3 !important;
+        border: 1px solid #0E0F14;
+        box-shadow:
+          0 1px 0 rgba(255,255,255,0.05) inset,
+          0 18px 44px rgba(26,27,38,0.24);
       }
       .btm-voice-wrap {
-        border: 1px dashed rgba(30,58,138,.28);
+        border: 1px dashed var(--gold-soft);
         border-radius: 14px;
-        padding: 12px 14px;
-        background: rgba(250,204,21,.08);
+        padding: 13px 15px;
+        background: rgba(166,137,102,0.06);
         margin: 10px 0 12px 0;
       }
       .btm-voice-title {
-        font-weight: 900;
-        color: __NAVY__;
+        font-family: var(--serif);
+        font-weight: 600;
+        color: var(--ink);
+        font-size: 17px;
         margin-bottom: 4px;
       }
       .btm-voice-copy {
         color: var(--muted);
-        font-size: 12.5px;
-        line-height: 1.4;
+        font-size: 13px;
+        line-height: 1.5;
+        font-family: var(--sans);
       }
-</style>
+
+      /* ========= MATERIALIZATION + RITUAL PULSE KEYFRAMES ========= */
+      @keyframes btmMaterialize{
+        0%   { opacity: 0; transform: translateY(14px); filter: blur(3px); }
+        60%  { opacity: 1; filter: blur(0); }
+        100% { opacity: 1; transform: translateY(0);   filter: blur(0); }
+      }
+      @keyframes btmFadeDown{
+        from{ opacity:0; transform: translateY(-8px); filter: blur(2px); }
+        to  { opacity:1; transform: translateY(0);    filter: blur(0); }
+      }
+      @keyframes btmRitualPulse{
+        0%, 100%{
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.75) inset,
+            0 1px 2px rgba(26,27,38,0.06),
+            0 28px 72px rgba(26,27,38,0.08),
+            0 0 0 1px rgba(166,137,102,0.14),
+            0 0 0 10px rgba(166,137,102,0.03);
+        }
+        50%{
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.85) inset,
+            0 1px 2px rgba(26,27,38,0.08),
+            0 40px 92px rgba(166,137,102,0.16),
+            0 0 0 1px rgba(166,137,102,0.30),
+            0 0 0 18px rgba(166,137,102,0.07);
+        }
+      }
+
+      /* Streamlit chat message â€” scholarly card */
+      div[data-testid="stChatMessage"]{
+        background: var(--vellum-raised) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+        box-shadow: var(--shadow-low);
+        animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
+      }
+      div[data-testid="stChatMessage"] p{
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+
+      /* Selectbox */
+      div[data-baseweb="select"] > div{
+        border-radius: 14px !important;
+        background: var(--vellum-raised) !important;
+        border: 1px solid var(--border-strong) !important;
+      }
+
+      /* Expander summary */
+      details summary{
+        font-family: var(--sans);
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: .02em;
+      }
+
+      /* Alert bubbles â€” softened */
+      div[data-testid="stAlert"]{
+        border-radius: 16px !important;
+        border: 1px solid var(--border) !important;
+        background: var(--vellum-raised) !important;
+        box-shadow: var(--shadow-low);
+      }
+
+      /* Markdown content inside story body â€” prose refinements */
+      .btm-card p{ font-size: 15.5px; line-height: 1.72; color: var(--text); }
+      .btm-card blockquote{
+        border-left: 3px solid var(--gold);
+        background: rgba(166,137,102,0.05);
+        margin: 14px 0;
+        padding: 10px 16px;
+        border-radius: 0 12px 12px 0;
+        font-family: var(--serif);
+        font-style: italic;
+        color: var(--text);
+      }
+    </style>
     """
 
     css = (css
@@ -857,6 +1100,714 @@ def inject_css(theme: str):
     st.markdown(css, unsafe_allow_html=True)
 
 inject_css(_get_theme())
+
+def inject_premium_layout_css():
+    # Plain string â€” tokens are literal CSS. No f-strings, no brace collisions.
+    st.markdown(
+        """
+        <style>
+        /* ========= PREMIUM VELLUM LAYOUT (Hero Composer + Home + Response Shell) ========= */
+        .stApp{
+          background:
+            radial-gradient(1200px 520px at 8% -8%, rgba(166,137,102,0.10), transparent 44%),
+            radial-gradient(900px 460px at 92% 2%, rgba(26,27,38,0.05), transparent 36%),
+            linear-gradient(180deg, rgba(251,250,245,0.76), rgba(249,247,242,0.94)),
+            var(--bg) !important;
+          position: relative;
+        }
+        .block-container{
+          max-width: 920px;
+          padding-top: 2rem;
+        }
+
+        /* ========= HOME HERO â€” scholarly Ink panel with gold halo ========= */
+        .btm-home-hero{
+          padding: 40px 34px 34px;
+          border-radius: 28px;
+          background:
+            radial-gradient(900px 280px at 14% -10%, rgba(166,137,102,0.24), transparent 50%),
+            radial-gradient(500px 200px at 100% 0%, rgba(166,137,102,0.10), transparent 60%),
+            linear-gradient(155deg,#16171F 0%, #1A1B26 52%, #111218 100%);
+          border: 1px solid rgba(237,231,218,0.07);
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.12) inset,
+            0 1px 2px rgba(26,27,38,0.20),
+            0 32px 80px rgba(26,27,38,0.22),
+            0 60px 140px rgba(26,27,38,0.18);
+          margin-bottom: 22px;
+          overflow: hidden;
+          position: relative;
+          animation: btmMaterialize 0.9s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-home-hero::after{
+          content:"";
+          position:absolute; inset:0;
+          pointer-events:none;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+          mix-blend-mode: overlay;
+          opacity: .4;
+        }
+        .btm-home-kicker{
+          display:inline-flex;align-items:center;gap:10px;
+          padding:8px 14px;border-radius:999px;
+          background:rgba(166,137,102,0.12);
+          border:1px solid rgba(166,137,102,0.26);
+          color:#E6D4B3;font-size:10.5px;font-weight:700;
+          letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px;
+          font-family: "Inter", system-ui, sans-serif;
+        }
+        .btm-home-title{
+          margin:0;
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-size:52px;font-weight:600;
+          letter-spacing:-.025em;line-height:1.02;
+          color:#F4EFE3;
+          text-wrap: balance;
+        }
+        .btm-home-title span{ color:#E6D4B3; font-style: italic; }
+        .btm-home-copy{
+          margin:16px 0 0 0;
+          color:#CFC7B6;font-size:16px;line-height:1.68;
+          max-width:690px;letter-spacing:.005em;
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-style: italic;
+        }
+        .btm-home-chip-row{
+          display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;
+        }
+        .btm-home-chip{
+          display:inline-flex;align-items:center;gap:6px;
+          padding:8px 13px;border-radius:999px;
+          background:rgba(244,239,227,0.06);
+          border:1px solid rgba(244,239,227,0.14);
+          color:#EFE8D8;font-size:11.5px;font-weight:600;
+          letter-spacing:.08em;
+          font-family:"Inter",system-ui,sans-serif;
+          transition: all .22s ease;
+        }
+        .btm-home-chip:hover{
+          background:rgba(166,137,102,0.16);
+          border-color: rgba(166,137,102,0.42);
+          color:#F5E7C9;
+          transform: translateY(-1px);
+        }
+        .btm-home-cta-note{
+          margin-top:18px;
+          color:#B8B0A0;font-size:13px;line-height:1.6;
+          font-family:"Cormorant Garamond",Georgia,serif;
+          font-style: italic;
+        }
+
+        /* ========= FLOATING VELLUM PANELS ========= */
+        .btm-path-card, .btm-footer-tools, .btm-response-shell, .btm-hero-composer{
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.96)),
+            var(--card);
+          border: 1px solid rgba(166,137,102,0.14);
+          border-radius: 24px;
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.88) inset,
+            0 1px 2px rgba(26,27,38,0.05),
+            0 20px 44px rgba(26,27,38,0.08),
+            0 48px 96px rgba(26,27,38,0.10);
+        }
+        .btm-path-card{
+          padding:26px 24px;
+          animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-path-title{
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-size:26px;font-weight:600;letter-spacing:-.02em;
+          color:var(--ink);margin:0 0 10px 0;text-wrap:balance;
+        }
+        .btm-path-copy, .btm-tool-copy, .btm-support-copy, .btm-send-note, .btm-angel-sub, .btm-composer-prompt{
+          color:var(--muted);
+          font-size:15px;
+          line-height:1.68;
+          letter-spacing:.005em;
+          font-family:"Inter",system-ui,sans-serif;
+        }
+
+        /* ========= ANGEL HERO ========= */
+        .btm-angel-hero{ padding:14px 0 8px 0; text-align:center; }
+        .btm-angel-kicker{
+          display:inline-flex;align-items:center;gap:10px;
+          padding:7px 14px;border-radius:999px;
+          background:rgba(166,137,102,0.10);
+          border:1px solid rgba(166,137,102,0.24);
+          color:#7D6242;font-size:10.5px;font-weight:700;
+          letter-spacing:.22em;text-transform:uppercase;
+          font-family:"Inter",system-ui,sans-serif;
+        }
+        .btm-angel-title{
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-size:54px;font-weight:600;
+          letter-spacing:-.03em;color:var(--ink);margin:14px 0 10px 0;
+          line-height:1.02;text-wrap:balance;
+        }
+        .btm-angel-sub{
+          max-width:680px;margin:0 auto 10px auto;
+          text-wrap:balance;
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-style: italic;
+          font-size: 17px;
+          color: var(--muted);
+        }
+        .btm-mode-chip-row{
+          display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:10px 0 14px 0;
+        }
+        .btm-mode-chip{
+          display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;
+          background:rgba(166,137,102,0.10);border:1px solid rgba(166,137,102,0.20);
+          color:#7D6242;font-size:11.5px;font-weight:600;letter-spacing:.10em;
+          font-family:"Inter",system-ui,sans-serif;
+          text-transform: uppercase;
+          transition: all .22s ease;
+        }
+        .btm-mode-chip:hover{
+          background: rgba(166,137,102,0.18);
+          border-color: rgba(166,137,102,0.40);
+          transform: translateY(-1px);
+        }
+
+        /* ========= HERO COMPOSER â€” center of gravity, with RITUAL PULSE ========= */
+        .btm-hero-composer{
+          position:relative;
+          padding:28px 24px 22px;
+          margin:20px auto 16px;
+          max-width: 760px;
+          animation: btmMaterialize 0.9s cubic-bezier(0.22,0.61,0.36,1) both,
+                     btmRitualPulse 5.4s ease-in-out 1.2s infinite;
+        }
+        .btm-hero-composer:before{
+          content:"";
+          position:absolute;inset:-1px;border-radius:24px;
+          pointer-events:none;
+          box-shadow:
+            0 0 0 1px rgba(166,137,102,0.14),
+            0 0 0 10px rgba(166,137,102,0.035);
+        }
+        .btm-hero-composer:after{
+          /* Subtle gilded corner mark */
+          content:"âœ¦";
+          position:absolute; top:14px; right:18px;
+          color: var(--gold);
+          font-size: 14px;
+          opacity: 0.55;
+          pointer-events:none;
+        }
+        .btm-composer-kicker{
+          font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+          color:#7D6242;margin-bottom:14px;text-align:center;
+          font-family:"Inter",system-ui,sans-serif;
+        }
+        .btm-send-note{
+          font-size:12.5px;margin-top:10px;text-align:center;
+          font-style: italic;
+          font-family:"Cormorant Garamond",Georgia,serif;
+          color: var(--muted);
+        }
+        .btm-prompt-strip{
+          display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+          margin:8px auto 0;
+          max-width:760px;
+        }
+
+        .btm-chat-frame{ margin-top:10px; }
+
+        /* ========= RESPONSE SHELL â€” materializes with the words ========= */
+        .btm-response-shell{
+          padding:26px 24px 22px;
+          margin:18px auto 16px;
+          max-width: 760px;
+          animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
+          position: relative;
+        }
+        .btm-response-shell:before{
+          content:"";
+          position:absolute; left:-1px; top:24px;
+          width: 3px; height: calc(100% - 48px);
+          background: linear-gradient(180deg, transparent, var(--gold), transparent);
+          opacity: 0.45;
+          border-radius: 0 3px 3px 0;
+        }
+        .btm-response-kicker{
+          font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+          color:#7D6242;margin-bottom:12px;
+          font-family:"Inter",system-ui,sans-serif;
+        }
+
+        /* ========= SCRIPTURE ANCHOR â€” gilded verse ========= */
+        .btm-scripture-anchor{
+          border-left:3px solid var(--gold);
+          background:
+            linear-gradient(90deg, rgba(166,137,102,0.10), rgba(166,137,102,0.01));
+          padding:18px 20px;border-radius:0 18px 18px 0;margin:0 0 18px 0;
+          animation: btmFadeDown 0.8s cubic-bezier(0.22,0.61,0.36,1) 0.15s both;
+        }
+        .btm-scripture-anchor .label{
+          font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+          color:#7D6242;margin-bottom:9px;
+          font-family:"Inter",system-ui,sans-serif;
+        }
+        .btm-scripture-anchor .ref{
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-size:28px;font-weight:600;
+          font-style: italic;
+          color:var(--ink);line-height:1.18;
+          text-wrap:balance;
+          letter-spacing: -0.01em;
+        }
+
+        .btm-tool-title{
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif;
+          font-weight:600;color:var(--ink);font-size:26px;margin-bottom:10px;
+          text-wrap: balance;
+          letter-spacing: -0.02em;
+        }
+        .btm-footer-tools{
+          padding:24px;margin-top:18px;
+          animation: btmMaterialize 0.8s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-minor-divider{
+          height:1px;border:0;
+          background:linear-gradient(90deg, rgba(226,232,240,0), rgba(166,137,102,0.36), rgba(226,232,240,0));
+          margin:14px 0 16px 0;
+        }
+
+        /* ========= HERO TEXT INPUT â€” the "composer" field ========= */
+        div[data-testid="stTextInput"]{
+          max-width: 760px;
+          margin: 0 auto;
+        }
+        div[data-testid="stTextInput"] input{
+          min-height:64px !important;
+          border-radius:20px !important;
+          border:1px solid rgba(166,137,102,0.30) !important;
+          background:rgba(255,255,255,0.95) !important;
+          color:#1A1B26 !important;
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.88) inset,
+            0 12px 24px rgba(26,27,38,0.06),
+            0 0 0 8px rgba(166,137,102,0.04) !important;
+          font-size:17px !important;
+          font-family:"Cormorant Garamond","Cormorant","EB Garamond",Georgia,serif !important;
+          font-style: italic;
+          padding:0 20px !important;
+          transition: all .32s ease !important;
+          letter-spacing: 0.005em;
+        }
+        div[data-testid="stTextInput"] input:focus{
+          border-color:rgba(166,137,102,0.70) !important;
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.96) inset,
+            0 18px 36px rgba(26,27,38,0.09),
+            0 0 0 12px rgba(166,137,102,0.10) !important;
+          background: #FFFFFF !important;
+        }
+        div[data-testid="stTextInput"] input::placeholder{
+          color:#7A7268 !important;
+          opacity:1 !important;
+          font-style: italic;
+        }
+
+        div[data-testid="stButton"] > button{
+          transition: all .3s ease !important;
+          letter-spacing:.04em !important;
+        }
+        .btm-pill-link, .btm-home-chip, .btm-mode-chip, .btm-badge{
+          transition: all .3s ease;
+        }
+        .btm-home-chip:hover, .btm-mode-chip:hover{
+          transform: translateY(-1px);
+          box-shadow: 0 10px 22px rgba(26,27,38,0.10);
+        }
+        h1,h2,h3,h4,h5,
+        .btm-home-title, .btm-angel-title, .btm-path-title,
+        .btm-tool-title, .btm-scripture-anchor .ref{
+          text-wrap: balance;
+        }
+
+        /* Keyframes (duplicated from inject_css so premium layer stands alone) */
+        @keyframes btmMaterialize{
+          0%   { opacity:0; transform: translateY(14px); filter: blur(3px); }
+          60%  { opacity:1; filter: blur(0); }
+          100% { opacity:1; transform: translateY(0);   filter: blur(0); }
+        }
+        @keyframes btmFadeDown{
+          from{ opacity:0; transform: translateY(-8px); filter: blur(2px); }
+          to  { opacity:1; transform: translateY(0);    filter: blur(0); }
+        }
+        @keyframes btmRitualPulse{
+          0%, 100%{
+            box-shadow:
+              0 1px 0 rgba(255,255,255,0.88) inset,
+              0 1px 2px rgba(26,27,38,0.05),
+              0 20px 44px rgba(26,27,38,0.08),
+              0 48px 96px rgba(26,27,38,0.10),
+              0 0 0 1px rgba(166,137,102,0.12),
+              0 0 0 10px rgba(166,137,102,0.025);
+          }
+          50%{
+            box-shadow:
+              0 1px 0 rgba(255,255,255,0.92) inset,
+              0 1px 2px rgba(26,27,38,0.07),
+              0 28px 60px rgba(26,27,38,0.12),
+              0 60px 120px rgba(166,137,102,0.14),
+              0 0 0 1px rgba(166,137,102,0.32),
+              0 0 0 18px rgba(166,137,102,0.06);
+          }
+        }
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce){
+          .btm-card, .btm-scripture, .btm-sharecard, .btm-response-shell,
+          .btm-hero-composer, .btm-home-hero, .btm-qa-wrap, .btm-footer-tools,
+          .btm-path-card, .btm-scripture-anchor, div[data-testid="stChatMessage"]{
+            animation: none !important;
+          }
+        }
+
+        @media (max-width: 520px){
+          .btm-home-hero{ padding: 28px 22px 26px; }
+          .btm-home-title{ font-size: 40px; }
+          .btm-angel-title{ font-size: 38px; }
+          .btm-hero-composer, .btm-response-shell, .btm-footer-tools{
+            padding: 22px 18px 18px;
+          }
+          .btm-scripture-anchor .ref{ font-size: 22px; }
+        }
+
+        /* ================================================================
+           TOTAL EXPERIENCE OVERHAUL â€” Sacred Minimalism layer
+           Sanctuary Invite, Sacred Glassmorphism, Illuminated Scripture,
+           Quiet Menu, Center-Anchored Companion Column.
+           ================================================================ */
+
+        /* --- Hide Streamlit chrome so the sanctuary has no product frame --- */
+        #MainMenu, footer, header { visibility: hidden !important; }
+        div[data-testid="stDecoration"] { display: none !important; }
+        div[data-testid="stToolbar"] { display: none !important; }
+        [data-testid="stStatusWidget"] { display: none !important; }
+
+        /* --- SANCTUARY INVITE (Home) --- */
+        .btm-sanctuary-wrap{
+          padding-top: 6vh;
+        }
+        .btm-sanctuary-invite{
+          text-align: center;
+          padding: 48px 20px 36px;
+          animation: btmMaterialize 1.2s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-sanctuary-ornament{
+          font-size: 28px;
+          color: #A68966;
+          letter-spacing: 0.2em;
+          margin-bottom: 22px;
+          opacity: 0.72;
+          animation: btmRitualPulse 6s ease-in-out infinite;
+        }
+        .btm-sanctuary-kicker{
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: rgba(26,27,38,0.52);
+          margin-bottom: 18px;
+        }
+        .btm-sanctuary-title{
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 400;
+          font-size: clamp(44px, 7vw, 72px);
+          line-height: 1.02;
+          letter-spacing: -0.015em;
+          color: #1A1B26;
+          margin: 0 0 18px;
+        }
+        .btm-sanctuary-title em{
+          font-style: italic;
+          color: #A68966;
+          font-weight: 400;
+        }
+        .btm-sanctuary-whisper{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: clamp(18px, 2.1vw, 22px);
+          line-height: 1.55;
+          color: rgba(26,27,38,0.62);
+          max-width: 520px;
+          margin: 0 auto 38px;
+        }
+        .btm-sanctuary-subnote{
+          text-align: center;
+          font-family: 'Inter', sans-serif;
+          font-size: 12px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: rgba(26,27,38,0.38);
+          margin-top: 22px;
+        }
+
+        /* Give the single Enter button a breathing gilded presence. */
+        .btm-sanctuary-wrap div[data-testid="stButton"] > button[kind="primary"]{
+          background: linear-gradient(180deg, #23243049 0%, #1A1B26 100%);
+          color: #F9F7F2;
+          border: 1px solid rgba(166,137,102,0.55);
+          border-radius: 999px;
+          padding: 18px 28px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 500;
+          font-size: 20px;
+          letter-spacing: 0.04em;
+          animation: btmRitualPulse 5.4s ease-in-out 1.2s infinite;
+          transition: transform 200ms ease, letter-spacing 300ms ease;
+        }
+        .btm-sanctuary-wrap div[data-testid="stButton"] > button[kind="primary"]:hover{
+          transform: translateY(-1px);
+          letter-spacing: 0.08em;
+        }
+
+        /* Quiet pop-over (expander) â€” Other ways in, More drawer. */
+        details[data-testid="stExpander"]{
+          background: rgba(249,247,242,0.55);
+          backdrop-filter: blur(12px) saturate(1.1);
+          -webkit-backdrop-filter: blur(12px) saturate(1.1);
+          border: 1px solid rgba(26,27,38,0.06);
+          border-radius: 16px;
+          margin-top: 12px;
+          box-shadow: 0 2px 12px rgba(26,27,38,0.04);
+        }
+        details[data-testid="stExpander"] summary{
+          font-family: 'Inter', sans-serif;
+          font-size: 13px;
+          color: rgba(26,27,38,0.58);
+          padding: 12px 18px;
+          letter-spacing: 0.04em;
+        }
+        .btm-quiet-menu-intro{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          color: rgba(26,27,38,0.58);
+          font-size: 16px;
+          line-height: 1.55;
+          margin-bottom: 14px;
+        }
+
+        /* --- SANCTUARY ANGEL CHAT HERO --- */
+        .btm-sanctuary-column{
+          padding-top: 3vh;
+        }
+        .btm-sanctuary-angel-hero{
+          text-align: center;
+          padding: 24px 12px 28px;
+          animation: btmMaterialize 1.0s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-sanctuary-angel-title{
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 400;
+          font-size: clamp(32px, 4.4vw, 48px);
+          line-height: 1.1;
+          color: #1A1B26;
+          margin: 6px 0 12px;
+        }
+        .btm-sanctuary-angel-sub{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 18px;
+          line-height: 1.55;
+          color: rgba(26,27,38,0.58);
+          max-width: 480px;
+          margin: 0 auto;
+        }
+
+        /* --- SACRED GLASSMORPHISM â€”  translucent navy panels --- */
+        .btm-sanctuary-glass{
+          background: linear-gradient(180deg,
+            rgba(26,27,38,0.04) 0%,
+            rgba(249,247,242,0.75) 100%);
+          backdrop-filter: blur(24px) saturate(1.2);
+          -webkit-backdrop-filter: blur(24px) saturate(1.2);
+          border: 1px solid rgba(26,27,38,0.08);
+          border-radius: 24px;
+          padding: 28px 32px;
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.88) inset,
+            0 24px 64px rgba(26,27,38,0.08),
+            0 1px 0 rgba(166,137,102,0.14);
+          position: relative;
+          overflow: hidden;
+        }
+        .btm-sanctuary-glass::before{
+          content:"";
+          position:absolute;
+          inset:0;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.15  0 0 0 0.018 0'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='0.7'/></svg>");
+          opacity:0.5;
+          pointer-events:none;
+          mix-blend-mode: multiply;
+        }
+
+        /* --- ILLUMINATED SCRIPTURE ANCHOR â€” manuscript look --- */
+        .btm-scripture-anchor.btm-illuminated{
+          text-align: center;
+          padding: 28px 24px 32px;
+          background:
+            radial-gradient(circle at 50% 0%, rgba(166,137,102,0.10) 0%, transparent 60%),
+            linear-gradient(180deg, rgba(249,247,242,0.95) 0%, rgba(249,247,242,0.75) 100%);
+          border: none;
+          border-radius: 18px;
+          position: relative;
+          animation: btmFadeDown 1.0s cubic-bezier(0.22,0.61,0.36,1) both;
+        }
+        .btm-illuminated-rule{
+          width: 60%;
+          max-width: 280px;
+          height: 1px;
+          margin: 0 auto 14px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(166,137,102,0.45) 25%,
+            #A68966 50%,
+            rgba(166,137,102,0.45) 75%,
+            transparent 100%);
+        }
+        .btm-illuminated-rule:last-child{
+          margin: 16px auto 0;
+        }
+        .btm-scripture-anchor.btm-illuminated .label{
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(166,137,102,0.82);
+          margin-bottom: 14px;
+        }
+        .btm-scripture-anchor.btm-illuminated .ref{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 500;
+          font-size: 32px;
+          line-height: 1.15;
+          color: #1A1B26;
+          letter-spacing: 0.005em;
+          display: flex;
+          align-items: baseline;
+          justify-content: center;
+          gap: 10px;
+        }
+        .btm-dropcap{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: normal;
+          color: #A68966;
+          font-size: 28px;
+          line-height: 1;
+          opacity: 0.9;
+        }
+        .btm-illuminated-sub{
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 13px;
+          color: rgba(26,27,38,0.42);
+          margin-top: 10px;
+          letter-spacing: 0.02em;
+        }
+
+        /* --- SANCTUARY COMPOSER â€” st.chat_input with ritual pulse --- */
+        .btm-sanctuary-composer-wrap{
+          margin-top: 24px;
+          padding: 4px;
+          border-radius: 999px;
+          animation: btmRitualPulse 5.4s ease-in-out 0.8s infinite;
+        }
+        /* Target Streamlit's st.chat_input container */
+        div[data-testid="stChatInput"],
+        section[data-testid="stChatInput"]{
+          background: rgba(249,247,242,0.92) !important;
+          backdrop-filter: blur(14px) saturate(1.1);
+          -webkit-backdrop-filter: blur(14px) saturate(1.1);
+          border: 1px solid rgba(166,137,102,0.25) !important;
+          border-radius: 999px !important;
+          box-shadow:
+            0 1px 0 rgba(255,255,255,0.9) inset,
+            0 14px 40px rgba(26,27,38,0.06) !important;
+        }
+        div[data-testid="stChatInput"] textarea,
+        section[data-testid="stChatInput"] textarea{
+          background: transparent !important;
+          font-family: 'Cormorant Garamond', serif !important;
+          font-style: italic !important;
+          font-size: 18px !important;
+          color: #1A1B26 !important;
+          padding: 6px 8px !important;
+        }
+        div[data-testid="stChatInput"] textarea::placeholder,
+        section[data-testid="stChatInput"] textarea::placeholder{
+          color: rgba(26,27,38,0.38) !important;
+          font-style: italic !important;
+        }
+
+        /* Sanctuary chat message bubbles â€” softer, less boxed */
+        .btm-sanctuary-chat div[data-testid="stChatMessage"]{
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 18px 0 !important;
+          border-bottom: 1px solid rgba(26,27,38,0.06) !important;
+          border-radius: 0 !important;
+        }
+        .btm-sanctuary-chat div[data-testid="stChatMessage"] p{
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 19px;
+          line-height: 1.65;
+          color: #1A1B26;
+        }
+        .btm-sanctuary-chat{
+          margin-bottom: 8px;
+        }
+
+        .btm-sanctuary-privacy{
+          background: rgba(249,247,242,0.7);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(26,27,38,0.06);
+          border-radius: 16px;
+          padding: 18px 22px;
+          margin: 10px 0 18px;
+        }
+
+        .btm-sanctuary-footnote{
+          margin-top: 30px;
+          padding-top: 16px;
+          border-top: 1px solid rgba(26,27,38,0.06);
+          opacity: 0.68;
+        }
+
+        @media (prefers-reduced-motion: reduce){
+          .btm-sanctuary-invite, .btm-sanctuary-angel-hero,
+          .btm-sanctuary-composer-wrap, .btm-sanctuary-ornament,
+          .btm-scripture-anchor.btm-illuminated,
+          .btm-sanctuary-wrap div[data-testid="stButton"] > button[kind="primary"]{
+            animation: none !important;
+          }
+        }
+
+        @media (max-width: 520px){
+          .btm-sanctuary-title{ font-size: 40px; }
+          .btm-sanctuary-angel-title{ font-size: 30px; }
+          .btm-scripture-anchor.btm-illuminated .ref{ font-size: 24px; }
+          .btm-sanctuary-glass{ padding: 22px 20px; }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# Apply the premium Vellum layer AFTER the base theme â€” this is what turns the
+# dashboard into the Virtual Sanctuary: ritual pulse, materialization, scripture
+# anchors, floating vellum panels.
+inject_premium_layout_css()
 
 
 def render_external_pill(label: str, url: str, variant: str = "secondary"):
@@ -952,9 +1903,9 @@ def render_how_it_works():
     st.markdown('<div class="btm-section-title">Choose the right lane</div>', unsafe_allow_html=True)
 
     steps = [
-        ('1 — Start in Study Hub', 'Use Study Hub for structured weekly lessons, Daily Compass prompts, teacher notes, Journey Map, and reflection tools that keep you engaged beyond Sunday.'),
-        ('2 — Use Angel Chat for real-life questions', 'Come to Angel Chat when you need prayer help, a practical next step, a deeper dive into Scripture, or guidance for what you are facing right now.'),
-        ('3 — Move between them as needed', 'Study Hub gives you the guided path. Angel Chat gives you personal support in the moment. Together they create a steady rhythm for discipleship.'),
+        ('1 â€” Start in Study Hub', 'Use Study Hub for structured weekly lessons, Daily Compass prompts, teacher notes, Journey Map, and reflection tools that keep you engaged beyond Sunday.'),
+        ('2 â€” Use Angel Chat for real-life questions', 'Come to Angel Chat when you need prayer help, a practical next step, a deeper dive into Scripture, or guidance for what you are facing right now.'),
+        ('3 â€” Move between them as needed', 'Study Hub gives you the guided path. Angel Chat gives you personal support in the moment. Together they create a steady rhythm for discipleship.'),
     ]
     for title, desc in steps:
         st.markdown(f'<div class="btm-step"><div class="btm-step-title">{title}</div><div class="btm-step-desc">{desc}</div></div>', unsafe_allow_html=True)
@@ -1050,7 +2001,7 @@ def render_scripture_links(refs, story_md: str, version: str = "KJV"):
     v = (version or "KJV").upper()
 
     st.markdown('<div class="btm-scripture">', unsafe_allow_html=True)
-    st.markdown(f"📖 Read First (tap to read — {v})", unsafe_allow_html=True)
+    st.markdown(f"ðŸ“– Read First (tap to read â€” {v})", unsafe_allow_html=True)
     st.markdown("<ul>", unsafe_allow_html=True)
     for r in refs:
         label = f"{_clean_ref(r)} ({v})"
@@ -1060,7 +2011,7 @@ def render_scripture_links(refs, story_md: str, version: str = "KJV"):
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
-# SHARE CARD (HTML Preview) — DO NOT CHANGE
+# SHARE CARD (HTML Preview) â€” DO NOT CHANGE
 # =========================
 def render_share_card_preview(body_text: str, kjv_ref: str = "", footer: str = PROD_FOOTER):
     body = (body_text or "").strip()
@@ -1135,7 +2086,7 @@ def _strip_json_fences(s: str) -> str:
 def _find_kjv_ref_in_text(text: str) -> str:
     if not text:
         return ""
-    m = re.search(r"\(([^)]{3,60}?\d+:\d+(?:[-–]\d+)?[^)]{0,20})\)", text)
+    m = re.search(r"\(([^)]{3,60}?\d+:\d+(?:[-â€“]\d+)?[^)]{0,20})\)", text)
     if m:
         return m.group(1).strip()
     return ""
@@ -1147,7 +2098,7 @@ def build_share_card(title: str, story_md: str, refs) -> dict:
 
     client = _openai_client()
     if client is None:
-        base = "I’m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
+        base = "Iâ€™m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
         hashtags = "#BeyondTheMessage #PrayerOnTheSteps #Faith #Prayer #Jesus"
         return {"caption": base.strip(), "hashtags": hashtags, "kjv_ref": kjv_ref}
 
@@ -1199,7 +2150,7 @@ def build_share_card(title: str, story_md: str, refs) -> dict:
         return {"caption": caption, "hashtags": hashtags, "kjv_ref": kjv_ref_out}
 
     except Exception:
-        base = "I’m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
+        base = "Iâ€™m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
         hashtags = "#BeyondTheMessage #PrayerOnTheSteps #Faith #Prayer #Jesus"
         return {"caption": base.strip(), "hashtags": hashtags, "kjv_ref": kjv_ref}
 
@@ -1271,21 +2222,21 @@ def answer_story_question_inline(story_title: str, story_md: str, user_question:
     client = _openai_client()
     if client is None:
         return (
-            "Angel Q&A is ready — but your OpenAI key isn’t connected in this Space yet.\n\n"
+            "Angel Q&A is ready â€” but your OpenAI key isnâ€™t connected in this Space yet.\n\n"
             "Add a Hugging Face Secret named OPENAI_API_KEY, then restart the Space."
         )
 
     story_text = _extract_plain_text(story_md, max_chars=1400)
 
     system = (
-        "You are Beyond the Message — Story Q&A.\n"
+        "You are Beyond the Message â€” Story Q&A.\n"
         "Tone: calm, confident, plainspoken. Not cheesy.\n"
         "Audience: families (kids + parents). Keep it safe.\n"
         "Use KJV references (reference-only). Do not invent verses.\n"
         "Do NOT quote long scripture passages. Keep any quote very short.\n"
         "Answer format:\n"
-        "1) 2–5 sentence answer.\n"
-        "2) 1–2 KJV references (reference-only).\n"
+        "1) 2â€“5 sentence answer.\n"
+        "2) 1â€“2 KJV references (reference-only).\n"
         "3) One simple application step.\n"
         "4) End with ONE short follow-up question.\n"
     )
@@ -1432,7 +2383,7 @@ def build_share_image_png(title: str, caption: str, kjv_ref: str, hashtags: str)
 # AGE SECTION PARSER (ROBUST + FALLBACK)
 # =========================
 def _normalize_dashes(s: str) -> str:
-    return (s or "").replace("—", "-").replace("–", "-").replace("−", "-")
+    return (s or "").replace("â€”", "-").replace("â€“", "-").replace("âˆ’", "-")
 
 def _detect_section_level(heading_text: str) -> str:
     h = _normalize_dashes(heading_text).lower()
@@ -1471,7 +2422,7 @@ def extract_age_section(md: str, age_label: str) -> str:
     if not md:
         return ""
 
-    want = {"6–10": "6-9", "9–13": "10-13", "Adult": "adult"}.get(age_label, "adult")
+    want = {"6â€“10": "6-9", "9â€“13": "10-13", "Adult": "adult"}.get(age_label, "adult")
     sections = _slice_sections(md)
 
     lookup = {}
@@ -1591,7 +2542,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         if base.startswith("josiah-") or "josiah-" in base:
             return "King Josiah"
 
-        # ARC 1 — Bridge
+        # ARC 1 â€” Bridge
         if base.startswith("bridge-") or "bridge-" in base:
             return "ARC 1 Bridge"
         if base.startswith("ahab-") or "ahab-" in base:
@@ -1601,7 +2552,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         if base.startswith("jezebel-") or "jezebel-" in base:
             return "Jezebel"
 
-        # ARC 2 — The Promised King (Jesus)
+        # ARC 2 â€” The Promised King (Jesus)
         if base.startswith("jesus-") or "jesus-" in base:
             return "The Promised King"
         if base.startswith("promised-king-") or "promised-king-" in base:
@@ -1643,10 +2594,10 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
 
     def _norm(tag: str) -> str:
         t = (tag or "").strip().lower()
-        t = t.replace("–", "-")
-        if t in ("6-10", "6-9", "6-8", "6–10", "6–9"):
+        t = t.replace("â€“", "-")
+        if t in ("6-10", "6-9", "6-8", "6â€“10", "6â€“9"):
             return "6-9"
-        if t in ("9-13", "10-13", "9–13", "10–13"):
+        if t in ("9-13", "10-13", "9â€“13", "10â€“13"):
             return "10-13"
         if t in ("adult", "young adult", "young-adult", "youngadult"):
             return "adult"
@@ -1673,7 +2624,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         arc_map.setdefault(arc, []).append(c)
 
     arc_order = [
-        # ARC 1 — Kings / Prophets
+        # ARC 1 â€” Kings / Prophets
         "King Saul",
         "King David",
         "King Ahab",
@@ -1681,10 +2632,10 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         "Jezebel",
         "King Josiah",
 
-        # ARC 2 — The Promised King
+        # ARC 2 â€” The Promised King
         "ARC 1 Bridge",
 
-        # ARC 2 — The Promised King
+        # ARC 2 â€” The Promised King
         "The Promised King",
 
         # Other
@@ -1695,7 +2646,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     arcs += [a for a in sorted(arc_map.keys()) if a not in arcs]
     arcs = sorted(arcs, key=lambda a: (arc_order.index(a) if a in arc_order else 999, a))
 
-    # ✅ Always show the arc selector (even if only one arc) so it never “disappears”
+    # âœ… Always show the arc selector (even if only one arc) so it never â€œdisappearsâ€
     arc_pick = st.selectbox(
         "Choose an arc",
         options=arcs,
@@ -1703,15 +2654,15 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         key=f"arc_{prefix_key}",
     )
 
-    # Age selector (key includes arc so switching arc doesn’t cross-wire)
+    # Age selector (key includes arc so switching arc doesnâ€™t cross-wire)
     age_label = st.radio(
         "Age range",
-        ["6–10", "9–13", "Adult"],
+        ["6â€“10", "9â€“13", "Adult"],
         horizontal=True,
         key=f"age_{prefix_key}_{arc_pick}",
     )
 
-    want = {"6–10": "6-9", "9–13": "10-13", "Adult": "adult"}[age_label]
+    want = {"6â€“10": "6-9", "9â€“13": "10-13", "Adult": "adult"}[age_label]
 
     def _infer_levels_from_path(meta_path: str, md_path: str):
         p = f"{meta_path} {md_path}".lower()
@@ -1744,7 +2695,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
             filtered.append(c)
 
     if not filtered:
-        # Adult fallback: if a story has only 6–10 and 9–13 versions, let Adult default to 9–13
+        # Adult fallback: if a story has only 6â€“10 and 9â€“13 versions, let Adult default to 9â€“13
         if want == "adult":
             fallback_want = "10-13"
             fallback = []
@@ -1762,7 +2713,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
                     fallback.append(c)
 
             if fallback:
-                st.info("Adult version isn’t available for every story yet — showing the 9–13 version for now.")
+                st.info("Adult version isnâ€™t available for every story yet â€” showing the 9â€“13 version for now.")
                 filtered = fallback
                 want = fallback_want
             else:
@@ -1788,7 +2739,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     shown_md = extract_age_section(story_md, age_label)
 
     st.markdown(
-        f"""
+       f"""
         <div class="btm-card">
           <h3 style="margin:0;color:{NAVY};font-weight:900;">{picked.get('title','Story')}</h3>
           {f"<div class='btm-small'>{picked.get('subtitle')}</div>" if picked.get("subtitle") else ""}
@@ -1812,7 +2763,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         st.markdown("</div>", unsafe_allow_html=True)
 
     # =========================
-    # Ask a Question (INLINE — no reroute)
+    # Ask a Question (INLINE â€” no reroute)
     # =========================
     order = picked.get("order", 0)
     qa_state_key = f"qa_{prefix_key}_{arc_pick}_{order}_{want}"
@@ -1828,7 +2779,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
             "Your question",
             value="",
             label_visibility="collapsed",
-            placeholder="Type your question here…",
+            placeholder="Type your question hereâ€¦",
         )
         cA, cB = st.columns([1, 1])
         with cA:
@@ -1839,7 +2790,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     if ask_inline:
         q = (user_q or "").strip()
         if q:
-            with st.spinner("Answering…"):
+            with st.spinner("Answeringâ€¦"):
                 ans = answer_story_question_inline(picked.get("title", "Story"), story_md, q)
             st.session_state[qa_state_key].append({
                 "q": q,
@@ -1851,7 +2802,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
 
     if send_to_angel:
         title = picked.get("title", "this story")
-        base = f"My question is about the story titled '{title}'.\n\nHere’s my question:\n"
+        base = f"My question is about the story titled '{title}'.\n\nHereâ€™s my question:\n"
         st.session_state.angel_prefill = base + ((user_q or "").strip())
         goto("angel")
 
@@ -1875,7 +2826,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     st.markdown("</div>", unsafe_allow_html=True)
 
     # =========================
-    # Journal (mailto + download fallback) — PRIVACY SAFE
+    # Journal (mailto + download fallback) â€” PRIVACY SAFE
     # =========================
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.markdown("<div class='btm-sec-title'>Journal Your Thoughts</div>", unsafe_allow_html=True)
@@ -1893,8 +2844,8 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         height=160
     )
 
-    # ✅ Privacy-safe: do NOT set recipient. User chooses who to send to.
-    subject = f"Journal Notes — {picked.get('title','Story')}"
+    # âœ… Privacy-safe: do NOT set recipient. User chooses who to send to.
+    subject = f"Journal Notes â€” {picked.get('title','Story')}"
     body = journal_text or ""
 
     query = urllib.parse.urlencode(
@@ -1936,13 +2887,13 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     cA, cB = st.columns([1, 1])
     with cA:
         if st.button("Generate Share Card", use_container_width=True, key=f"gen_{share_key}", type="secondary"):
-            with st.spinner("Generating…"):
+            with st.spinner("Generatingâ€¦"):
                 card = build_share_card(picked.get("title", "Story"), story_md, refs)
             st.session_state[share_key] = card
 
     with cB:
         if st.button("Regenerate", use_container_width=True, key=f"regen_{share_key}", type="secondary"):
-            with st.spinner("Regenerating…"):
+            with st.spinner("Regeneratingâ€¦"):
                 card = build_share_card(picked.get("title", "Story"), story_md, refs)
             st.session_state[share_key] = card
 
@@ -1964,7 +2915,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         )
         if png_bytes:
             st.download_button(
-                "Download Share Image (PNG) — optional",
+                "Download Share Image (PNG) â€” optional",
                 data=png_bytes,
                 file_name=f"{prefix_key}.{arc_pick}.{order}.{want}.share.png".replace(" ", "-"),
                 mime="image/png",
@@ -1999,33 +2950,48 @@ def render_angel_chat():
         st.session_state.last_user_text = ""
     if "busy" not in st.session_state:
         st.session_state.busy = False
-        # Busy/lock timestamps (prevents WebView double-fire + stuck states)
-        if "busy_since" not in st.session_state:
-            st.session_state.busy_since = 0.0
-        if "openai_lock" not in st.session_state:
-            st.session_state.openai_lock = False
-        if "openai_lock_since" not in st.session_state:
-            st.session_state.openai_lock_since = 0.0
-
+    if "busy_since" not in st.session_state:
+        st.session_state.busy_since = 0.0
+    if "openai_lock" not in st.session_state:
+        st.session_state.openai_lock = False
+    if "openai_lock_since" not in st.session_state:
+        st.session_state.openai_lock_since = 0.0
     if "angel_share" not in st.session_state:
         st.session_state.angel_share = {"caption": "", "hashtags": "", "kjv_ref": ""}
-
     if "privacy_ack" not in st.session_state:
         st.session_state.privacy_ack = False
     if "angel_message_input" not in st.session_state:
         st.session_state.angel_message_input = st.session_state.get("angel_prefill", "")
     if "last_voice_hash" not in st.session_state:
         st.session_state.last_voice_hash = ""
+    if "angel_placeholder_index" not in st.session_state:
+        st.session_state.angel_placeholder_index = 0
+    # Relational Memory â€” distilled "burden" of the conversation.
+    if "burden" not in st.session_state:
+        st.session_state.burden = ""
+    # Hidden Intent Routing default â€” the companion senses unless user pins.
+    if "mode_pinned" not in st.session_state:
+        st.session_state.mode_pinned = False
+
+    placeholder_options = [
+        "I read Romans 15 today. Give me the context, key people, and leadership lessons.",
+        "Explain this passage to me like a study companion and help me apply it this week.",
+        "Tell me about the main person in this chapter and why their story matters.",
+        "Create me a 7-day study plan from the chapter I read today.",
+    ]
 
     def reset_chat():
         st.session_state.chat = []
         st.session_state.mode = None
         st.session_state.last_user_text = ""
         st.session_state.busy = False
+        st.session_state.busy_since = 0.0
         st.session_state.angel_share = {"caption": "", "hashtags": "", "kjv_ref": ""}
         st.session_state.angel_prefill = ""
         st.session_state.angel_message_input = ""
         st.session_state.last_voice_hash = ""
+        st.session_state.burden = ""
+        st.session_state.mode_pinned = False
         _save_angel_state()
 
     def mode_label(mode_key: str) -> str:
@@ -2033,72 +2999,92 @@ def render_angel_chat():
             "prayer": "Prayer",
             "scripture": "Scripture",
             "encouragement": "Encouragement",
-            "living": "Living It Out",
-        }.get(mode_key, "Angel Chat")
+            "living": "Leadership & Living It Out",
+        }.get(mode_key, "Scripture")
 
     def build_system_prompt_for_mode(mode_key: str) -> str:
+        # === FAITH-ORIENTED FRIEND ===
+        # The voice is a trusted Christian friend, not a tool, app, or AI.
+        # Empathy precedes Scripture. Always.
         base = (
-            "You are Angel Chat for Beyond the Message, a Christ-centered assistant.\n"
-            "Tone: warm, grounded, plainspoken, not cheesy.\n"
-            "Primary goal: help the user reflect, pray, and take a practical next step.\n"
-            "User prefers KJV; use KJV references.\n"
-            "When giving a plan (especially weekly), include:\n"
-            "- One KJV anchor reference near the top\n"
-            "- AND at least one KJV reference per day (Day 1…Day 7).\n"
-            "Do NOT invent verses. Do not output long verbatim scripture passages; keep any quotes short.\n"
-            "Always ask 1 gentle follow-up question at the end.\n"
+            "You are a quiet, faith-oriented friend in conversation with someone who has come to "
+            "a sacred space to be heard. You are NOT an AI, a tool, an app, an assistant, or a chatbot. "
+            "Never refer to yourself as such. Never say 'as an AI' or 'I am here to help'. "
+            "You are simply present, the way a trusted Christian friend is present.\n\n"
+            "VOICE: warm, grounded, unhurried, plainspoken. Never preachy. Never saccharine. "
+            "Never academic-cold. The way someone you trust speaks to you over coffee â€” with gravity, "
+            "but also tenderness.\n\n"
+            "FLOW (this order matters):\n"
+            "1) FIRST, name the weight. Acknowledge what the person is carrying â€” the emotion, the "
+            "situation, the question beneath the question. Two or three sentences of pure presence "
+            "before any Scripture.\n"
+            "2) THEN, gently bring the Word. Offer 1â€“2 KJV verses that meet the moment. Not as proof "
+            "texts. As gifts.\n"
+            "3) THEN, illuminate. A short, thoughtful insight â€” what this Scripture is saying into "
+            "their specific situation.\n"
+            "4) THEN, a small invitation. One concrete next step they could take today, or a quiet "
+            "prayer they could carry.\n"
+            "5) FINALLY, one gentle question to keep the door open.\n\n"
+            "RULES:\n"
+            "â€¢ User prefers KJV; use KJV references.\n"
+            "â€¢ Do NOT invent verses. Quote short â€” a phrase or a single verse, never long passages.\n"
+            "â€¢ Do NOT use bullet headers like 'Scripture Anchor:' or 'Application:'. Write in prose, "
+            "the way a friend writes a letter.\n"
+            "â€¢ Do NOT moralize, lecture, or rebuke unless explicitly asked.\n"
+            "â€¢ If the person is in crisis, gently encourage them to also reach out to a trusted "
+            "person or pastor in their life.\n"
         )
+
+        # Relational Memory â€” what the person is carrying this week.
+        burden = (st.session_state.get("burden") or "").strip()
+        if burden:
+            base += (
+                "\nWHAT YOUR FRIEND IS CARRYING (do not quote this back; let it shape your tone):\n"
+                f'"{burden}"\n'
+            )
 
         if mode_key == "prayer":
             return base + (
-                "\nMODE: PRAYER\n"
-                "1) Acknowledge what they shared.\n"
-                "2) Offer a short prayer (3–6 lines).\n"
-                "3) Add 1 KJV reference that fits.\n"
-                "4) End with ONE follow-up question.\n"
+                "\nTHIS MOMENT â€” PRAYER:\n"
+                "They are carrying something heavy. Lead with empathy. Then offer a short, sincere "
+                "prayer (3â€“6 lines, second person â€” 'Lordâ€¦', 'Fatherâ€¦'). Anchor with one KJV verse. "
+                "Close with a single gentle question.\n"
             )
-
         if mode_key == "scripture":
             return base + (
-                "\nMODE: SCRIPTURE\n"
-                "1) If their topic is unclear, ask what they need (fear, anxiety, guidance, forgiveness, etc.).\n"
-                "2) Provide 2–3 KJV references + a short explanation of each.\n"
-                "3) Suggest a simple reading plan for today (3 steps max).\n"
-                "4) End with ONE follow-up question.\n"
+                "\nTHIS MOMENT â€” STUDY:\n"
+                "They want to understand. Open with one sentence of presence ('That's a beautiful "
+                "passage to sit withâ€¦' or similar). Then give the context like a friend who knows "
+                "the story. Offer 2â€“3 KJV references woven into prose. Close with a single gentle "
+                "question that invites them deeper.\n"
             )
-
         if mode_key == "encouragement":
             return base + (
-                "\nMODE: ENCOURAGEMENT\n"
-                "1) Encourage without minimizing.\n"
-                "2) Give one 'truth + action' pair.\n"
-                "3) Include 1 KJV reference.\n"
-                "4) End with ONE follow-up question.\n"
+                "\nTHIS MOMENT â€” ENCOURAGEMENT:\n"
+                "They may not have asked for much. Be present anyway. Acknowledge whatever they "
+                "shared â€” even briefly. Offer one true thing and one KJV verse that meets them. "
+                "Close with a single gentle question.\n"
             )
-
         return base + (
-            "\nMODE: LIVING IT OUT\n"
-            "1) Identify the situation and the 'next right step'.\n"
-            "2) Provide: (a) one practical step for today, (b) one short prayer, (c) one KJV reference.\n"
-            "3) End with ONE follow-up question.\n"
+            "\nTHIS MOMENT â€” LIVING IT OUT:\n"
+            "They are facing a real situation. Honor the weight of it before advising. Then name "
+            "the next right step â€” one concrete, small thing. Anchor with one KJV verse. Add a "
+            "short prayer they can carry. Close with a single gentle question.\n"
         )
 
     def safe_model_response(system_prompt: str, user_text: str) -> str:
         if client is None:
             return (
-                "Angel Chat is ready — but your OpenAI key isn’t connected in this Space yet.\n\n"
+                "Angel Chat is ready â€” but your OpenAI key is not connected in this Space yet.\n\n"
                 "Add a Hugging Face Secret named OPENAI_API_KEY, then restart the Space."
             )
-
         messages = [{"role": "system", "content": system_prompt}]
         history = st.session_state.chat[-12:] if len(st.session_state.chat) > 12 else st.session_state.chat
         for m in history:
             messages.append({"role": m["role"], "content": m["content"]})
         messages.append({"role": "user", "content": user_text})
-
         if not _lock_try("openai_lock", timeout_s=45):
-            return "⏳ Still working on your last request… give it a moment, then try again."
-
+            return "â³ Still working on your last requestâ€¦ give it a moment, then try again."
         try:
             resp = client.chat.completions.create(
                 model="gpt-4o-mini",
@@ -2109,13 +3095,10 @@ def render_angel_chat():
         except Exception as e:
             msg = str(e)
             if "Another request is already running" in msg:
-                return "⏳ Still working on your last request… give it a moment, then try again."
+                return "â³ Still working on your last requestâ€¦ give it a moment, then try again."
             if "401" in msg or "invalid_api_key" in msg.lower():
-                return "⚠️ OpenAI authentication error. Please re-check your OPENAI_API_KEY secret and restart the Space."
-            return (
-                "I hit an error generating a response.\n\n"
-                f"Details: {msg}"
-            )
+                return "âš ï¸ OpenAI authentication error. Please re-check your OPENAI_API_KEY secret and restart the Space."
+            return "I hit an error generating a response.\n\nDetails: " + msg
         finally:
             _lock_release("openai_lock")
 
@@ -2124,36 +3107,32 @@ def render_angel_chat():
         if not st.session_state.chat:
             st.session_state.chat.append({
                 "role": "assistant",
-                "content": "What’s on your heart today? Type below — or use a Quick Start to begin."
+                "content": "Iâ€™m ready. Start with the passage you read today, or tap one of the quick starts below."
             })
         _save_angel_state()
 
     def run_quick_start(prompt_text: str):
         now = time.time()
-        # Auto-release if stuck
         if st.session_state.busy and st.session_state.get("busy_since", 0.0) and (now - st.session_state.get("busy_since", 0.0)) > 45:
             st.session_state.busy = False
             st.session_state.busy_since = 0.0
         if st.session_state.busy:
-            st.info("⏳ Still working on your last request… give it a moment, then try again.")
+            st.info("â³ Still working on your last requestâ€¦ give it a moment, then try again.")
             return
         st.session_state.busy = True
         st.session_state.busy_since = now
-
         if not st.session_state.mode:
-            st.session_state.mode = "living"
-
+            st.session_state.mode = "scripture"
         st.session_state.chat.append({"role": "user", "content": prompt_text})
         _save_angel_state()
-
         try:
-            with st.spinner("Angel Chat is writing…"):
+            with st.spinner("Angel Chat is writingâ€¦"):
                 reply = safe_model_response(build_system_prompt_for_mode(st.session_state.mode), prompt_text)
         finally:
             st.session_state.busy = False
             st.session_state.busy_since = 0.0
-
         st.session_state.chat.append({"role": "assistant", "content": reply})
+        st.session_state.angel_placeholder_index = (st.session_state.angel_placeholder_index + 1) % len(placeholder_options)
         _save_angel_state()
         st.rerun()
 
@@ -2165,269 +3144,425 @@ def render_angel_chat():
                     return txt
         return ""
 
-    st.markdown('<div class="btm-page-title">Angel Chat</div>', unsafe_allow_html=True)
-    st.markdown('<div class="btm-sub">A simple space to pause, pray, and reflect with God.</div>', unsafe_allow_html=True)
+    def detect_intent(text: str) -> str:
+        """Hidden Intent Routing â€” silently choose a mode from what the user said.
 
-    # =========================
-    # PRIVACY REASSURANCE (TRUST FIRST)
-    # =========================
-    if not st.session_state.get("privacy_ack", False):
-        st.markdown(
-            f"""
-            <div class="btm-privacy">
-              <div class="title">A quick privacy note</div>
-              <p class="line"><span class="strong">Your conversation stays here.</span> Angel Chat doesn’t save, remember, or track what you share.</p>
-              <ul class="bullets">
-                <li>We don’t store conversations</li>
-                <li>We don’t build profiles</li>
-                <li>We don’t sell or share data</li>
-              </ul>
-              <div class="btm-privacy-mini">
-                If we ever offer features that remember or follow your journey, they’ll be optional and clearly labeled — never assumed.
-              </div>
-            </div>
-            """,
-            unsafe_allow_html=True
+        The user never sees a mode picker. The companion feels the weight and shifts.
+        Keyword-gated for now; can be upgraded to a small classify call later.
+        """
+        t = (text or "").lower()
+        # Prayer: emotional weight, struggle, lament
+        prayer_signals = (
+            "pray", "prayer", "struggling", "struggle", "hurting", "hurt", "anxious",
+            "anxiety", "afraid", "fear", "alone", "lonely", "tired", "exhausted",
+            "broken", "lost", "grief", "grieving", "depressed", "sad", "weary",
+            "burden", "burdened", "overwhelm", "i can't", "i cant", "give up",
+            "heart is heavy", "need peace", "need help", "help me",
         )
-        c_ok, c_more = st.columns([1, 1])
-        with c_ok:
-            if st.button("Got it", use_container_width=True, key="privacy_ack_btn", type="primary"):
-                st.session_state.privacy_ack = True
-                _save_angel_state()
-                st.rerun()
-        with c_more:
-            st.caption("This is designed as a safe space — not a profile.")
-        st.markdown('<div class="btm-hr"></div>', unsafe_allow_html=True)
+        # Scripture/study: explanation, context, who/what
+        scripture_signals = (
+            "explain", "what does", "what is", "who is", "context", "background",
+            "meaning of", "study", "teach me", "tell me about", "history of",
+            "verse", "chapter", "book of", "translation", "interpret",
+        )
+        # Living/leadership: decisions, team, action
+        living_signals = (
+            "lead", "leader", "leadership", "team", "decision", "should i",
+            "how do i", "at work", "my job", "boss", "career", "manage",
+            "marriage", "parent", "parenting", "discipline",
+        )
+        if any(s in t for s in prayer_signals):
+            return "prayer"
+        if any(s in t for s in living_signals):
+            return "living"
+        if any(s in t for s in scripture_signals):
+            return "scripture"
+        # Default: encouragement (the gentlest fallback for short or open prompts)
+        return "encouragement"
 
-    c1, c2 = st.columns([1, 1])
-    with c1:
-        st.caption("Choose a mode, then share what’s on your heart.")
-    with c2:
-        if st.button("New Chat", use_container_width=True, disabled=st.session_state.busy, key="angel_new_chat", type="secondary"):
-            reset_chat()
-            st.rerun()
-
-    b1, b2, b3, b4 = st.columns(4)
-    with b1:
-        if st.button("Prayer", use_container_width=True, disabled=st.session_state.busy, key="mode_prayer", type="secondary"):
-            set_mode("prayer")
-    with b2:
-        if st.button("Scripture", use_container_width=True, disabled=st.session_state.busy, key="mode_scripture", type="secondary"):
-            set_mode("scripture")
-    with b3:
-        if st.button("Encouragement", use_container_width=True, disabled=st.session_state.busy, key="mode_encouragement", type="secondary"):
-            set_mode("encouragement")
-    with b4:
-        if st.button("Living It Out", use_container_width=True, disabled=st.session_state.busy, key="mode_living", type="secondary"):
-            set_mode("living")
-
-    st.markdown(f"**Mode:** {mode_label(st.session_state.mode) if st.session_state.mode else '(choose one above)'}")
-
-    if st.session_state.angel_prefill:
-        st.info("Story context loaded. You can edit it before sending.")
-        
-    if st.session_state.mode:
-        st.caption("Quick Start")
-        q1, q2, q3 = st.columns(3)
-
-        if st.session_state.mode == "prayer":
-            with q1:
-                if st.button("Pray for peace", use_container_width=True, disabled=st.session_state.busy, key="qs_pray_peace", type="secondary"):
-                    run_quick_start("Please pray with me for peace and calm in my mind and heart.")
-            with q2:
-                if st.button("Pray for direction", use_container_width=True, disabled=st.session_state.busy, key="qs_pray_direction", type="secondary"):
-                    run_quick_start("Please pray for God’s direction and wisdom for a decision I’m facing.")
-            with q3:
-                if st.button("Pray for family", use_container_width=True, disabled=st.session_state.busy, key="qs_pray_family", type="secondary"):
-                    run_quick_start("Please pray for my family — that we would be drawn closer to Jesus and have unity.")
-
-        elif st.session_state.mode == "scripture":
-            with q1:
-                if st.button("Anxiety & fear", use_container_width=True, disabled=st.session_state.busy, key="qs_scripture_anxiety", type="secondary"):
-                    run_quick_start("Give me 3 KJV scriptures for anxiety and fear, and explain how to apply them today.")
-            with q2:
-                if st.button("Guidance", use_container_width=True, disabled=st.session_state.busy, key="qs_scripture_guidance", type="secondary"):
-                    run_quick_start("Give me 3 KJV scriptures for guidance and making wise decisions, with a simple plan for today.")
-            with q3:
-                if st.button("Forgiveness", use_container_width=True, disabled=st.session_state.busy, key="qs_scripture_forgiveness", type="secondary"):
-                    run_quick_start("Give me 3 KJV scriptures on forgiveness, and help me take one step today.")
-
-        elif st.session_state.mode == "encouragement":
-            with q1:
-                if st.button("I feel worn out", use_container_width=True, disabled=st.session_state.busy, key="qs_enc_worn", type="secondary"):
-                    run_quick_start("I feel worn out and discouraged. Encourage me biblically and give me one action step for today.")
-            with q2:
-                if st.button("I feel behind", use_container_width=True, disabled=st.session_state.busy, key="qs_enc_behind", type="secondary"):
-                    run_quick_start("I feel behind in life. Encourage me with KJV scripture and a practical next step.")
-            with q3:
-                if st.button("I need hope", use_container_width=True, disabled=st.session_state.busy, key="qs_enc_hope", type="secondary"):
-                    run_quick_start("I need hope right now. Encourage me and give me a short prayer and one KJV reference.")
-
-        else:
-            with q1:
-                if st.button("Next right step", use_container_width=True, disabled=st.session_state.busy, key="qs_living_next", type="secondary"):
-                    run_quick_start("Help me identify the next right step of obedience for today, with a short prayer and KJV reference.")
-            with q2:
-                if st.button("Hard conversation", use_container_width=True, disabled=st.session_state.busy, key="qs_living_hard", type="secondary"):
-                    run_quick_start("I need to have a hard conversation. Help me respond with wisdom, humility, and courage (KJV).")
-            with q3:
-                if st.button("Build a habit", use_container_width=True, disabled=st.session_state.busy, key="qs_living_habit", type="secondary"):
-                    run_quick_start("Help me build a daily habit of prayer and scripture. Give me a simple plan for today (KJV).")
-
-    st.markdown('<div class="btm-hr"></div>', unsafe_allow_html=True)
-
-    for m in st.session_state.chat:
-        with st.chat_message(m["role"]):
-            st.markdown(m["content"])
+    def _distill_burden(recent_user_text: str) -> str:
+        """Update st.session_state.burden â€” a short distilled string of what the
+        person is carrying this week. Heuristic only; no extra API calls.
+        Stored on session and persisted via _save_angel_state.
+        """
+        existing = (st.session_state.get("burden", "") or "").strip()
+        t = (recent_user_text or "").strip()
+        if not t:
+            return existing
+        # Lightweight heuristic: if the message is short and feels like a state
+        # (mentions feeling words), we use it directly; else we keep the prior burden.
+        feeling_markers = (
+            "i feel", "i'm feeling", "im feeling", "i am feeling",
+            "struggling", "hurting", "anxious", "afraid", "tired",
+            "alone", "broken", "lost", "grieving", "weary", "overwhelmed",
+            "burden", "heavy", "stuck",
+        )
+        low = t.lower()
+        if any(m in low for m in feeling_markers):
+            # Keep it short â€” first 140 chars, single line.
+            distilled = " ".join(t.split())[:140]
+            st.session_state.burden = distilled
+            return distilled
+        return existing
 
     def _send_user_message(text: str):
         text = (text or "").strip()
         if not text or st.session_state.busy:
             return
-
         st.session_state.busy = True
+        st.session_state.busy_since = time.time()
 
-        if not st.session_state.mode:
-            st.session_state.mode = "living"
-            if not st.session_state.chat:
-                st.session_state.chat.append({
-                    "role": "assistant",
-                    "content": "I’ll start you in Living It Out — you can switch modes anytime above."
-                })
+        # Hidden Intent Routing â€” the companion picks the mode silently.
+        # User-pinned modes (set via the hidden drawer) are respected.
+        if not st.session_state.get("mode_pinned", False):
+            st.session_state.mode = detect_intent(text)
+
+        # Relational Memory â€” quietly track the burden of the conversation.
+        _distill_burden(text)
 
         if st.session_state.angel_prefill:
             st.session_state.angel_prefill = ""
-
         st.session_state.last_user_text = text
         st.session_state.chat.append({"role": "user", "content": text})
         _save_angel_state()
-
         try:
-            with st.spinner("Angel Chat is writing…"):
+            with st.spinner("â€¦"):
                 system_prompt = build_system_prompt_for_mode(st.session_state.mode)
                 reply = safe_model_response(system_prompt, text)
         finally:
             st.session_state.busy = False
-
+            st.session_state.busy_since = 0.0
         st.session_state.chat.append({"role": "assistant", "content": reply})
+        st.session_state.angel_placeholder_index = (st.session_state.angel_placeholder_index + 1) % len(placeholder_options)
         _save_angel_state()
         st.rerun()
 
-    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
-    st.markdown("<div class='btm-sec-title'>Send a Message</div>", unsafe_allow_html=True)
+    placeholder_text = "What is on your heart? (e.g., I need peace todayâ€¦)"
 
-    with st.form("angel_composer_form", clear_on_submit=True):
-        # NOTE: We intentionally use a single-line input here so mobile users can simply hit Enter.
-        # The default Streamlit “Press Enter…” hint can overlap on small screens, so we hide it via CSS.
-        default_msg = (st.session_state.get("angel_prefill") or "").strip()
-        msg = st.text_input(
-            "Message",
-            value=default_msg,
-            label_visibility="collapsed",
-            placeholder="Type what’s on your heart…",
+    # ============================================================
+    # CENTER-ANCHORED SANCTUARY COLUMN
+    # The entire conversation lives in a single 700-ish px reading column.
+    # ============================================================
+    st.markdown('<div class="btm-sanctuary-column">', unsafe_allow_html=True)
+    sanctuary_left, sanctuary_center, sanctuary_right = st.columns([1, 2, 1])
+
+    with sanctuary_center:
+        # Quiet hero â€” no kicker chip, no "AI companion" framing.
+        st.markdown(
+            """
+            <div class="btm-sanctuary-angel-hero">
+              <div class="btm-sanctuary-ornament">âœ¦</div>
+              <h1 class="btm-sanctuary-angel-title">A quiet place in Scripture</h1>
+              <p class="btm-sanctuary-angel-sub">Bring what is on your heart. The Word will meet you here.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Privacy acknowledgement â€” softened.
+        if not st.session_state.get("privacy_ack", False):
+            st.markdown(
+                """
+                <div class="btm-privacy btm-sanctuary-privacy">
+                  <div class="title">A quiet promise</div>
+                  <p class="line"><span class="strong">What you share stays here.</span> Nothing is saved, remembered, or tracked across sessions.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            if st.button("Continue", use_container_width=True, key="privacy_ack_btn", type="primary"):
+                st.session_state.privacy_ack = True
+                _save_angel_state()
+                st.rerun()
+
+        # ============================================================
+        # CHAT HISTORY (renders above composer)
+        # ============================================================
+        st.markdown('<div class="btm-sanctuary-chat">', unsafe_allow_html=True)
+        for m in st.session_state.chat:
+            with st.chat_message(m["role"]):
+                st.markdown(m["content"])
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        # ============================================================
+        # RESPONSE SHELL â€” Progressive Reveal (Scripture Anchor first)
+        # ============================================================
+        latest = _latest_angel_answer()
+        detected_ref = _find_kjv_ref_in_text(latest)
+        if latest:
+            st.markdown('<div class="btm-response-shell btm-sanctuary-glass">', unsafe_allow_html=True)
+            if detected_ref:
+                st.markdown(
+                    f"""
+                    <div class="btm-scripture-anchor btm-illuminated">
+                      <div class="btm-illuminated-rule"></div>
+                      <div class="label">Scripture Anchor</div>
+                      <div class="ref"><span class="btm-dropcap">&#10023;</span>{detected_ref}</div>
+                      <div class="btm-illuminated-sub">Verily, the Word is a lamp.</div>
+                      <div class="btm-illuminated-rule"></div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        # ============================================================
+        # THE COMPOSER â€” single breathing input, no mode buttons visible
+        # ============================================================
+        st.markdown('<div class="btm-sanctuary-composer-wrap">', unsafe_allow_html=True)
+        user_msg = st.chat_input(
+            placeholder=placeholder_text,
+            key="angel_chat_input",
             disabled=st.session_state.busy,
         )
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        # Keep guidance *below* the field (not inside it) so it never collides with typed text.
-        st.markdown(
-            '<div class="btm-small" style="margin-top:-6px;">Tip: Tap <b>Send</b> (or press Enter) when you’re ready.</div>',
-            unsafe_allow_html=True
-        )
+        if user_msg:
+            _send_user_message(user_msg)
 
-        # Keep privacy reassurance compact here to avoid pushing the chat off-screen on mobile.
-        st.markdown(
-            '<div class="btm-small" style="margin-top:8px;">🔒 <b>Your conversation stays here.</b> Not saved. Not tracked.</div>',
-            unsafe_allow_html=True
-        )
-
-        sent = st.form_submit_button("Send", use_container_width=True, disabled=st.session_state.busy)
-        if sent:
-            _send_user_message(msg)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown('<div class="btm-hr"></div>', unsafe_allow_html=True)
-    st.markdown("### Share Card")
-    st.markdown("<div class='btm-small'>Tap Create — then screenshot the card.</div>", unsafe_allow_html=True)
-
-    latest = _latest_angel_answer()
-
-    cA, cB = st.columns([1, 1])
-    with cA:
-        if st.button("Create Share Card", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_make_share", type="primary"):
-            with st.spinner("Creating…"):
-                st.session_state.angel_share = build_angel_share_card_from_text(latest)
-            _save_angel_state()
-    with cB:
-        if st.button("Regenerate", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_regen_share", type="secondary"):
-            with st.spinner("Regenerating…"):
-                st.session_state.angel_share = build_angel_share_card_from_text(latest)
-            _save_angel_state()
-
-    a = st.session_state.angel_share
-    a_caption = (a.get("caption") or "").strip()
-    a_tags = (a.get("hashtags") or "").strip()
-    a_ref = (a.get("kjv_ref") or "").strip()
-
-    if a_caption:
-        render_share_card_preview(a_caption, kjv_ref=a_ref, footer=PROD_FOOTER)
-        if a_tags:
-            st.caption(a_tags)
-
-        png_bytes = build_share_image_png(
-            title="Share This Encouragement",
-            caption=a_caption,
-            kjv_ref=(a_ref if a_ref else ""),
-            hashtags=a_tags
-        )
-        if png_bytes:
-            st.download_button(
-                "Download Share Image (PNG) — optional",
-                data=png_bytes,
-                file_name="angel.share.png",
-                mime="image/png",
-                use_container_width=True
+        # ============================================================
+        # QUIET "MORE" DRAWER â€” mode pinning + quick starts + deeper tools
+        # Everything that was a persistent button is now one collapse away.
+        # ============================================================
+        with st.expander("â‹¯  More", expanded=False):
+            st.markdown(
+                '<div class="btm-quiet-menu-intro">The companion senses your intent. These are here if you want to steer it yourself.</div>',
+                unsafe_allow_html=True,
             )
-        else:
-            st.caption("PNG export needs a system font (DejaVu/Liberation). Screenshot the card above instead.")
 
-    st.markdown('<div class="btm-hr"></div>', unsafe_allow_html=True)
-    left, right = st.columns([1, 1])
-    with left:
-        st.caption("Please verify with Scripture (KJV).")
-    with right:
-        st.caption("Key detected" if OPENAI_API_KEY else "Add Secret: OPENAI_API_KEY")
+            st.markdown("**Pin a mode** (optional)")
+            pin_cols = st.columns(4)
+            with pin_cols[0]:
+                if st.button("Auto-sense", use_container_width=True, key="pin_auto", type="secondary"):
+                    st.session_state.mode_pinned = False
+                    st.session_state.mode = None
+                    _save_angel_state()
+                    st.rerun()
+            with pin_cols[1]:
+                if st.button("Scripture", use_container_width=True, key="pin_scripture", type="secondary"):
+                    st.session_state.mode_pinned = True
+                    set_mode("scripture")
+                    st.rerun()
+            with pin_cols[2]:
+                if st.button("Prayer", use_container_width=True, key="pin_prayer", type="secondary"):
+                    st.session_state.mode_pinned = True
+                    set_mode("prayer")
+                    st.rerun()
+            with pin_cols[3]:
+                if st.button("Leadership", use_container_width=True, key="pin_living", type="secondary"):
+                    st.session_state.mode_pinned = True
+                    set_mode("living")
+                    st.rerun()
 
-    st.caption("© 2025 Beyond the Message — Angel Chat")
+            if st.session_state.get("mode_pinned"):
+                st.caption(f"Currently pinned: **{mode_label(st.session_state.mode)}**")
+            else:
+                st.caption("Auto-sensing mode from what you share.")
+
+            st.markdown("---")
+            st.markdown("**Quick starts**")
+            q1, q2 = st.columns(2)
+            with q1:
+                if st.button("Context of what I read", use_container_width=True, disabled=st.session_state.busy, key="qs_context", type="secondary"):
+                    run_quick_start("Give me the context of the chapter I read today â€” what is happening, who is involved, and why it matters.")
+                if st.button("7-Day plan from this passage", use_container_width=True, disabled=st.session_state.busy, key="qs_weekly_plan", type="secondary"):
+                    run_quick_start("Create me a 7-day study plan from the passage I read today, anchored in KJV scripture.")
+            with q2:
+                if st.button("Leadership lens", use_container_width=True, disabled=st.session_state.busy, key="qs_leadership", type="secondary"):
+                    run_quick_start("Show me the leadership lens from the passage I read today and how I can apply it.")
+                if st.button("The person in this chapter", use_container_width=True, disabled=st.session_state.busy, key="qs_person", type="secondary"):
+                    run_quick_start("Tell me about the main person in the passage I read today, including context, character, and what I can learn from them.")
+
+            if latest:
+                st.markdown("---")
+                st.markdown("**Go deeper with the last response**")
+                d1, d2, d3 = st.columns(3)
+                with d1:
+                    if st.button("Deeper into this chapter", use_container_width=True, key="deeper_chapter", type="secondary"):
+                        run_quick_start("Go deeper into the same chapter and help me see more of the context, structure, and main ideas.")
+                with d2:
+                    if st.button("Build a weekly plan", use_container_width=True, key="deeper_plan", type="secondary"):
+                        run_quick_start("Take this response and turn it into a 7-day Bible study plan with KJV anchors for each day.")
+                with d3:
+                    if st.button("Leadership lens", use_container_width=True, key="deeper_leadership", type="secondary"):
+                        run_quick_start("Take this same passage and teach it through a leadership lens with clear application.")
+
+                st.markdown("---")
+                st.markdown("**Share**")
+                cA, cB, cC = st.columns([1, 1, 1])
+                with cA:
+                    if st.button("Create Share Card", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_make_share", type="primary"):
+                        with st.spinner("Creatingâ€¦"):
+                            st.session_state.angel_share = build_angel_share_card_from_text(latest)
+                        _save_angel_state()
+                with cB:
+                    if st.button("Regenerate", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_regen_share", type="secondary"):
+                        with st.spinner("Regeneratingâ€¦"):
+                            st.session_state.angel_share = build_angel_share_card_from_text(latest)
+                        _save_angel_state()
+                with cC:
+                    share_url = f"https://angel.beyondthemessage.org/?v=angel&theme={_get_theme()}"
+                    st.link_button("Share with a Friend", share_url, use_container_width=True)
+
+                a = st.session_state.angel_share
+                a_caption = (a.get("caption") or "").strip()
+                a_tags = (a.get("hashtags") or "").strip()
+                a_ref = (a.get("kjv_ref") or detected_ref or "").strip()
+                if a_caption:
+                    render_share_card_preview(a_caption, kjv_ref=a_ref, footer=PROD_FOOTER)
+                    if a_ref:
+                        st.caption(f"Anchor verse: {a_ref} (KJV)")
+                    if a_tags:
+                        st.caption(a_tags)
+                    png_bytes = build_share_image_png(
+                        title="Share This Encouragement",
+                        caption=a_caption,
+                        kjv_ref=(a_ref if a_ref else ""),
+                        hashtags=a_tags,
+                    )
+                    if png_bytes:
+                        st.download_button(
+                            "Download Share Image (PNG)",
+                            data=png_bytes,
+                            file_name="angel.share.png",
+                            mime="image/png",
+                            use_container_width=True,
+                        )
+
+            st.markdown("---")
+            st.markdown("**Other ways in**")
+            r1, r2, r3 = st.columns(3)
+            with r1:
+                render_external_pill("Study Hub", "https://beyondthemessage.org/study-hub/", variant="secondary")
+            with r2:
+                if st.button("Bible Stories", use_container_width=True, key="angel_to_bible", type="secondary"):
+                    goto("bible")
+            with r3:
+                if st.button("New conversation", use_container_width=True, disabled=st.session_state.busy, key="angel_new_chat", type="secondary"):
+                    reset_chat()
+                    st.rerun()
+
+        # Quiet footer caption
+        st.markdown('<div class="btm-sanctuary-footnote">', unsafe_allow_html=True)
+        footL, footR = st.columns([1, 1])
+        with footL:
+            st.caption("Please verify with Scripture (KJV).")
+        with footR:
+            st.caption("Key connected" if OPENAI_API_KEY else "Add Secret: OPENAI_API_KEY")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 # =========================
 # HOME
 # =========================
 def render_home():
-    st.markdown('<div class="btm-wrap">', unsafe_allow_html=True)
+    st.markdown('<div class="btm-wrap btm-sanctuary-wrap">', unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        <div class="btm-hero">
-          <h1>Beyond the <span>Message</span></h1>
-          <p>A trusted place for families to learn, pray, and grow.</p>
-          <p class="btm-note">Study Hub for guided lessons. Angel Chat for real-time prayer, questions, and deeper guidance.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # Single invitation — no dashboard, no path cards, no chip rows on first view.
+    # The sanctuary asks one thing: come in.
+    left_sp, center_col, right_sp = st.columns([1, 2, 1])
+    with center_col:
+        st.markdown(
+            """
+            <div class="btm-sanctuary-invite">
+              <div class="btm-sanctuary-ornament">✦</div>
+              <div class="btm-sanctuary-kicker">A quiet place in Scripture</div>
+              <h1 class="btm-sanctuary-title">Beyond the <em>Message</em></h1>
+              <p class="btm-sanctuary-whisper">Bring what is on your heart. The Word will meet you here.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        if st.button("Angel Chat", use_container_width=True, key="home_btn_angel", type="primary"):
+        if st.button(
+            "Enter Angel Chat",
+            use_container_width=True,
+            key="home_enter_angel_chat",
+            type="primary",
+        ):
             goto("angel")
-    with c2:
-        if st.button("Bible Stories", use_container_width=True, key="home_btn_bible", type="secondary"):
-            goto("bible")
-    with c3:
-        render_external_pill("Study Hub", "https://beyondthemessage.org/study-hub/", variant="secondary")
 
-    st.caption("Tip: Use Study Hub for guided lessons and Angel Chat for real-time prayer, questions, and deeper guidance.")
+        st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
+
+        st.markdown(
+            """
+            <style>
+              .btm-sanctuary-wrap div[data-testid="stLinkButton"] a,
+              .btm-sanctuary-wrap a[data-testid="stBaseButton-primary"] {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                min-height: 58px !important;
+                background: linear-gradient(180deg, #232430 0%, #1A1B26 100%) !important;
+                color: #F9F7F2 !important;
+                border: 1px solid rgba(166,137,102,0.55) !important;
+                border-radius: 999px !important;
+                font-family: 'Cormorant Garamond', serif !important;
+                font-style: italic !important;
+                font-size: 20px !important;
+                font-weight: 500 !important;
+                letter-spacing: 0.04em !important;
+                text-decoration: none !important;
+                box-shadow:
+                  0 1px 0 rgba(255,255,255,0.05) inset,
+                  0 1px 2px rgba(26,27,38,0.24),
+                  0 18px 44px rgba(26,27,38,0.24) !important;
+                transition: transform 200ms ease, letter-spacing 300ms ease, box-shadow 200ms ease !important;
+              }
+              .btm-sanctuary-wrap div[data-testid="stLinkButton"] a:hover,
+              .btm-sanctuary-wrap a[data-testid="stBaseButton-primary"]:hover {
+                transform: translateY(-1px) !important;
+                letter-spacing: 0.08em !important;
+                box-shadow:
+                  0 1px 0 rgba(255,255,255,0.07) inset,
+                  0 1px 2px rgba(26,27,38,0.28),
+                  0 24px 56px rgba(26,27,38,0.30),
+                  0 0 0 1px rgba(166,137,102,0.45) !important;
+              }
+              .btm-sanctuary-wrap div[data-testid="stLinkButton"] p {
+                color: #F9F7F2 !important;
+                font-family: 'Cormorant Garamond', serif !important;
+                font-style: italic !important;
+                font-size: 20px !important;
+                font-weight: 500 !important;
+                letter-spacing: inherit !important;
+              }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.link_button(
+            "Enter King's Counsel",
+            "https://king-s-counsel-leadership-app.vercel.app/",
+            use_container_width=True,
+            type="primary",
+        )
+
+        st.markdown(
+            '<div class="btm-sanctuary-subnote">One conversation. No menus. No noise.</div>',
+            unsafe_allow_html=True,
+        )
+
+    # Quiet secondary tools — tucked into a soft pop-over, not shouting.
+    with st.expander("⋯  Other ways in", expanded=False):
+        st.markdown(
+            '<div class="btm-quiet-menu-intro">When you are ready to go deeper, these stay accessible.</div>',
+            unsafe_allow_html=True,
+        )
+        qmenu_a, qmenu_b, qmenu_c = st.columns(3)
+        with qmenu_a:
+            if st.button("Bible Stories", use_container_width=True, key="home_quiet_bible", type="secondary"):
+                goto("bible")
+        with qmenu_b:
+            render_external_pill("Study Hub", "https://beyondthemessage.org/study-hub/", variant="secondary")
+        with qmenu_c:
+            if st.button("How this works", use_container_width=True, key="home_quiet_about", type="secondary"):
+                goto("about")
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
@@ -2443,7 +3578,6 @@ elif st.session_state.view == "angel":
 
 elif st.session_state.view == "bible":
     render_story_reader(
-        # ✅ Include jezebel so root files like jezebel-01-*.meta.json load automatically
         ["bible-stories", "josiah", "saul", "ahab", "elijah", "jezebel", "david", "bridge", "jesus", "promised-king"],
         "Stories of the Bible",
         "Age-based stories and reflection prompts, anchored in Scripture."
@@ -2473,3 +3607,4 @@ elif st.session_state.view == "about":
 else:
     render_home()
     render_bottom_nav(active="angel")
+
