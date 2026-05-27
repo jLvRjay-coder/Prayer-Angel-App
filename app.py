@@ -547,7 +547,7 @@ def inject_css(theme: str):
       .btm-rhythm p {
         margin: 0;
         color: var(--muted);
-        font-size: 13.5px;
+        font-size: 12.5px;
         line-height: 1.55;
         font-family: var(--serif);
         font-style: italic;
@@ -825,7 +825,7 @@ def inject_css(theme: str):
         margin: 12px 0 0 0;
         padding-left: 20px;
         color: var(--muted);
-        font-size: 13.5px;
+        font-size: 12.5px;
         line-height: 1.65;
         font-family: var(--sans);
       }
@@ -850,9 +850,9 @@ def inject_css(theme: str):
         bottom: 0;
         z-index: 9999;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+        grid-template-columns: repeat(5, 1fr);
+        gap: 7px;
+        padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
         background: linear-gradient(180deg, rgba(249,247,242,0), rgba(249,247,242,0.86));
         backdrop-filter: blur(14px) saturate(1.05);
       }
@@ -877,7 +877,7 @@ def inject_css(theme: str):
       }
       .btm-nav-item .btm-nav-label{
         font-weight: 600;
-        font-size: 13.5px;
+        font-size: 12.5px;
         letter-spacing: .04em;
         line-height: 1.1;
         text-align: center;
@@ -1851,9 +1851,15 @@ def _build_href(view_key: str) -> str:
     return "?" + urllib.parse.urlencode(qp, doseq=False)
 
 def render_bottom_nav(active: str):
-    # 4-tab bottom nav: Angel Chat | Bible Stories | Study Hub | How It Works
+    # 5-tab bottom nav: Angel Chat | King's Counsel | Bible Stories | Study Hub | How It Works
     items = [
         {"key": "angel", "label": "Angel Chat", "href": _build_href("angel"), "external": False},
+        {
+            "key": "counsel",
+            "label": "King's Counsel",
+            "href": "https://king-s-counsel-leadership-app.vercel.app/",
+            "external": True,
+        },
         {"key": "bible", "label": "Bible Stories", "href": _build_href("bible"), "external": False},
         {
             "key": "study",
