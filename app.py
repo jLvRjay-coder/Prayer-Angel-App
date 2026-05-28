@@ -1,5 +1,5 @@
-﻿# ============================================================
-# FULL app.py â€” Beyond the Message / Prayer Angel (Single File)
+# ============================================================
+# FULL app.py — Beyond the Message / Prayer Angel (Single File)
 # UI POLISH UPDATE (NO CACHE / PWA TROUBLESHOOTING)
 # FIX INCLUDED: f-string braces crash in inject_css() (try{ ... } in JS)
 # FIX INCLUDED: Streamlit session_state crash in Angel composer
@@ -32,10 +32,10 @@ try:
     from PIL import Image
     _ICON = Image.open("icon-192.png")  # keep this file at repo root
 except Exception:
-    _ICON = "ðŸ•¯ï¸"
+    _ICON = "🕯️"
 
 st.set_page_config(
-    page_title="Prayer Angel â€” Beyond the Message",
+    page_title="Prayer Angel — Beyond the Message",
     page_icon=_ICON,
     layout="centered",
 )
@@ -70,8 +70,8 @@ def inject_pwa():
 inject_pwa()
 
 # =========================
-# COLORS / TOKENS â€” VIRTUAL SANCTUARY PALETTE
-# Deep Scholarly Navy (Ink) Â· Muted Altar Gold Â· Vellum
+# COLORS / TOKENS — VIRTUAL SANCTUARY PALETTE
+# Deep Scholarly Navy (Ink) · Muted Altar Gold · Vellum
 # =========================
 NAVY   = "#1A1B26"   # Deep Scholarly Navy (Ink)
 GOLD   = "#A68966"   # Muted Altar Gold (Accents)
@@ -81,7 +81,7 @@ MID    = "#5C5A5E"   # Muted scholar grey
 BORDER = "rgba(26,27,38,0.10)"
 INK    = "#1A1B26"
 
-PROD_FOOTER = "BEYOND THE MESSAGE â€¢ angel.beyondthemessage.org"
+PROD_FOOTER = "BEYOND THE MESSAGE • angel.beyondthemessage.org"
 
 # =========================
 # ROUTER STATE
@@ -180,7 +180,7 @@ def _save_angel_state():
             "angel_share": st.session_state.get("angel_share", {"caption": "", "hashtags": "", "kjv_ref": ""}),
             "angel_prefill": st.session_state.get("angel_prefill", ""),
             "privacy_ack": st.session_state.get("privacy_ack", False),
-            # Relational Memory â€” what the person is carrying this week.
+            # Relational Memory — what the person is carrying this week.
             "burden": st.session_state.get("burden", ""),
             "mode_pinned": st.session_state.get("mode_pinned", False),
         }
@@ -247,14 +247,14 @@ def _theme_tokens(theme: str) -> dict:
 def inject_css(theme: str):
     tokens = _theme_tokens(theme)
     # NOTE: Plain triple-quoted string (NOT f-string). Tokens like __NAVY__ are
-    # substituted via .replace() below â€” so JS/CSS braces {...} are 100% safe.
+    # substituted via .replace() below — so JS/CSS braces {...} are 100% safe.
     css = """
     <style>
-      /* ========= TYPOGRAPHY â€” Cormorant Garamond (serif, Scripture + headings)
+      /* ========= TYPOGRAPHY — Cormorant Garamond (serif, Scripture + headings)
          paired with Inter (variable, utility) ========= */
       @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-      /* ========= THEME TOKENS â€” VIRTUAL SANCTUARY ========= */
+      /* ========= THEME TOKENS — VIRTUAL SANCTUARY ========= */
       :root{
         --bg: __BG__;
         --card: __CARD__;
@@ -286,7 +286,7 @@ def inject_css(theme: str):
         --sans:  "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      /* ========= VELLUM BASE â€” paper texture + altar-gold halo ========= */
+      /* ========= VELLUM BASE — paper texture + altar-gold halo ========= */
       html, body, .stApp{
         background:
           radial-gradient(1100px 520px at 10% -8%, rgba(166,137,102,0.07), transparent 44%),
@@ -299,7 +299,7 @@ def inject_css(theme: str):
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      /* Vellum noise â€” SVG data URI, fixed so it never scrolls */
+      /* Vellum noise — SVG data URI, fixed so it never scrolls */
       .stApp:before{
         content:"";
         position: fixed;
@@ -354,7 +354,7 @@ def inject_css(theme: str):
         color: var(--text);
       }
 
-      /* ========= LEGACY HERO â€” still used on the How It Works view ========= */
+      /* ========= LEGACY HERO — still used on the How It Works view ========= */
       .btm-hero {
         padding: 28px 26px 24px 26px;
         border-radius: 24px;
@@ -417,7 +417,7 @@ def inject_css(theme: str):
         font-family: var(--serif);
       }
 
-      /* Section title â€” hairline gold underline */
+      /* Section title — hairline gold underline */
       .btm-sec-title{
         font-family: var(--serif);
         font-weight: 700;
@@ -431,7 +431,7 @@ def inject_css(theme: str):
       }
       .btm-sec-title.is-serif{ font-family: var(--serif); }
 
-      /* ========= CARDS â€” Floating Vellum (dual-layer shadow) ========= */
+      /* ========= CARDS — Floating Vellum (dual-layer shadow) ========= */
       .btm-card {
         background:
           linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.94)),
@@ -492,7 +492,7 @@ def inject_css(theme: str):
       .btm-badge.warn{    background: rgba(180,122,58,0.12); color: var(--warning); border-color: rgba(180,122,58,0.25); }
       .btm-badge.error{   background: rgba(156,59,59,0.12);  color: var(--error);   border-color: rgba(156,59,59,0.25); }
 
-      /* ========= SCRIPTURE BOX â€” ink ground, gilded anchor ========= */
+      /* ========= SCRIPTURE BOX — ink ground, gilded anchor ========= */
       .btm-scripture {
         background:
           radial-gradient(600px 220px at 0% 0%, rgba(166,137,102,0.20), transparent 60%),
@@ -526,7 +526,7 @@ def inject_css(theme: str):
       .btm-scripture ul{ margin: 4px 0 0 0; padding-left: 18px; }
       .btm-scripture li{ margin: 6px 0; }
 
-      /* ========= RHYTHM CALLOUT â€” compact altar strip ========= */
+      /* ========= RHYTHM CALLOUT — compact altar strip ========= */
       .btm-rhythm {
         border: 1px solid var(--gold-soft);
         background:
@@ -653,7 +653,7 @@ def inject_css(theme: str):
         padding: 0 !important;
       }
 
-      /* ========= BUTTON SYSTEM â€” Ink primary / Vellum-outlined secondary ========= */
+      /* ========= BUTTON SYSTEM — Ink primary / Vellum-outlined secondary ========= */
       div[data-testid="stButton"] > button{
         font-family: var(--sans) !important;
         letter-spacing: .04em !important;
@@ -883,7 +883,7 @@ def inject_css(theme: str):
         font-style: italic;
       }
 
-      /* ========= BOTTOM NAV â€” Vellum glass ========= */
+      /* ========= BOTTOM NAV — Vellum glass ========= */
       .btm-bottom-nav{
         position: fixed;
         left: 0;
@@ -1072,7 +1072,7 @@ def inject_css(theme: str):
         }
       }
 
-      /* Streamlit chat message â€” scholarly card */
+      /* Streamlit chat message — scholarly card */
       div[data-testid="stChatMessage"]{
         background: var(--vellum-raised) !important;
         border: 1px solid var(--border) !important;
@@ -1102,7 +1102,7 @@ def inject_css(theme: str):
         letter-spacing: .02em;
       }
 
-      /* Alert bubbles â€” softened */
+      /* Alert bubbles — softened */
       div[data-testid="stAlert"]{
         border-radius: 16px !important;
         border: 1px solid var(--border) !important;
@@ -1110,7 +1110,7 @@ def inject_css(theme: str):
         box-shadow: var(--shadow-low);
       }
 
-      /* Markdown content inside story body â€” prose refinements */
+      /* Markdown content inside story body — prose refinements */
       .btm-card p{ font-size: 15.5px; line-height: 1.72; color: var(--text); }
       .btm-card blockquote{
         border-left: 3px solid var(--gold);
@@ -1146,7 +1146,7 @@ def inject_css(theme: str):
 inject_css(_get_theme())
 
 def inject_premium_layout_css():
-    # Plain string â€” tokens are literal CSS. No f-strings, no brace collisions.
+    # Plain string — tokens are literal CSS. No f-strings, no brace collisions.
     st.markdown(
         """
         <style>
@@ -1164,7 +1164,7 @@ def inject_premium_layout_css():
           padding-top: 2rem;
         }
 
-        /* ========= HOME HERO â€” scholarly Ink panel with gold halo ========= */
+        /* ========= HOME HERO — scholarly Ink panel with gold halo ========= */
         .btm-home-hero{
           padding: 40px 34px 34px;
           border-radius: 28px;
@@ -1314,7 +1314,7 @@ def inject_premium_layout_css():
           transform: translateY(-1px);
         }
 
-        /* ========= HERO COMPOSER â€” center of gravity, with RITUAL PULSE ========= */
+        /* ========= HERO COMPOSER — center of gravity, with RITUAL PULSE ========= */
         .btm-hero-composer{
           position:relative;
           padding:28px 24px 22px;
@@ -1333,7 +1333,7 @@ def inject_premium_layout_css():
         }
         .btm-hero-composer:after{
           /* Subtle gilded corner mark */
-          content:"âœ¦";
+          content:"✦";
           position:absolute; top:14px; right:18px;
           color: var(--gold);
           font-size: 14px;
@@ -1359,7 +1359,7 @@ def inject_premium_layout_css():
 
         .btm-chat-frame{ margin-top:10px; }
 
-        /* ========= RESPONSE SHELL â€” materializes with the words ========= */
+        /* ========= RESPONSE SHELL — materializes with the words ========= */
         .btm-response-shell{
           padding:26px 24px 22px;
           margin:18px auto 16px;
@@ -1381,7 +1381,7 @@ def inject_premium_layout_css():
           font-family:"Inter",system-ui,sans-serif;
         }
 
-        /* ========= SCRIPTURE ANCHOR â€” gilded verse ========= */
+        /* ========= SCRIPTURE ANCHOR — gilded verse ========= */
         .btm-scripture-anchor{
           border-left:3px solid var(--gold);
           background:
@@ -1419,7 +1419,7 @@ def inject_premium_layout_css():
           margin:14px 0 16px 0;
         }
 
-        /* ========= HERO TEXT INPUT â€” the "composer" field ========= */
+        /* ========= HERO TEXT INPUT — the "composer" field ========= */
         div[data-testid="stTextInput"]{
           max-width: 760px;
           margin: 0 auto;
@@ -1522,7 +1522,7 @@ def inject_premium_layout_css():
         }
 
         /* ================================================================
-           TOTAL EXPERIENCE OVERHAUL â€” Sacred Minimalism layer
+           TOTAL EXPERIENCE OVERHAUL — Sacred Minimalism layer
            Sanctuary Invite, Sacred Glassmorphism, Illuminated Scripture,
            Quiet Menu, Center-Anchored Companion Column.
            ================================================================ */
@@ -1612,7 +1612,7 @@ def inject_premium_layout_css():
           letter-spacing: 0.08em;
         }
 
-        /* Quiet pop-over (expander) â€” Other ways in, More drawer. */
+        /* Quiet pop-over (expander) — Other ways in, More drawer. */
         details[data-testid="stExpander"]{
           background: rgba(249,247,242,0.55);
           backdrop-filter: blur(12px) saturate(1.1);
@@ -1665,7 +1665,7 @@ def inject_premium_layout_css():
           margin: 0 auto;
         }
 
-        /* --- SACRED GLASSMORPHISM â€”  translucent navy panels --- */
+        /* --- SACRED GLASSMORPHISM —  translucent navy panels --- */
         .btm-sanctuary-glass{
           background: linear-gradient(180deg,
             rgba(26,27,38,0.04) 0%,
@@ -1692,7 +1692,7 @@ def inject_premium_layout_css():
           mix-blend-mode: multiply;
         }
 
-        /* --- ILLUMINATED SCRIPTURE ANCHOR â€” manuscript look --- */
+        /* --- ILLUMINATED SCRIPTURE ANCHOR — manuscript look --- */
         .btm-scripture-anchor.btm-illuminated{
           text-align: center;
           padding: 28px 24px 32px;
@@ -1758,7 +1758,7 @@ def inject_premium_layout_css():
           letter-spacing: 0.02em;
         }
 
-        /* --- SANCTUARY COMPOSER â€” st.chat_input with ritual pulse --- */
+        /* --- SANCTUARY COMPOSER — st.chat_input with ritual pulse --- */
         .btm-sanctuary-composer-wrap{
           margin-top: 24px;
           padding: 4px;
@@ -1792,7 +1792,7 @@ def inject_premium_layout_css():
           font-style: italic !important;
         }
 
-        /* Sanctuary chat message bubbles â€” softer, less boxed */
+        /* Sanctuary chat message bubbles — softer, less boxed */
         .btm-sanctuary-chat div[data-testid="stChatMessage"]{
           background: transparent !important;
           border: none !important;
@@ -1848,7 +1848,7 @@ def inject_premium_layout_css():
         unsafe_allow_html=True,
     )
 
-# Apply the premium Vellum layer AFTER the base theme â€” this is what turns the
+# Apply the premium Vellum layer AFTER the base theme — this is what turns the
 # dashboard into the Virtual Sanctuary: ritual pulse, materialization, scripture
 # anchors, floating vellum panels.
 inject_premium_layout_css()
@@ -1953,9 +1953,9 @@ def render_how_it_works():
     st.markdown('<div class="btm-section-title">Choose the right lane</div>', unsafe_allow_html=True)
 
     steps = [
-        ('1 â€” Start in Study Hub', 'Use Study Hub for structured weekly lessons, Daily Compass prompts, teacher notes, Journey Map, and reflection tools that keep you engaged beyond Sunday.'),
-        ('2 â€” Use Angel Chat for real-life questions', 'Come to Angel Chat when you need prayer help, a practical next step, a deeper dive into Scripture, or guidance for what you are facing right now.'),
-        ('3 â€” Move between them as needed', 'Study Hub gives you the guided path. Angel Chat gives you personal support in the moment. Together they create a steady rhythm for discipleship.'),
+        ('1 — Start in Study Hub', 'Use Study Hub for structured weekly lessons, Daily Compass prompts, teacher notes, Journey Map, and reflection tools that keep you engaged beyond Sunday.'),
+        ('2 — Use Angel Chat for real-life questions', 'Come to Angel Chat when you need prayer help, a practical next step, a deeper dive into Scripture, or guidance for what you are facing right now.'),
+        ('3 — Move between them as needed', 'Study Hub gives you the guided path. Angel Chat gives you personal support in the moment. Together they create a steady rhythm for discipleship.'),
     ]
     for title, desc in steps:
         st.markdown(f'<div class="btm-step"><div class="btm-step-title">{title}</div><div class="btm-step-desc">{desc}</div></div>', unsafe_allow_html=True)
@@ -2051,7 +2051,7 @@ def render_scripture_links(refs, story_md: str, version: str = "KJV"):
     v = (version or "KJV").upper()
 
     st.markdown('<div class="btm-scripture">', unsafe_allow_html=True)
-    st.markdown(f"ðŸ“– Read First (tap to read â€” {v})", unsafe_allow_html=True)
+    st.markdown(f"📖 Read First (tap to read — {v})", unsafe_allow_html=True)
     st.markdown("<ul>", unsafe_allow_html=True)
     for r in refs:
         label = f"{_clean_ref(r)} ({v})"
@@ -2061,7 +2061,7 @@ def render_scripture_links(refs, story_md: str, version: str = "KJV"):
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
-# SHARE CARD (HTML Preview) â€” DO NOT CHANGE
+# SHARE CARD (HTML Preview) — DO NOT CHANGE
 # =========================
 def render_share_card_preview(body_text: str, kjv_ref: str = "", footer: str = PROD_FOOTER):
     body = (body_text or "").strip()
@@ -2136,7 +2136,7 @@ def _strip_json_fences(s: str) -> str:
 def _find_kjv_ref_in_text(text: str) -> str:
     if not text:
         return ""
-    m = re.search(r"\(([^)]{3,60}?\d+:\d+(?:[-â€“]\d+)?[^)]{0,20})\)", text)
+    m = re.search(r"\(([^)]{3,60}?\d+:\d+(?:[-–]\d+)?[^)]{0,20})\)", text)
     if m:
         return m.group(1).strip()
     return ""
@@ -2148,7 +2148,7 @@ def build_share_card(title: str, story_md: str, refs) -> dict:
 
     client = _openai_client()
     if client is None:
-        base = "Iâ€™m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
+        base = "I’m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
         hashtags = "#BeyondTheMessage #PrayerOnTheSteps #Faith #Prayer #Jesus"
         return {"caption": base.strip(), "hashtags": hashtags, "kjv_ref": kjv_ref}
 
@@ -2200,7 +2200,7 @@ def build_share_card(title: str, story_md: str, refs) -> dict:
         return {"caption": caption, "hashtags": hashtags, "kjv_ref": kjv_ref_out}
 
     except Exception:
-        base = "Iâ€™m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
+        base = "I’m choosing to seek God early and trust Him in the middle of the noise.\nEven small obedience matters."
         hashtags = "#BeyondTheMessage #PrayerOnTheSteps #Faith #Prayer #Jesus"
         return {"caption": base.strip(), "hashtags": hashtags, "kjv_ref": kjv_ref}
 
@@ -2272,21 +2272,21 @@ def answer_story_question_inline(story_title: str, story_md: str, user_question:
     client = _openai_client()
     if client is None:
         return (
-            "Angel Q&A is ready â€” but your OpenAI key isnâ€™t connected in this Space yet.\n\n"
+            "Angel Q&A is ready — but your OpenAI key isn’t connected in this Space yet.\n\n"
             "Add a Hugging Face Secret named OPENAI_API_KEY, then restart the Space."
         )
 
     story_text = _extract_plain_text(story_md, max_chars=1400)
 
     system = (
-        "You are Beyond the Message â€” Story Q&A.\n"
+        "You are Beyond the Message — Story Q&A.\n"
         "Tone: calm, confident, plainspoken. Not cheesy.\n"
         "Audience: families (kids + parents). Keep it safe.\n"
         "Use KJV references (reference-only). Do not invent verses.\n"
         "Do NOT quote long scripture passages. Keep any quote very short.\n"
         "Answer format:\n"
-        "1) 2â€“5 sentence answer.\n"
-        "2) 1â€“2 KJV references (reference-only).\n"
+        "1) 2–5 sentence answer.\n"
+        "2) 1–2 KJV references (reference-only).\n"
         "3) One simple application step.\n"
         "4) End with ONE short follow-up question.\n"
     )
@@ -2433,7 +2433,7 @@ def build_share_image_png(title: str, caption: str, kjv_ref: str, hashtags: str)
 # AGE SECTION PARSER (ROBUST + FALLBACK)
 # =========================
 def _normalize_dashes(s: str) -> str:
-    return (s or "").replace("â€”", "-").replace("â€“", "-").replace("âˆ’", "-")
+    return (s or "").replace("—", "-").replace("–", "-").replace("−", "-")
 
 def _detect_section_level(heading_text: str) -> str:
     h = _normalize_dashes(heading_text).lower()
@@ -2512,8 +2512,8 @@ def load_story_cards(series_prefix):
 
     for p in prefixes:
         meta_paths.extend(glob.glob(f"stories/{p}.*.meta.json"))
-        meta_paths.extend(glob.glob(f"stories/{p}.*.Pre-Teen.meta.json"))
-        meta_paths.extend(glob.glob(f"stories/{p}.*.Teen.meta.json"))
+        meta_paths.extend(glob.glob(f"stories/{p}.*.6-10.meta.json"))
+        meta_paths.extend(glob.glob(f"stories/{p}.*.9-13.meta.json"))
         meta_paths.extend(glob.glob(f"stories/{p}.*.adult.meta.json"))
         meta_paths.extend(glob.glob(f"{p}.*.meta.json"))
         meta_paths.extend(glob.glob(f"{p}-*.meta.json"))
@@ -2591,7 +2591,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         if base.startswith("josiah-") or "josiah-" in base:
             return "King Josiah"
 
-        # ARC 1 â€” Bridge
+        # ARC 1 — Bridge
         if base.startswith("bridge-") or "bridge-" in base:
             return "ARC 1 Bridge"
         if base.startswith("ahab-") or "ahab-" in base:
@@ -2601,7 +2601,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         if base.startswith("jezebel-") or "jezebel-" in base:
             return "Jezebel"
 
-        # ARC 2 â€” The Promised King (Jesus)
+        # ARC 2 — The Promised King (Jesus)
         if base.startswith("jesus-") or "jesus-" in base:
             return "The Promised King"
         if base.startswith("promised-king-") or "promised-king-" in base:
@@ -2644,10 +2644,10 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     def _norm(tag: str) -> str:
         t = (tag or "").strip().lower()
         # Normalize all dash variants
-        t = t.replace("â€“", "-").replace("â€”", "-").replace("âˆ’", "-")
-        if t in ("Pre-Teen", "6-9", "6-8", "ages Pre-Teen", "ages 6-9", "age_6_10"):
+        t = t.replace("–", "-").replace("—", "-").replace("−", "-")
+        if t in ("6-10", "6-9", "6-8", "ages 6-10", "ages 6-9", "age_6_10"):
             return "6-9"
-        if t in ("Teen", "10-13", "ages Teen", "ages 10-13", "age_9_13"):
+        if t in ("9-13", "10-13", "ages 9-13", "ages 10-13", "age_9_13"):
             return "10-13"
         if t in ("adult", "young adult", "young-adult", "youngadult"):
             return "adult"
@@ -2674,7 +2674,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         arc_map.setdefault(arc, []).append(c)
 
     arc_order = [
-        # ARC 1 â€” Kings / Prophets
+        # ARC 1 — Kings / Prophets
         "King Saul",
         "King David",
         "King Ahab",
@@ -2682,10 +2682,10 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         "Jezebel",
         "King Josiah",
 
-        # ARC 2 â€” The Promised King
+        # ARC 2 — The Promised King
         "ARC 1 Bridge",
 
-        # ARC 2 â€” The Promised King
+        # ARC 2 — The Promised King
         "The Promised King",
 
         # Other
@@ -2696,7 +2696,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     arcs += [a for a in sorted(arc_map.keys()) if a not in arcs]
     arcs = sorted(arcs, key=lambda a: (arc_order.index(a) if a in arc_order else 999, a))
 
-    # âœ… Always show the arc selector (even if only one arc) so it never â€œdisappearsâ€
+    # ✅ Always show the arc selector (even if only one arc) so it never “disappears”
     arc_pick = st.selectbox(
         "Choose an arc",
         options=arcs,
@@ -2704,11 +2704,11 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         key=f"arc_{prefix_key}",
     )
 
-    # Age selector â€” stable internal keys with separate display labels.
+    # Age selector — stable internal keys with separate display labels.
     # Key is independent of arc so the user's age choice is preserved across arc changes.
     AGE_LABELS = {
-        "age_6_10": "Ages 6â€“10",
-        "age_9_13": "Ages 9â€“13",
+        "age_6_10": "Pre-Teen",
+        "age_9_13": "Teen",
         "adult": "Adult",
     }
     AGE_TO_LEVEL = {"age_6_10": "6-9", "age_9_13": "10-13", "adult": "adult"}
@@ -2726,9 +2726,9 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
 
     def _infer_levels_from_path(meta_path: str, md_path: str):
         p = f"{meta_path} {md_path}".lower()
-        if ".Pre-Teen." in p or ".6-9." in p:
+        if ".6-10." in p or ".6-9." in p:
             return {"6-9"}
-        if ".Teen." in p or ".10-13." in p:
+        if ".9-13." in p or ".10-13." in p:
             return {"10-13"}
         if ".adult." in p:
             return {"adult"}
@@ -2755,7 +2755,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
             filtered.append(c)
 
     if not filtered:
-        # Adult fallback: if a story has only 6â€“10 and 9â€“13 versions, let Adult default to 9â€“13
+        # Adult fallback: if a story has only 6–10 and 9–13 versions, let Adult default to 9–13
         if want == "adult":
             fallback_want = "10-13"
             fallback = []
@@ -2773,7 +2773,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
                     fallback.append(c)
 
             if fallback:
-                st.info("Adult version isnâ€™t available for every story yet â€” showing the 9â€“13 version for now.")
+                st.info("Adult version isn’t available for every story yet — showing the 9–13 version for now.")
                 filtered = fallback
                 want = fallback_want
             else:
@@ -2823,7 +2823,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         st.markdown("</div>", unsafe_allow_html=True)
 
     # =========================
-    # Ask a Question (INLINE â€” no reroute)
+    # Ask a Question (INLINE — no reroute)
     # =========================
     order = picked.get("order", 0)
     qa_state_key = f"qa_{prefix_key}_{arc_pick}_{order}_{want}"
@@ -2839,7 +2839,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
             "Your question",
             value="",
             label_visibility="collapsed",
-            placeholder="Type your question hereâ€¦",
+            placeholder="Type your question here…",
         )
         cA, cB = st.columns([1, 1])
         with cA:
@@ -2850,7 +2850,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     if ask_inline:
         q = (user_q or "").strip()
         if q:
-            with st.spinner("Answeringâ€¦"):
+            with st.spinner("Answering…"):
                 ans = answer_story_question_inline(picked.get("title", "Story"), story_md, q)
             st.session_state[qa_state_key].append({
                 "q": q,
@@ -2862,7 +2862,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
 
     if send_to_angel:
         title = picked.get("title", "this story")
-        base = f"My question is about the story titled '{title}'.\n\nHereâ€™s my question:\n"
+        base = f"My question is about the story titled '{title}'.\n\nHere’s my question:\n"
         st.session_state.angel_prefill = base + ((user_q or "").strip())
         goto("angel")
 
@@ -2886,7 +2886,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     st.markdown("</div>", unsafe_allow_html=True)
 
     # =========================
-    # Journal (mailto + download fallback) â€” PRIVACY SAFE
+    # Journal (mailto + download fallback) — PRIVACY SAFE
     # =========================
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.markdown("<div class='btm-sec-title'>Journal Your Thoughts</div>", unsafe_allow_html=True)
@@ -2904,8 +2904,8 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         height=160
     )
 
-    # âœ… Privacy-safe: do NOT set recipient. User chooses who to send to.
-    subject = f"Journal Notes â€” {picked.get('title','Story')}"
+    # ✅ Privacy-safe: do NOT set recipient. User chooses who to send to.
+    subject = f"Journal Notes — {picked.get('title','Story')}"
     body = journal_text or ""
 
     query = urllib.parse.urlencode(
@@ -2947,13 +2947,13 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     cA, cB = st.columns([1, 1])
     with cA:
         if st.button("Generate Share Card", use_container_width=True, key=f"gen_{share_key}", type="secondary"):
-            with st.spinner("Generatingâ€¦"):
+            with st.spinner("Generating…"):
                 card = build_share_card(picked.get("title", "Story"), story_md, refs)
             st.session_state[share_key] = card
 
     with cB:
         if st.button("Regenerate", use_container_width=True, key=f"regen_{share_key}", type="secondary"):
-            with st.spinner("Regeneratingâ€¦"):
+            with st.spinner("Regenerating…"):
                 card = build_share_card(picked.get("title", "Story"), story_md, refs)
             st.session_state[share_key] = card
 
@@ -2975,7 +2975,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         )
         if png_bytes:
             st.download_button(
-                "Download Share Image (PNG) â€” optional",
+                "Download Share Image (PNG) — optional",
                 data=png_bytes,
                 file_name=f"{prefix_key}.{arc_pick}.{order}.{want}.share.png".replace(" ", "-"),
                 mime="image/png",
@@ -3026,10 +3026,10 @@ def render_angel_chat():
         st.session_state.last_voice_hash = ""
     if "angel_placeholder_index" not in st.session_state:
         st.session_state.angel_placeholder_index = 0
-    # Relational Memory â€” distilled "burden" of the conversation.
+    # Relational Memory — distilled "burden" of the conversation.
     if "burden" not in st.session_state:
         st.session_state.burden = ""
-    # Hidden Intent Routing default â€” the companion senses unless user pins.
+    # Hidden Intent Routing default — the companion senses unless user pins.
     if "mode_pinned" not in st.session_state:
         st.session_state.mode_pinned = False
 
@@ -3072,30 +3072,30 @@ def render_angel_chat():
             "Never refer to yourself as such. Never say 'as an AI' or 'I am here to help'. "
             "You are simply present, the way a trusted Christian friend is present.\n\n"
             "VOICE: warm, grounded, unhurried, plainspoken. Never preachy. Never saccharine. "
-            "Never academic-cold. The way someone you trust speaks to you over coffee â€” with gravity, "
+            "Never academic-cold. The way someone you trust speaks to you over coffee — with gravity, "
             "but also tenderness.\n\n"
             "FLOW (this order matters):\n"
-            "1) FIRST, name the weight. Acknowledge what the person is carrying â€” the emotion, the "
+            "1) FIRST, name the weight. Acknowledge what the person is carrying — the emotion, the "
             "situation, the question beneath the question. Two or three sentences of pure presence "
             "before any Scripture.\n"
-            "2) THEN, gently bring the Word. Offer 1â€“2 KJV verses that meet the moment. Not as proof "
+            "2) THEN, gently bring the Word. Offer 1–2 KJV verses that meet the moment. Not as proof "
             "texts. As gifts.\n"
-            "3) THEN, illuminate. A short, thoughtful insight â€” what this Scripture is saying into "
+            "3) THEN, illuminate. A short, thoughtful insight — what this Scripture is saying into "
             "their specific situation.\n"
             "4) THEN, a small invitation. One concrete next step they could take today, or a quiet "
             "prayer they could carry.\n"
             "5) FINALLY, one gentle question to keep the door open.\n\n"
             "RULES:\n"
-            "â€¢ User prefers KJV; use KJV references.\n"
-            "â€¢ Do NOT invent verses. Quote short â€” a phrase or a single verse, never long passages.\n"
-            "â€¢ Do NOT use bullet headers like 'Scripture Anchor:' or 'Application:'. Write in prose, "
+            "• User prefers KJV; use KJV references.\n"
+            "• Do NOT invent verses. Quote short — a phrase or a single verse, never long passages.\n"
+            "• Do NOT use bullet headers like 'Scripture Anchor:' or 'Application:'. Write in prose, "
             "the way a friend writes a letter.\n"
-            "â€¢ Do NOT moralize, lecture, or rebuke unless explicitly asked.\n"
-            "â€¢ If the person is in crisis, gently encourage them to also reach out to a trusted "
+            "• Do NOT moralize, lecture, or rebuke unless explicitly asked.\n"
+            "• If the person is in crisis, gently encourage them to also reach out to a trusted "
             "person or pastor in their life.\n"
         )
 
-        # Relational Memory â€” what the person is carrying this week.
+        # Relational Memory — what the person is carrying this week.
         burden = (st.session_state.get("burden") or "").strip()
         if burden:
             base += (
@@ -3105,37 +3105,37 @@ def render_angel_chat():
 
         if mode_key == "prayer":
             return base + (
-                "\nTHIS MOMENT â€” PRAYER:\n"
+                "\nTHIS MOMENT — PRAYER:\n"
                 "They are carrying something heavy. Lead with empathy. Then offer a short, sincere "
-                "prayer (3â€“6 lines, second person â€” 'Lordâ€¦', 'Fatherâ€¦'). Anchor with one KJV verse. "
+                "prayer (3–6 lines, second person — 'Lord…', 'Father…'). Anchor with one KJV verse. "
                 "Close with a single gentle question.\n"
             )
         if mode_key == "scripture":
             return base + (
-                "\nTHIS MOMENT â€” STUDY:\n"
+                "\nTHIS MOMENT — STUDY:\n"
                 "They want to understand. Open with one sentence of presence ('That's a beautiful "
-                "passage to sit withâ€¦' or similar). Then give the context like a friend who knows "
-                "the story. Offer 2â€“3 KJV references woven into prose. Close with a single gentle "
+                "passage to sit with…' or similar). Then give the context like a friend who knows "
+                "the story. Offer 2–3 KJV references woven into prose. Close with a single gentle "
                 "question that invites them deeper.\n"
             )
         if mode_key == "encouragement":
             return base + (
-                "\nTHIS MOMENT â€” ENCOURAGEMENT:\n"
+                "\nTHIS MOMENT — ENCOURAGEMENT:\n"
                 "They may not have asked for much. Be present anyway. Acknowledge whatever they "
-                "shared â€” even briefly. Offer one true thing and one KJV verse that meets them. "
+                "shared — even briefly. Offer one true thing and one KJV verse that meets them. "
                 "Close with a single gentle question.\n"
             )
         return base + (
-            "\nTHIS MOMENT â€” LIVING IT OUT:\n"
+            "\nTHIS MOMENT — LIVING IT OUT:\n"
             "They are facing a real situation. Honor the weight of it before advising. Then name "
-            "the next right step â€” one concrete, small thing. Anchor with one KJV verse. Add a "
+            "the next right step — one concrete, small thing. Anchor with one KJV verse. Add a "
             "short prayer they can carry. Close with a single gentle question.\n"
         )
 
     def safe_model_response(system_prompt: str, user_text: str) -> str:
         if client is None:
             return (
-                "Angel Chat is ready â€” but your OpenAI key is not connected in this Space yet.\n\n"
+                "Angel Chat is ready — but your OpenAI key is not connected in this Space yet.\n\n"
                 "Add a Hugging Face Secret named OPENAI_API_KEY, then restart the Space."
             )
         messages = [{"role": "system", "content": system_prompt}]
@@ -3144,7 +3144,7 @@ def render_angel_chat():
             messages.append({"role": m["role"], "content": m["content"]})
         messages.append({"role": "user", "content": user_text})
         if not _lock_try("openai_lock", timeout_s=45):
-            return "â³ Still working on your last requestâ€¦ give it a moment, then try again."
+            return "⏳ Still working on your last request… give it a moment, then try again."
         try:
             resp = client.chat.completions.create(
                 model="gpt-4o-mini",
@@ -3155,9 +3155,9 @@ def render_angel_chat():
         except Exception as e:
             msg = str(e)
             if "Another request is already running" in msg:
-                return "â³ Still working on your last requestâ€¦ give it a moment, then try again."
+                return "⏳ Still working on your last request… give it a moment, then try again."
             if "401" in msg or "invalid_api_key" in msg.lower():
-                return "âš ï¸ OpenAI authentication error. Please re-check your OPENAI_API_KEY secret and restart the Space."
+                return "⚠️ OpenAI authentication error. Please re-check your OPENAI_API_KEY secret and restart the Space."
             return "I hit an error generating a response.\n\nDetails: " + msg
         finally:
             _lock_release("openai_lock")
@@ -3167,7 +3167,7 @@ def render_angel_chat():
         if not st.session_state.chat:
             st.session_state.chat.append({
                 "role": "assistant",
-                "content": "Iâ€™m ready. Start with the passage you read today, or tap one of the quick starts below."
+                "content": "I’m ready. Start with the passage you read today, or tap one of the quick starts below."
             })
         _save_angel_state()
 
@@ -3177,7 +3177,7 @@ def render_angel_chat():
             st.session_state.busy = False
             st.session_state.busy_since = 0.0
         if st.session_state.busy:
-            st.info("â³ Still working on your last requestâ€¦ give it a moment, then try again.")
+            st.info("⏳ Still working on your last request… give it a moment, then try again.")
             return
         st.session_state.busy = True
         st.session_state.busy_since = now
@@ -3186,7 +3186,7 @@ def render_angel_chat():
         st.session_state.chat.append({"role": "user", "content": prompt_text})
         _save_angel_state()
         try:
-            with st.spinner("Angel Chat is writingâ€¦"):
+            with st.spinner("Angel Chat is writing…"):
                 reply = safe_model_response(build_system_prompt_for_mode(st.session_state.mode), prompt_text)
         finally:
             st.session_state.busy = False
@@ -3205,7 +3205,7 @@ def render_angel_chat():
         return ""
 
     def detect_intent(text: str) -> str:
-        """Hidden Intent Routing â€” silently choose a mode from what the user said.
+        """Hidden Intent Routing — silently choose a mode from what the user said.
 
         The user never sees a mode picker. The companion feels the weight and shifts.
         Keyword-gated for now; can be upgraded to a small classify call later.
@@ -3241,7 +3241,7 @@ def render_angel_chat():
         return "encouragement"
 
     def _distill_burden(recent_user_text: str) -> str:
-        """Update st.session_state.burden â€” a short distilled string of what the
+        """Update st.session_state.burden — a short distilled string of what the
         person is carrying this week. Heuristic only; no extra API calls.
         Stored on session and persisted via _save_angel_state.
         """
@@ -3259,7 +3259,7 @@ def render_angel_chat():
         )
         low = t.lower()
         if any(m in low for m in feeling_markers):
-            # Keep it short â€” first 140 chars, single line.
+            # Keep it short — first 140 chars, single line.
             distilled = " ".join(t.split())[:140]
             st.session_state.burden = distilled
             return distilled
@@ -3272,12 +3272,12 @@ def render_angel_chat():
         st.session_state.busy = True
         st.session_state.busy_since = time.time()
 
-        # Hidden Intent Routing â€” the companion picks the mode silently.
+        # Hidden Intent Routing — the companion picks the mode silently.
         # User-pinned modes (set via the hidden drawer) are respected.
         if not st.session_state.get("mode_pinned", False):
             st.session_state.mode = detect_intent(text)
 
-        # Relational Memory â€” quietly track the burden of the conversation.
+        # Relational Memory — quietly track the burden of the conversation.
         _distill_burden(text)
 
         if st.session_state.angel_prefill:
@@ -3286,7 +3286,7 @@ def render_angel_chat():
         st.session_state.chat.append({"role": "user", "content": text})
         _save_angel_state()
         try:
-            with st.spinner("â€¦"):
+            with st.spinner("…"):
                 system_prompt = build_system_prompt_for_mode(st.session_state.mode)
                 reply = safe_model_response(system_prompt, text)
         finally:
@@ -3297,7 +3297,7 @@ def render_angel_chat():
         _save_angel_state()
         st.rerun()
 
-    placeholder_text = "Whatâ€™s on your heart? (e.g., I need peace today.)"
+    placeholder_text = "What’s on your heart? (e.g., I need peace today.)"
 
     # ============================================================
     # CENTER-ANCHORED SANCTUARY COLUMN
@@ -3307,11 +3307,11 @@ def render_angel_chat():
     sanctuary_left, sanctuary_center, sanctuary_right = st.columns([1, 2, 1])
 
     with sanctuary_center:
-        # Quiet hero â€” no kicker chip, no "AI companion" framing.
+        # Quiet hero — no kicker chip, no "AI companion" framing.
         st.markdown(
             """
             <div class="btm-sanctuary-angel-hero">
-              <div class="btm-sanctuary-ornament">âœ¦</div>
+              <div class="btm-sanctuary-ornament">✦</div>
               <h1 class="btm-sanctuary-angel-title">A quiet place in Scripture</h1>
               <p class="btm-sanctuary-angel-sub">Bring what is on your heart. The Word will meet you here.</p>
             </div>
@@ -3319,7 +3319,7 @@ def render_angel_chat():
             unsafe_allow_html=True,
         )
 
-        # Privacy acknowledgement â€” softened.
+        # Privacy acknowledgement — softened.
         if not st.session_state.get("privacy_ack", False):
             st.markdown(
                 """
@@ -3345,7 +3345,7 @@ def render_angel_chat():
         st.markdown('</div>', unsafe_allow_html=True)
 
         # ============================================================
-        # RESPONSE SHELL â€” Progressive Reveal (Scripture Anchor first)
+        # RESPONSE SHELL — Progressive Reveal (Scripture Anchor first)
         # ============================================================
         latest = _latest_angel_answer()
         detected_ref = _find_kjv_ref_in_text(latest)
@@ -3367,7 +3367,7 @@ def render_angel_chat():
             st.markdown('</div>', unsafe_allow_html=True)
 
         # ============================================================
-        # THE COMPOSER â€” single breathing input, no mode buttons visible
+        # THE COMPOSER — single breathing input, no mode buttons visible
         # ============================================================
         st.markdown('<div class="btm-sanctuary-composer-wrap">', unsafe_allow_html=True)
         user_msg = st.chat_input(
@@ -3381,7 +3381,7 @@ def render_angel_chat():
             _send_user_message(user_msg)
 
         # ============================================================
-        # QUIET "MORE" DRAWER â€” mode pinning + quick starts + deeper tools
+        # QUIET "MORE" DRAWER — mode pinning + quick starts + deeper tools
         # Everything that was a persistent button is now one collapse away.
         # ============================================================
         with st.expander("More prompts", expanded=False):
@@ -3424,7 +3424,7 @@ def render_angel_chat():
             q1, q2 = st.columns(2)
             with q1:
                 if st.button("Context of what I read", use_container_width=True, disabled=st.session_state.busy, key="qs_context", type="secondary"):
-                    run_quick_start("Give me the context of the chapter I read today â€” what is happening, who is involved, and why it matters.")
+                    run_quick_start("Give me the context of the chapter I read today — what is happening, who is involved, and why it matters.")
                 if st.button("7-Day plan from this passage", use_container_width=True, disabled=st.session_state.busy, key="qs_weekly_plan", type="secondary"):
                     run_quick_start("Create me a 7-day study plan from the passage I read today, anchored in KJV scripture.")
             with q2:
@@ -3452,12 +3452,12 @@ def render_angel_chat():
                 cA, cB, cC = st.columns([1, 1, 1])
                 with cA:
                     if st.button("Create Share Card", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_make_share", type="primary"):
-                        with st.spinner("Creatingâ€¦"):
+                        with st.spinner("Creating…"):
                             st.session_state.angel_share = build_angel_share_card_from_text(latest)
                         _save_angel_state()
                 with cB:
                     if st.button("Regenerate", use_container_width=True, disabled=st.session_state.busy or (not latest), key="angel_regen_share", type="secondary"):
-                        with st.spinner("Regeneratingâ€¦"):
+                        with st.spinner("Regenerating…"):
                             st.session_state.angel_share = build_angel_share_card_from_text(latest)
                         _save_angel_state()
                 with cC:
@@ -3520,14 +3520,14 @@ def render_angel_chat():
 def render_home():
     st.markdown('<div class="btm-wrap btm-sanctuary-wrap">', unsafe_allow_html=True)
 
-    # Single invitation â€” no dashboard, no path cards, no chip rows on first view.
+    # Single invitation — no dashboard, no path cards, no chip rows on first view.
     # The sanctuary asks one thing: come in.
     left_sp, center_col, right_sp = st.columns([1, 2, 1])
     with center_col:
         st.markdown(
             """
             <div class="btm-sanctuary-invite">
-              <div class="btm-sanctuary-ornament">âœ¦</div>
+              <div class="btm-sanctuary-ornament">✦</div>
               <div class="btm-sanctuary-kicker">A quiet place in Scripture</div>
               <h1 class="btm-sanctuary-title">Beyond the <em>Message</em></h1>
               <p class="btm-sanctuary-whisper">Bring what is on your heart. The Word will meet you here.</p>
@@ -3607,8 +3607,8 @@ def render_home():
             unsafe_allow_html=True,
         )
 
-    # Quiet secondary tools â€” tucked into a soft pop-over, not shouting.
-    with st.expander("â‹¯  Other ways in", expanded=False):
+    # Quiet secondary tools — tucked into a soft pop-over, not shouting.
+    with st.expander("⋯  Other ways in", expanded=False):
         st.markdown(
             '<div class="btm-quiet-menu-intro">When you are ready to go deeper, these stay accessible.</div>',
             unsafe_allow_html=True,
@@ -3667,5 +3667,4 @@ elif st.session_state.view == "about":
 else:
     render_home()
     render_bottom_nav(active="angel")
-
 
