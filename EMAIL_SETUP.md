@@ -16,13 +16,13 @@ The dedicated project is already created in the **Beyond the Message.** Free org
 | Database | Standard PostgreSQL 17 |
 | Dashboard | [Open project](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb) |
 
-Migration `20261014042040_create_private_daily_email_storage` created the three tables. Migration `20261014043827_backend_email_https_rpc` added a narrow, backend-only HTTPS RPC. Both migrations are recorded in `supabase/migrations` with the same versions as the hosted database.
+Migration `20261014042040_create_private_daily_email_storage` created the three tables. Migration `20261014043827_backend_email_https_rpc` added a narrow, backend-only HTTPS RPC. Migration `20261014054746_expose_protected_email_api` configures exposure of its `public` schema. All three migrations are recorded in `supabase/migrations` with the same versions as the hosted database.
 
 Hugging Face [documents that Spaces block outgoing ports other than 80, 443, and 8080](https://huggingface.co/docs/hub/spaces-overview#networking). Standard PostgreSQL connections use 5432/6543, so the selected deployment uses Supabase over HTTPS on 443 instead of a PostgreSQL URI. The Python server sends a secret API key in the `apikey` header. It never sends that key to the browser or OpenAI.
 
 To connect the app:
 
-1. Open [Data API settings](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb/integrations/data_api/overview) and turn **Enable Data API** on. Keep the subscriber schema out of exposed schemas and leave automatic table exposure off.
+1. Keep **Enable Data API** on in [Data API settings](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb/integrations/data_api/overview). The migration already exposes `public` for the protected RPC. Keep the subscriber schema out of exposed schemas and leave automatic table exposure off.
 2. Open [API Keys](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb/settings/api-keys). Use a **secret** key beginning `sb_secret_`; a publishable key is not accepted by the app.
 3. In Hugging Face, add the Variable `EMAIL_SUPABASE_URL=https://srjstdtnabzkmnuilceb.supabase.co` and Secret `EMAIL_SUPABASE_SECRET_KEY` containing that secret key. Copy the key directly between settings screens, keeping it out of chat, code, and screenshots.
 4. Configure the shared signing key and remaining settings below. The HTTPS connection does not need `EMAIL_DATABASE_URL` or the database password.
@@ -30,6 +30,10 @@ To connect the app:
 The RPC exposes only defined subscription/delivery actions, with no generic SQL endpoint. It runs as `SECURITY INVOKER`, with execute permission only for the backend `service_role`. That backend role has SELECT/INSERT/UPDATE on the three private tables and bypasses RLS; `anon`, `authenticated`, and PUBLIC have no access to the private schema, tables, or RPC. The server validates signed email links before invoking mutations, and the database checks their current nonce again under lock. All tables keep RLS enabled with no client policies. Never add `angel_email_private` to Data API exposed schemas.
 
 Hosted SQL checks verified owner writes, RLS on each table, denied execution for anonymous and signed-in clients, backend health, no email tables in `public` or Realtime, and zero retained test records. Supabase reported no warning/error advisories. Its informational [RLS without policies notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) is intentional for these private tables. Its [unused index notices](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index) are expected in an empty database.
+
+The hosted Data API initially had no exposed schema and could not build its cache (`PGRST002`, with the `pg_pgrst_no_exposed_schemas` placeholder in its logs). The exposure migration sets `pgrst.db_schemas=public` on `authenticator` and reloads the API configuration. The HTTPS check now reaches the function and denies the publishable/anonymous caller with HTTP 401 / `42501`, rather than returning a service error. There are no tables in `public`; subscriber records remain private.
+
+This [database role override](https://supabase.com/docs/guides/troubleshooting/postgrest-error-pgrst002-could-not-query-the-database-for-the-schema-cache-c396e9) takes precedence over the Dashboard's Exposed schemas field. Manage future API schema exposure through a migration. To return to Dashboard management, first configure `public` there, then reset `pgrst.db_schemas` on `authenticator` and reload configuration; resetting it before configuring the Dashboard would restore the empty exposure.
 
 Direct PostgreSQL support remains available for other hosts and isolated tests through `EMAIL_DATABASE_URL`. It requires TLS on hosted databases and uses the table-owner connection; do not use this route for Hugging Face Spaces.
 
@@ -66,6 +70,8 @@ Add these to **Prayer-Angel-App → Settings → Secrets and variables → Actio
 - Variables: `EMAIL_SUPABASE_URL`, `EMAIL_POSTAL_ADDRESS`; keep `EMAIL_DELIVERY_ENABLED=false` until ready.
 
 The Hugging Face Secret is not automatically available to GitHub Actions. The workflow is inactive while this PR is a draft branch; scheduled workflows require the default branch.
+
+Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. This confirms the setup steps were completed, not that the saved values or live Space have been authenticated. The mailing footer, worker settings, deployed code, and live connection tests still need completion.
 
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
