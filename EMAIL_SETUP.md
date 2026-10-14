@@ -4,13 +4,21 @@ The app now has opt-in signup, email confirmation, preferences, and unsubscribe.
 
 ## Storage
 
-Use a private hosted PostgreSQL database, such as Supabase or Neon. The app and worker use the same database. Normal Hugging Face container files are ephemeral and must not hold the subscriber list. Do not use a public repository, CSV, or chat-session files for contacts.
+This pilot uses a private PostgreSQL database hosted by Supabase. The app and worker use the same database. Normal Hugging Face container files are ephemeral and must not hold the subscriber list. Do not use a public repository, CSV, or chat-session files for contacts.
 
-For this pilot, use a dedicated Supabase project in the **Beyond the Message.** Free organization:
+The dedicated project is already created in the **Beyond the Message.** Free organization:
 
-1. Open the organization dashboard and create a project named `angel-daily-encouragement`.
-2. Choose **West US / us-west-1** and standard PostgreSQL. Save the generated database password in your password manager; do not post it in chat.
-3. After the project is ready, open **Connect**, choose **Session pooler**, and copy its PostgreSQL URI. Insert the database password locally, URL-encoding special characters if needed, then save the complete URI directly as the `EMAIL_DATABASE_URL` Secret.
+| Project setting | Verified value |
+|---|---|
+| Name | `angel-daily-encouragement` |
+| Reference | `srjstdtnabzkmnuilceb` |
+| Region | East US / `us-east-1` (selected through Americas) |
+| Database | Standard PostgreSQL 17 |
+| Dashboard | [Open project](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb) |
+
+Migration `20261014042040_create_private_daily_email_storage` created the three tables. Hosted SQL checks verified owner writes, row-level security on each table, no schema or table access for `anon`, `authenticated`, or `service_role`, no email tables in `public` or Realtime, and zero retained subscriber/delivery/attempt records after the temporary write check. Supabase reported no warning/error advisories. Its informational [RLS without policies notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) is expected: these private tables have no client access policies. Its [unused index notices](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index) are expected for a new, empty database; the indexes support subscription lookup, the rolling sending budget, and the delivery foreign key.
+
+To connect the app, open the project's **Connect** panel, choose the PostgreSQL URI for **Session pooler**, and copy it. Insert the saved database password locally, URL-encoding special characters if needed, then save the complete URI directly as the `EMAIL_DATABASE_URL` Secret in Hugging Face. Save the same value separately in GitHub Actions when configuring the worker. Keep the password and URI out of chat, source files, and screenshots.
 
 The code requires TLS for a remote database. Use the server-side `postgres` table-owner connection from the Connect panel, not an anon/publishable API key. The app creates tables in the private `angel_email_private` schema, outside Supabase's default public Data API schema. It also enables row-level security with no client policies and revokes public and Supabase client-role access. Only the server-side table owner manages contacts. Do not expose this schema through the Data API. This feature does not use the Data API, so you may disable it for the dedicated project.
 
@@ -75,7 +83,7 @@ The app throttles confirmations and limits the pilot size, but this is not a ful
 
 ## Privacy and release
 
-`EMAIL_PRIVACY_NOTICE.md` is a draft addition to the public privacy policy, covering email addresses, delivery preferences, consent, delivery records, Hostinger, and the database host. Choose and document the retention period, identify the actual database provider, and publish the completed wording before opening signup. Unsubscribed records currently remain stored to honor opt-out and preserve consent; there is no automatic purge in this draft.
+`EMAIL_PRIVACY_NOTICE.md` is a draft addition to the public privacy policy, covering email addresses, delivery preferences, consent, delivery records, Hostinger, and Supabase. Choose and document the retention period and deletion process, and publish the completed wording before opening signup. Unsubscribed records currently remain stored to honor opt-out and preserve consent; there is no automatic purge in this draft.
 
 Before the Android subscription feature goes live, update relevant Google Play Data safety declarations and the privacy policy, and inspect the Android packaging project for any required build/link changes. The repositories inspected so far contain the web application, not the Android package project.
 
@@ -87,4 +95,4 @@ Install `requirements.txt`, then run:
 python -m unittest discover -s tests -v
 ```
 
-Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Local validation used an isolated PGlite PostgreSQL engine through its wire-protocol server and stubbed all Hostinger sends. Hosted database connection, real API-token authentication from the Space, and actual inbox delivery remain deployment checks.
+Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Local validation used an isolated PGlite PostgreSQL engine through its wire-protocol server and stubbed all Hostinger sends. The hosted database's SQL write and access checks passed separately, as described above. Hugging Face/GitHub database connectivity, real API-token authentication from the Space, and actual inbox delivery remain deployment checks.
