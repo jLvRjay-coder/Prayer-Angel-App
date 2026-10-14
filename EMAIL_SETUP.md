@@ -37,6 +37,14 @@ This [database role override](https://supabase.com/docs/guides/troubleshooting/p
 
 Direct PostgreSQL support remains available for other hosts and isolated tests through `EMAIL_DATABASE_URL`. It requires TLS on hosted databases and uses the table-owner connection; do not use this route for Hugging Face Spaces.
 
+## Postal address and the devotional format
+
+Jamie confirmed that Beyond the Message and Angel Chat are entirely free. The planned messages contain Scripture, encouragement, reflection, prayer, and a link to continue the discussion in Angel Chat. Based on that described purpose, they appear to be noncommercial. The [FTC explains that CAN-SPAM does not apply to noncommercial bulk email](https://www.ftc.gov/business-guidance/blog/2015/08/candid-answers-can-spam-questions). A link to a free devotional service does not by itself establish a commercial purpose; reassess the message if paid products, services, or advertising are introduced.
+
+[Hostinger's no-spam policy](https://www.hostinger.com/legal/universal-terms-of-service-agreement#12-no-spam-policy) also lists a sender's physical address among requirements that apply as applicable to commercial advertising or bulk communications. Its wording does not explicitly resolve this free devotional use case. Clarify that requirement with Hostinger before enabling delivery without a postal address. If an address is needed, the [FTC's commercial-email guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business) accepts a registered USPS PO Box or qualifying private mailbox as well as a current street address.
+
+Leave `EMAIL_POSTAL_ADDRESS` unset while resolving this. The current sender still requires it and therefore will not accept signups or send confirmation/daily emails without it. Credential setup and the `--initialize` storage check below can continue without a postal address. No exception has been enabled in code, and there is no live delivery yet.
+
 ## Hugging Face settings
 
 | Setting | Type | Purpose |
@@ -45,7 +53,7 @@ Direct PostgreSQL support remains available for other hosts and isolated tests t
 | `EMAIL_SUPABASE_URL` | Variable | `https://srjstdtnabzkmnuilceb.supabase.co` |
 | `EMAIL_SUPABASE_SECRET_KEY` | Secret | Backend key beginning `sb_secret_`; never use a publishable key here. |
 | `EMAIL_SIGNING_KEY` | Secret | At least 32 random characters; use the same value in the app and worker. |
-| `EMAIL_POSTAL_ADDRESS` | Variable or Secret | Valid ministry/business mailing address included in every email. |
+| `EMAIL_POSTAL_ADDRESS` | Variable or Secret | Postal footer required by the current sender; leave unset pending the clarification above. |
 | `EMAIL_SIGNUPS_ENABLED` | Variable | Leave `false` until database connectivity, confirmation, policy, and public links are tested. |
 | `EMAIL_BUDGET_24H` | Variable | Default `750`; accepts 1–900. Counts this feature's confirmation and daily-send attempts together over a rolling 24 hours. |
 | `EMAIL_MAX_SUBSCRIBERS` | Variable | Default `50` for the initial pilot. |
@@ -67,11 +75,11 @@ The draft includes `.github/workflows/daily-email.yml`, scheduled at minutes 17 
 Add these to **Prayer-Angel-App → Settings → Secrets and variables → Actions**:
 
 - Secrets: `HOSTINGER_MAIL_API_TOKEN`, `EMAIL_SUPABASE_SECRET_KEY`, and `EMAIL_SIGNING_KEY` (same values as Hugging Face).
-- Variables: `EMAIL_SUPABASE_URL`, `EMAIL_POSTAL_ADDRESS`; keep `EMAIL_DELIVERY_ENABLED=false` until ready.
+- Variables: `EMAIL_SUPABASE_URL`; keep `EMAIL_DELIVERY_ENABLED=false` until ready. Add `EMAIL_POSTAL_ADDRESS` when resolved as described above.
 
 The Hugging Face Secret is not automatically available to GitHub Actions. The workflow is inactive while this PR is a draft branch; scheduled workflows require the default branch.
 
-Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. This confirms the setup steps were completed, not that the saved values or live Space have been authenticated. The mailing footer, worker settings, deployed code, and live connection tests still need completion.
+Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. This confirms the setup steps were completed, not that the saved values or live Space have been authenticated. The postal-address question, worker settings, deployed code, and live connection tests still need completion.
 
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
