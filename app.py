@@ -27,6 +27,7 @@ from daily_encouragement import (
     DAILY_MESSAGES, chat_context, default_message, email_preview,
     local_today, message_by_key, message_url,
 )
+from email_ui import email_settings, render_email_action, render_email_signup
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -93,7 +94,7 @@ PROD_FOOTER = "BEYOND THE MESSAGE • angel.beyondthemessage.org"
 # ROUTER STATE
 # =========================
 if "view" not in st.session_state:
-    st.session_state.view = "home"  # home | angel | daily | bible | steps | about
+    st.session_state.view = "home"  # home | angel | daily | email | bible | steps | about
 
 # Sync view from URL (so bottom nav links + deep-links work)
 try:
@@ -101,7 +102,7 @@ try:
 except Exception:
     _qp = {}
 _v = _qp.get("v")
-if _v in {"home", "angel", "daily", "bible", "steps", "about"} and _v != st.session_state.view:
+if _v in {"home", "angel", "daily", "email", "bible", "steps", "about"} and _v != st.session_state.view:
     st.session_state.view = _v
 elif not _v and _qp.get("message"):
     st.session_state.view = "daily"
@@ -117,6 +118,9 @@ def goto(view_key: str):
     st.session_state.view = view_key
     try:
         st.query_params["v"] = view_key
+        if view_key != "email":
+            st.query_params.pop("token", None)
+            st.query_params.pop("action", None)
         if view_key not in {"daily", "angel"}:
             st.query_params.pop("message", None)
             st.session_state.pop("daily_chat_message_id", None)
@@ -1902,6 +1906,9 @@ def _build_href(view_key: str) -> str:
     except Exception:
         qp = {}
     qp["v"] = view_key
+    # A confirmation/preferences token is never forwarded into navigation links.
+    qp.pop("token", None)
+    qp.pop("action", None)
     # normalize: Streamlit may store lists; keep simple
     for k, v in list(qp.items()):
         if isinstance(v, (list, tuple)) and v:
@@ -2006,7 +2013,7 @@ def render_how_it_works():
 
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.markdown('<div class="btm-section-title">Daily Encouragement</div>', unsafe_allow_html=True)
-    st.write("Read a Scripture-rooted reflection, carry a personal question into your day, and explore the same message in Angel Chat. Daily email signup is coming soon.")
+    st.write("Read a Scripture-rooted reflection, carry a personal question into your day, and explore the same message in Angel Chat. Optional daily email delivery starts after you confirm your email address.")
     if st.button("Read Daily Encouragement", key="about_open_daily", use_container_width=True):
         goto("daily")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -3042,7 +3049,7 @@ def render_daily_encouragement():
         st.markdown('</div>', unsafe_allow_html=True)
         return
 
-    st.caption("Seven-day preview collection • Daily email signup is coming soon.")
+    st.caption("Seven-day preview collection • Scripture, reflection, and room to go deeper.")
     if not requested and message["date"] != today.isoformat():
         if message["date"] > today.isoformat():
             st.info("Preview the first message in this collection.")
@@ -3101,9 +3108,9 @@ def render_daily_encouragement():
 
     with st.expander("Preview the daily email"):
         st.text(email_preview(message))
-        st.caption("Content preview only. Email signup and delivery are not active yet.")
+        st.caption("Content preview only. Sent emails also include sender details, unsubscribe, and delivery-preference links.")
 
-    st.info("Daily email encouragement is coming soon. For now, you can read and explore every message here.")
+    render_email_signup()
     if st.button("Back to Home", key="daily_back_home", use_container_width=True):
         goto("home")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -3750,6 +3757,10 @@ def render_home():
 
         if st.button("Read Daily Encouragement", use_container_width=True, key="home_open_daily", type="secondary"):
             goto("daily")
+        settings = email_settings()
+        if settings.ready and settings.signups_enabled:
+            if st.button("Get daily encouragement by email", use_container_width=True, key="home_email_signup", type="secondary"):
+                goto("email")
 
         st.markdown(
             '<div class="btm-sanctuary-subnote">One conversation. No menus. No noise.</div>',
@@ -3787,6 +3798,10 @@ elif st.session_state.view == "angel":
 
 elif st.session_state.view == "daily":
     render_daily_encouragement()
+    render_bottom_nav(active="daily")
+
+elif st.session_state.view == "email":
+    render_email_action(goto)
     render_bottom_nav(active="daily")
 
 elif st.session_state.view == "bible":

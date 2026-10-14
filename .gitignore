@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .btm_sessions/
+.env
+.env.*
+!.env.example
