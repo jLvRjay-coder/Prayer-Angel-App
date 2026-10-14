@@ -16,18 +16,30 @@ The dedicated project is already created in the **Beyond the Message.** Free org
 | Database | Standard PostgreSQL 17 |
 | Dashboard | [Open project](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb) |
 
-Migration `20261014042040_create_private_daily_email_storage` created the three tables. Hosted SQL checks verified owner writes, row-level security on each table, no schema or table access for `anon`, `authenticated`, or `service_role`, no email tables in `public` or Realtime, and zero retained subscriber/delivery/attempt records after the temporary write check. Supabase reported no warning/error advisories. Its informational [RLS without policies notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) is expected: these private tables have no client access policies. Its [unused index notices](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index) are expected for a new, empty database; the indexes support subscription lookup, the rolling sending budget, and the delivery foreign key.
+Migration `20261014042040_create_private_daily_email_storage` created the three tables. Migration `20261014043827_backend_email_https_rpc` added a narrow, backend-only HTTPS RPC. Both migrations are recorded in `supabase/migrations` with the same versions as the hosted database.
 
-To connect the app, open the project's **Connect** panel, choose the PostgreSQL URI for **Session pooler**, and copy it. Insert the saved database password locally, URL-encoding special characters if needed, then save the complete URI directly as the `EMAIL_DATABASE_URL` Secret in Hugging Face. Save the same value separately in GitHub Actions when configuring the worker. Keep the password and URI out of chat, source files, and screenshots.
+Hugging Face [documents that Spaces block outgoing ports other than 80, 443, and 8080](https://huggingface.co/docs/hub/spaces-overview#networking). Standard PostgreSQL connections use 5432/6543, so the selected deployment uses Supabase over HTTPS on 443 instead of a PostgreSQL URI. The Python server sends a secret API key in the `apikey` header. It never sends that key to the browser or OpenAI.
 
-The code requires TLS for a remote database. Use the server-side `postgres` table-owner connection from the Connect panel, not an anon/publishable API key. The app creates tables in the private `angel_email_private` schema, outside Supabase's default public Data API schema. It also enables row-level security with no client policies and revokes public and Supabase client-role access. Only the server-side table owner manages contacts. Do not expose this schema through the Data API. This feature does not use the Data API, so you may disable it for the dedicated project.
+To connect the app:
+
+1. Open [Data API settings](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb/integrations/data_api/overview) and turn **Enable Data API** on. Keep the subscriber schema out of exposed schemas and leave automatic table exposure off.
+2. Open [API Keys](https://supabase.com/dashboard/project/srjstdtnabzkmnuilceb/settings/api-keys). Use a **secret** key beginning `sb_secret_`; a publishable key is not accepted by the app.
+3. In Hugging Face, add the Variable `EMAIL_SUPABASE_URL=https://srjstdtnabzkmnuilceb.supabase.co` and Secret `EMAIL_SUPABASE_SECRET_KEY` containing that secret key. Copy the key directly between settings screens, keeping it out of chat, code, and screenshots.
+4. Configure the shared signing key and remaining settings below. The HTTPS connection does not need `EMAIL_DATABASE_URL` or the database password.
+
+The RPC exposes only defined subscription/delivery actions, with no generic SQL endpoint. It runs as `SECURITY INVOKER`, with execute permission only for the backend `service_role`. That backend role has SELECT/INSERT/UPDATE on the three private tables and bypasses RLS; `anon`, `authenticated`, and PUBLIC have no access to the private schema, tables, or RPC. The server validates signed email links before invoking mutations, and the database checks their current nonce again under lock. All tables keep RLS enabled with no client policies. Never add `angel_email_private` to Data API exposed schemas.
+
+Hosted SQL checks verified owner writes, RLS on each table, denied execution for anonymous and signed-in clients, backend health, no email tables in `public` or Realtime, and zero retained test records. Supabase reported no warning/error advisories. Its informational [RLS without policies notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) is intentional for these private tables. Its [unused index notices](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index) are expected in an empty database.
+
+Direct PostgreSQL support remains available for other hosts and isolated tests through `EMAIL_DATABASE_URL`. It requires TLS on hosted databases and uses the table-owner connection; do not use this route for Hugging Face Spaces.
 
 ## Hugging Face settings
 
 | Setting | Type | Purpose |
 |---|---|---|
 | `HOSTINGER_MAIL_API_TOKEN` | Secret | Already added by Jamie; restricted to contact@beyondthemessage.org. |
-| `EMAIL_DATABASE_URL` | Secret | Private PostgreSQL connection URI. |
+| `EMAIL_SUPABASE_URL` | Variable | `https://srjstdtnabzkmnuilceb.supabase.co` |
+| `EMAIL_SUPABASE_SECRET_KEY` | Secret | Backend key beginning `sb_secret_`; never use a publishable key here. |
 | `EMAIL_SIGNING_KEY` | Secret | At least 32 random characters; use the same value in the app and worker. |
 | `EMAIL_POSTAL_ADDRESS` | Variable or Secret | Valid ministry/business mailing address included in every email. |
 | `EMAIL_SIGNUPS_ENABLED` | Variable | Leave `false` until database connectivity, confirmation, policy, and public links are tested. |
@@ -50,12 +62,12 @@ The draft includes `.github/workflows/daily-email.yml`, scheduled at minutes 17 
 
 Add these to **Prayer-Angel-App → Settings → Secrets and variables → Actions**:
 
-- Secrets: `HOSTINGER_MAIL_API_TOKEN`, `EMAIL_DATABASE_URL`, and `EMAIL_SIGNING_KEY` (same values as Hugging Face).
-- Variables: `EMAIL_POSTAL_ADDRESS`; keep `EMAIL_DELIVERY_ENABLED=false` until ready.
+- Secrets: `HOSTINGER_MAIL_API_TOKEN`, `EMAIL_SUPABASE_SECRET_KEY`, and `EMAIL_SIGNING_KEY` (same values as Hugging Face).
+- Variables: `EMAIL_SUPABASE_URL`, `EMAIL_POSTAL_ADDRESS`; keep `EMAIL_DELIVERY_ENABLED=false` until ready.
 
 The Hugging Face Secret is not automatically available to GitHub Actions. The workflow is inactive while this PR is a draft branch; scheduled workflows require the default branch.
 
-To initialize tables without sending:
+The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
 ```bash
 python email_worker.py --initialize
@@ -79,6 +91,8 @@ Your Business Starter mailbox limit is 1,000 outgoing messages over a rolling 24
 
 The sender follows `Retry-After` on HTTP 429 by deferring that delivery until a later eligible run; it does not invent a separate API quota. Daily deliveries are deduplicated by subscriber and message ID in PostgreSQL. A durable `sending` record is written before calling the provider. Timeouts and uncertain server responses become `unknown`; interrupted sends remain `sending`. Neither is automatically replayed. Investigate those records against Hostinger's Sent folder/delivery logs before any operator retry. A missing email is preferable to silently duplicating an uncertain send.
 
+Each HTTPS mutation commits as one database transaction. Capacity/reservation operations use an advisory lock; claiming a send checks consent under a row lock and records `sending` before the provider request. The HTTP client never automatically retries a mutation. If saving the final outcome fails after provider acceptance, the durable `sending` record still prevents replay. Unsubscribe prevents future claims; an email request already in flight cannot be recalled.
+
 The app throttles confirmations and limits the pilot size, but this is not a full public abuse-prevention system. For a broad public launch, add stronger form verification and monitoring as usage grows.
 
 ## Privacy and release
@@ -95,4 +109,4 @@ Install `requirements.txt`, then run:
 python -m unittest discover -s tests -v
 ```
 
-Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Local validation used an isolated PGlite PostgreSQL engine through its wire-protocol server and stubbed all Hostinger sends. The hosted database's SQL write and access checks passed separately, as described above. Hugging Face/GitHub database connectivity, real API-token authentication from the Space, and actual inbox delivery remain deployment checks.
+Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Local validation used an isolated PGlite PostgreSQL engine through its wire-protocol server. The HTTPS adapter was tested against the real RPC SQL through a local session stub, including normal subscription flows, access denial, and a lost outcome update after provider acceptance. All Hostinger and OpenAI calls were stubbed. Hosted SQL write/access checks passed separately. Live HTTPS authentication, Hugging Face/GitHub connectivity, mail-token authentication from the Space, and actual inbox delivery remain deployment checks.

@@ -1,6 +1,6 @@
 """Durable opt-in subscriptions and delivery records, separate from chat state.
 
-Production storage is PostgreSQL with TLS. Every outgoing API attempt reserves
+Hosted storage uses HTTPS or PostgreSQL with TLS. Every outgoing API attempt reserves
 rolling-24-hour capacity before sending. A durable 'sending' state prevents a
 crash after provider acceptance from silently producing a duplicate.
 """
@@ -40,6 +40,8 @@ class SubscriptionError(ValueError):
 @dataclass(frozen=True)
 class EmailSettings:
     database_url: str = field(default="", repr=False)
+    supabase_url: str = ""
+    supabase_secret_key: str = field(default="", repr=False)
     signing_key: str = field(default="", repr=False)
     api_token: str = field(default="", repr=False)
     signups_enabled: bool = False
@@ -55,6 +57,8 @@ class EmailSettings:
         values = os.environ if values is None else values
         return cls(
             database_url=values.get("EMAIL_DATABASE_URL", ""),
+            supabase_url=values.get("EMAIL_SUPABASE_URL", ""),
+            supabase_secret_key=values.get("EMAIL_SUPABASE_SECRET_KEY", ""),
             signing_key=values.get("EMAIL_SIGNING_KEY", ""),
             api_token=values.get("HOSTINGER_MAIL_API_TOKEN", ""),
             signups_enabled=str(values.get("EMAIL_SIGNUPS_ENABLED", "false")).lower() == "true",
@@ -65,9 +69,24 @@ class EmailSettings:
         )
 
     @property
+    def https_database_ready(self):
+        try:
+            url = urlparse(self.supabase_url)
+            port = url.port
+        except ValueError:
+            return False
+        return bool(
+            url.scheme == "https" and url.hostname
+            and url.hostname.endswith(".supabase.co")
+            and not url.username and not url.password and not port
+            and url.path in {"", "/"} and not url.query and not url.fragment
+            and self.supabase_secret_key.startswith("sb_secret_")
+        )
+
+    @property
     def storage_ready(self):
         return bool(
-            self.database_url.startswith(("postgresql://", "postgres://"))
+            (self.https_database_ready or self.database_url.startswith(("postgresql://", "postgres://")))
             and len(self.signing_key) >= 32
         )
 
@@ -109,8 +128,8 @@ CREATE INDEX IF NOT EXISTS angel_email_attempts_time_idx ON angel_email_private.
 CREATE INDEX IF NOT EXISTS angel_email_attempts_delivery_idx ON angel_email_private.angel_email_attempts(delivery_id);
 CREATE INDEX IF NOT EXISTS angel_email_active_idx ON angel_email_private.angel_email_subscribers(status);
 
--- Server connections use the table owner. No browser/client policies exist.
--- RLS denies non-owner access even if a table grant is added accidentally.
+-- No browser/client policies exist. RLS denies ordinary client roles even
+-- after accidental grants; the HTTPS migration separately authorizes backend service_role.
 ALTER TABLE angel_email_private.angel_email_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE angel_email_private.angel_email_deliveries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE angel_email_private.angel_email_attempts ENABLE ROW LEVEL SECURITY;
@@ -123,7 +142,7 @@ DECLARE client_role TEXT;
 BEGIN
     FOR client_role IN
         SELECT rolname FROM pg_catalog.pg_roles
-        WHERE rolname IN ('anon', 'authenticated', 'service_role')
+        WHERE rolname IN ('anon', 'authenticated')
     LOOP
         EXECUTE format('REVOKE ALL ON SCHEMA angel_email_private FROM %I', client_role);
         EXECUTE format('REVOKE ALL ON ALL TABLES IN SCHEMA angel_email_private FROM %I', client_role);
@@ -412,7 +431,7 @@ class SubscriptionStore:
 class EmailService:
     def __init__(self, settings, store=None, mailer=None):
         self.settings = settings
-        self.store = store or SubscriptionStore(settings)
+        self.store = store or subscription_store(settings)
         self.mailer = mailer or HostingerMailer(settings.api_token, settings.mailbox_address)
 
     def signup(self, email, tz, clock, consent, now=None):
@@ -437,6 +456,13 @@ class EmailService:
         if result.state != "sent":
             raise SubscriptionError("We could not confirm delivery of the email. Please try again later.")
         return "sent"
+
+
+def subscription_store(settings):
+    if settings.https_database_ready:
+        from supabase_email_store import SupabaseSubscriptionStore
+        return SupabaseSubscriptionStore(settings)
+    return SubscriptionStore(settings)
 
 
 def due_message(subscriber, messages, now=None):

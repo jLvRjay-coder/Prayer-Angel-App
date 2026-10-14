@@ -131,13 +131,16 @@ class LinkAndScheduleTests(unittest.TestCase):
 class DatabaseFlowTests(unittest.TestCase):
     def setUp(self):
         self.settings = settings()
-        self.store = SubscriptionStore(self.settings)
+        self.store = self.make_store(self.settings)
         self.store.initialize()
         with self.store.connection() as connection:
             connection.execute("TRUNCATE angel_email_attempts,angel_email_deliveries,angel_email_subscribers CASCADE")
 
     def requested(self, email="reader@example.com", now=NOW):
         return self.store.request(email, "America/Denver", time(8), True, now)
+
+    def make_store(self, configuration):
+        return SubscriptionStore(configuration)
 
     def activate(self, row):
         self.store.apply_action(make_token(self.settings, row, "confirm", NOW), "confirm", now=NOW)
@@ -195,7 +198,7 @@ class DatabaseFlowTests(unittest.TestCase):
         self.assertIsNone(self.store.reserve(active["id"], "daily:uncertain", "daily", now=NOW + timedelta(hours=2)))
 
     def test_rolling_budget_includes_confirmation_attempts(self):
-        limited = SubscriptionStore(replace(self.settings, budget_24h=1))
+        limited = self.make_store(replace(self.settings, budget_24h=1))
         pending = self.requested()
         limited.reserve(pending["id"], "confirmation:first", "confirmation", pending["confirmation_nonce"], now=NOW)
         active = self.activate(pending)
@@ -219,7 +222,7 @@ class DatabaseFlowTests(unittest.TestCase):
 
     def test_preferences_and_unsubscribe_work_when_sending_credentials_are_removed(self):
         active = self.activate(self.requested())
-        store = SubscriptionStore(replace(self.settings, api_token="", delivery_enabled=False))
+        store = self.make_store(replace(self.settings, api_token="", delivery_enabled=False))
         manage = make_token(self.settings, active, "manage", NOW)
         store.apply_action(manage, "manage", "America/New_York", time(9), NOW)
         self.assertEqual(store.active_subscribers()[0]["timezone"], "America/New_York")
@@ -227,7 +230,7 @@ class DatabaseFlowTests(unittest.TestCase):
         self.assertEqual(store.active_subscribers(), [])
 
     def test_pilot_cap_counts_pending_and_active_subscribers(self):
-        capped = SubscriptionStore(replace(self.settings, max_subscribers=1))
+        capped = self.make_store(replace(self.settings, max_subscribers=1))
         capped.request("first@example.com", "America/Denver", time(8), True, NOW)
         with self.assertRaises(SubscriptionError):
             capped.request("second@example.com", "America/Denver", time(8), True, NOW)
@@ -273,7 +276,7 @@ class EmailScreenTests(unittest.TestCase):
             self.assertIn("Daily email signup will open soon", at.info[0].value)
 
     def test_opening_confirmation_link_never_confirms_automatically(self):
-        with patch("email_ui.email_settings", return_value=settings()), patch("email_ui.SubscriptionStore") as store:
+        with patch("email_ui.email_settings", return_value=settings()), patch("email_ui.subscription_store") as store:
             store.return_value.token_subscriber.return_value = subscriber()
             at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)
             at.query_params.update({"v": "email", "action": "confirm", "token": "private-test-token"})

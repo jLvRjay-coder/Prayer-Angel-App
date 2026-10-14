@@ -43,7 +43,7 @@ The draft adds a seven-day collection adapted from Daily Compass with one additi
 
 ### Email signup and Hostinger delivery
 
-The draft now includes consent-based signup, confirmation emails, timezone/time preferences, unsubscribe, signed links, a private PostgreSQL subscriber store, Hostinger's mailbox API, and an external GitHub Actions delivery worker. It sends only approved content on explicit dates, deduplicates daily messages, and reserves a rolling 24-hour budget across confirmation and daily-send attempts. See [EMAIL_SETUP.md](EMAIL_SETUP.md) for deployment settings and remaining connection steps, and [EMAIL_PRIVACY_NOTICE.md](EMAIL_PRIVACY_NOTICE.md) for a draft privacy-policy addition.
+The draft now includes consent-based signup, confirmation emails, timezone/time preferences, unsubscribe, signed links, a private Supabase PostgreSQL subscriber store accessed by a backend-only HTTPS RPC, Hostinger's mailbox API, and an external GitHub Actions delivery worker. It sends only approved content on explicit dates, deduplicates daily messages, and reserves a rolling 24-hour budget across confirmation and daily-send attempts. The HTTPS route fits Hugging Face's network restrictions; its secret key stays on the Python server. See [EMAIL_SETUP.md](EMAIL_SETUP.md) for deployment settings and remaining connection steps, and [EMAIL_PRIVACY_NOTICE.md](EMAIL_PRIVACY_NOTICE.md) for a draft privacy-policy addition.
 
 Test the draft with `python -m unittest discover -s tests -v` after installing `requirements.txt`. Set `EMAIL_TEST_DATABASE_URL` to an isolated PostgreSQL test database to include database integration tests. Hostinger and OpenAI calls are stubbed; no external messages or AI requests are made.
 
@@ -51,6 +51,8 @@ Test the draft with `python -m unittest discover -s tests -v` after installing `
 - `app.py` — main Streamlit app
 - `daily_encouragement.py` — reviewed-content format and seven draft teachings
 - `email_subscription.py` — subscriptions, signed links, and durable delivery records
+- `supabase_email_store.py` — backend HTTPS storage adapter
+- `supabase/migrations` — installed private tables and restricted backend RPC
 - `email_ui.py` — signup, confirmation, preferences, and unsubscribe screens
 - `hostinger_email.py` — sending transport and read-only mailbox verification
 - `email_worker.py` — scheduled worker outside Streamlit

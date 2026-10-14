@@ -6,7 +6,7 @@ from zoneinfo import available_timezones
 import streamlit as st
 
 from email_subscription import (
-    CONSENT_TEXT, EmailService, EmailSettings, SubscriptionError, SubscriptionStore,
+    CONSENT_TEXT, EmailService, EmailSettings, SubscriptionError, subscription_store,
 )
 from hostinger_email import MailUnavailable
 
@@ -75,7 +75,7 @@ def render_email_action(goto):
             st.error("Email preferences are temporarily unavailable. Please try again later or contact contact@beyondthemessage.org.")
         else:
             try:
-                store = SubscriptionStore(settings)
+                store = subscription_store(settings)
                 row = store.token_subscriber(token, action)
                 if action == "manage":
                     with st.form("email_preferences"):

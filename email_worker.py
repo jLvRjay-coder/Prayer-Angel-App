@@ -11,7 +11,7 @@ import time
 
 from daily_encouragement import DAILY_MESSAGES
 from email_subscription import (
-    EmailSettings, SubscriptionError, SubscriptionStore, due_message, render_email, utc_now,
+    EmailSettings, SubscriptionError, subscription_store, due_message, render_email, utc_now,
 )
 from hostinger_email import HostingerMailer
 
@@ -21,7 +21,7 @@ def run_worker(settings, store=None, mailer=None, messages=DAILY_MESSAGES, now=N
         return {"disabled": 1}
     if not settings.ready:
         raise SubscriptionError("The email worker is not configured.")
-    store = store or SubscriptionStore(settings)
+    store = store or subscription_store(settings)
     mailer = mailer or HostingerMailer(settings.api_token, settings.mailbox_address)
     store.initialize()
     mailer.verify_mailbox()
@@ -54,13 +54,13 @@ def run_worker(settings, store=None, mailer=None, messages=DAILY_MESSAGES, now=N
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--initialize", action="store_true", help="Create the database tables without sending email")
+    parser.add_argument("--initialize", action="store_true", help="Initialize PostgreSQL tables or verify installed HTTPS storage without sending")
     args = parser.parse_args()
     settings = EmailSettings.from_env()
     try:
         if args.initialize:
-            SubscriptionStore(settings).initialize()
-            print("Subscription tables initialized; no email sent.")
+            subscription_store(settings).initialize()
+            print("Subscription storage ready; no email sent.")
         else:
             print(run_worker(settings))
     except Exception:
