@@ -6,7 +6,13 @@ The app now has opt-in signup, email confirmation, preferences, and unsubscribe.
 
 Use a private hosted PostgreSQL database, such as Supabase or Neon. The app and worker use the same database. Normal Hugging Face container files are ephemeral and must not hold the subscriber list. Do not use a public repository, CSV, or chat-session files for contacts.
 
-For Supabase, copy the **Session pooler** PostgreSQL connection URI from the project's Connect panel and insert the database password locally. The code requires TLS for a remote database. Prefer a dedicated project/database for this feature. The app creates tables in the private `angel_email_private` schema, outside Supabase's default public Data API schema. Do not expose this schema through a public API or grant anonymous/client roles access to it.
+For this pilot, use a dedicated Supabase project in the **Beyond the Message.** Free organization:
+
+1. Open the organization dashboard and create a project named `angel-daily-encouragement`.
+2. Choose **West US / us-west-1** and standard PostgreSQL. Save the generated database password in your password manager; do not post it in chat.
+3. After the project is ready, open **Connect**, choose **Session pooler**, and copy its PostgreSQL URI. Insert the database password locally, URL-encoding special characters if needed, then save the complete URI directly as the `EMAIL_DATABASE_URL` Secret.
+
+The code requires TLS for a remote database. Use the server-side `postgres` table-owner connection from the Connect panel, not an anon/publishable API key. The app creates tables in the private `angel_email_private` schema, outside Supabase's default public Data API schema. It also enables row-level security with no client policies and revokes public and Supabase client-role access. Only the server-side table owner manages contacts. Do not expose this schema through the Data API. This feature does not use the Data API, so you may disable it for the dedicated project.
 
 ## Hugging Face settings
 

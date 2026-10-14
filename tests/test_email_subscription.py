@@ -8,6 +8,7 @@ from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
 import requests
+import psycopg
 from streamlit.testing.v1 import AppTest
 
 from daily_encouragement import DAILY_MESSAGES
@@ -141,6 +142,25 @@ class DatabaseFlowTests(unittest.TestCase):
     def activate(self, row):
         self.store.apply_action(make_token(self.settings, row, "confirm", NOW), "confirm", now=NOW)
         return self.store.active_subscribers()[0]
+
+    def test_client_cannot_read_or_write_contacts_even_after_accidental_grants(self):
+        self.requested()
+        with self.store.connection() as connection:
+            # All role/grant changes roll back; only the isolated test DB is used.
+            try:
+                connection.execute("CREATE ROLE angel_email_privacy_test NOLOGIN")
+                connection.execute("GRANT USAGE ON SCHEMA angel_email_private TO angel_email_privacy_test")
+                connection.execute("GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA angel_email_private TO angel_email_privacy_test")
+                connection.execute("SET LOCAL ROLE angel_email_privacy_test")
+                for table in ("angel_email_subscribers", "angel_email_deliveries", "angel_email_attempts"):
+                    self.assertEqual(connection.execute(f"SELECT count(*) AS n FROM {table}").fetchone()["n"], 0)
+                with self.assertRaises(psycopg.errors.InsufficientPrivilege):
+                    with connection.transaction():
+                        connection.execute("""INSERT INTO angel_email_subscribers
+                            (id,email,status,timezone,delivery_time,manage_nonce,requested_at,updated_at)
+                            VALUES ('blocked','blocked@example.com','pending','UTC','08:00','test',now(),now())""")
+            finally:
+                connection.rollback()
 
     def test_consent_confirmation_and_unsubscribe(self):
         with self.assertRaises(SubscriptionError):
