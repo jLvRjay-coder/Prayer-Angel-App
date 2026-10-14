@@ -19,8 +19,14 @@ import re
 import urllib.parse
 import uuid
 import io
+import html
 from datetime import datetime
 import time
+
+from daily_encouragement import (
+    DAILY_MESSAGES, chat_context, default_message, email_preview,
+    local_today, message_by_key, message_url,
+)
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -87,7 +93,7 @@ PROD_FOOTER = "BEYOND THE MESSAGE • angel.beyondthemessage.org"
 # ROUTER STATE
 # =========================
 if "view" not in st.session_state:
-    st.session_state.view = "home"  # home | angel | bible | steps | about
+    st.session_state.view = "home"  # home | angel | daily | bible | steps | about
 
 # Sync view from URL (so bottom nav links + deep-links work)
 try:
@@ -95,8 +101,13 @@ try:
 except Exception:
     _qp = {}
 _v = _qp.get("v")
-if _v in {"home", "angel", "bible", "steps", "about"} and _v != st.session_state.view:
+if _v in {"home", "angel", "daily", "bible", "steps", "about"} and _v != st.session_state.view:
     st.session_state.view = _v
+elif not _v and _qp.get("message"):
+    st.session_state.view = "daily"
+
+if _v == "angel" and message_by_key(_qp.get("message", "")):
+    st.session_state.daily_chat_message_id = message_by_key(_qp["message"])["id"]
 
 if "angel_prefill" not in st.session_state:
     st.session_state.angel_prefill = ""
@@ -106,6 +117,9 @@ def goto(view_key: str):
     st.session_state.view = view_key
     try:
         st.query_params["v"] = view_key
+        if view_key not in {"daily", "angel"}:
+            st.query_params.pop("message", None)
+            st.session_state.pop("daily_chat_message_id", None)
     except Exception:
         pass
     st.rerun()
@@ -1990,6 +2004,18 @@ def render_how_it_works():
     )
     st.markdown('</div>', unsafe_allow_html=True)
 
+    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
+    st.markdown('<div class="btm-section-title">Daily Encouragement</div>', unsafe_allow_html=True)
+    st.write("Read a Scripture-rooted reflection, carry a personal question into your day, and explore the same message in Angel Chat. Daily email signup is coming soon.")
+    if st.button("Read Daily Encouragement", key="about_open_daily", use_container_width=True):
+        goto("daily")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
+    st.markdown('<div class="btm-section-title">Your conversation and privacy</div>', unsafe_allow_html=True)
+    st.write("No account is required. Conversation state is saved on our server to restore your session after a reload. Your messages are sent to OpenAI to generate replies. New conversation clears the saved conversation for this session. Keep your session link private and avoid sharing sensitive personal details.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="btm-card btm-note">', unsafe_allow_html=True)
@@ -2987,6 +3013,103 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
+# DAILY ENCOURAGEMENT
+# =========================
+def _open_daily_in_chat(message, question):
+    # Restore an existing chat before applying the new composer text so the
+    # persistence loader cannot replace it with an older saved prefill.
+    _load_angel_state_if_any()
+    st.session_state.daily_chat_message_id = message["id"]
+    st.session_state.angel_prefill = question
+    st.session_state.angel_message_input = question
+    st.session_state.angel_chat_input = question
+    st.query_params["message"] = message["id"]
+    goto("angel")
+
+
+def render_daily_encouragement():
+    st.markdown('<div class="btm-page">', unsafe_allow_html=True)
+    st.markdown('<div class="btm-hero"><div class="btm-hero-title">Daily Encouragement</div><div class="btm-hero-sub">A moment in Scripture. A question to carry. Room to go deeper.</div></div>', unsafe_allow_html=True)
+
+    today = local_today()
+    requested = st.query_params.get("message", "")
+    message = message_by_key(requested) if requested else default_message(today)
+    if message is None:
+        st.error("This message link could not be found.")
+        if st.button("Open Daily Encouragement", key="daily_invalid_link", use_container_width=True):
+            st.query_params.pop("message", None)
+            goto("daily")
+        st.markdown('</div>', unsafe_allow_html=True)
+        return
+
+    st.caption("Seven-day preview collection • Daily email signup is coming soon.")
+    if not requested and message["date"] != today.isoformat():
+        if message["date"] > today.isoformat():
+            st.info("Preview the first message in this collection.")
+        else:
+            st.info("There is no new message scheduled for today. You can still explore this collection.")
+
+    ids = [m["id"] for m in DAILY_MESSAGES]
+    choices = {m["id"]: m for m in DAILY_MESSAGES}
+    selected_id = st.selectbox(
+        "Explore a message", ids, index=ids.index(message["id"]),
+        format_func=lambda key: f"{choices[key]['date']} — {choices[key]['title']}",
+        key=f"daily_select_{message['id']}",
+    )
+    if selected_id != message["id"]:
+        st.query_params["message"] = selected_id
+        goto("daily")
+
+    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
+    st.caption(datetime.fromisoformat(message["date"]).strftime("%A, %B %d, %Y"))
+    st.subheader(message["title"])
+    st.markdown(
+        f'<div class="btm-scripture-anchor"><div class="label">Scripture • KJV</div><div class="ref">{html.escape(message["reference"])}</div></div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(f'> {message["verse"]}\n\n*{message["verse_reference"]}, KJV*')
+    st.write(message["encouragement"])
+    st.link_button("Read the passage", kjv_url(message["reference"]), use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
+    st.markdown('**A question to carry**')
+    st.write(message["reflection"])
+    st.markdown('**A prayer**')
+    st.write(message["prayer"])
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    with st.expander("Explore the passage and its connections"):
+        st.write(message["context"])
+        st.write(message["connection"])
+
+    st.subheader("Go deeper with Angel Chat")
+    st.caption("Choose a question, then send it when you are ready. Angel Chat will have this teaching as context.")
+    questions = (
+        ("Understand the passage", f"Help me understand {message['reference']} in its original context."),
+        ("Connect across Scripture", "How does this encouragement connect with the larger story of Scripture?"),
+        ("Reflect on this message", f"Help me reflect on this question: {message['reflection']}"),
+        ("Ask my own question", f"I have a question about {message['title']}: "),
+    )
+    for index, (label, question) in enumerate(questions):
+        if st.button(label, key=f"daily_question_{message['id']}_{index}", use_container_width=True):
+            _open_daily_in_chat(message, question)
+
+    with st.expander("Share this encouragement"):
+        st.markdown(f'[Open a shareable link]({message_url(message)})')
+        st.caption("This link opens the teaching without including your conversation or private session link.")
+
+    with st.expander("Preview the daily email"):
+        st.text(email_preview(message))
+        st.caption("Content preview only. Email signup and delivery are not active yet.")
+
+    st.info("Daily email encouragement is coming soon. For now, you can read and explore every message here.")
+    if st.button("Back to Home", key="daily_back_home", use_container_width=True):
+        goto("home")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# =========================
 # ANGEL CHAT
 # =========================
 def render_angel_chat():
@@ -3052,6 +3175,8 @@ def render_angel_chat():
         st.session_state.last_voice_hash = ""
         st.session_state.burden = ""
         st.session_state.mode_pinned = False
+        st.session_state.pop("daily_chat_message_id", None)
+        st.query_params.pop("message", None)
         _save_angel_state()
 
     def mode_label(mode_key: str) -> str:
@@ -3094,6 +3219,17 @@ def render_angel_chat():
             "• If the person is in crisis, gently encourage them to also reach out to a trusted "
             "person or pastor in their life.\n"
         )
+
+        daily_message = message_by_key(st.session_state.get("daily_chat_message_id", ""))
+        if daily_message:
+            base += (
+                "\nDAILY ENCOURAGEMENT THE PERSON IS EXPLORING:\n"
+                + chat_context(daily_message)
+                + "\nUse this teaching as context for their question. Keep the passage in its original setting. "
+                "Distinguish what the passage says from personal reflection. Explain and pray in natural modern language; "
+                "preserve KJV wording only in actual Scripture quotations. End with an open, personal question rather than "
+                "prescribing what God is telling this person to do.\n"
+            )
 
         # Relational Memory — what the person is carrying this week.
         burden = (st.session_state.get("burden") or "").strip()
@@ -3320,12 +3456,22 @@ def render_angel_chat():
         )
 
         # Privacy acknowledgement — softened.
+        daily_message = message_by_key(st.session_state.get("daily_chat_message_id", ""))
+        if daily_message:
+            st.info(f"Exploring: {daily_message['title']} • {daily_message['reference']}")
+            if st.button("Return to this encouragement", key="angel_back_daily", use_container_width=True):
+                st.query_params["message"] = daily_message["id"]
+                goto("daily")
+        else:
+            if st.button("Read Daily Encouragement", key="angel_open_daily", use_container_width=True):
+                goto("daily")
+
         if not st.session_state.get("privacy_ack", False):
             st.markdown(
                 """
                 <div class="btm-privacy btm-sanctuary-privacy">
                   <div class="title">A quiet promise</div>
-                  <p class="line"><span class="strong">What you share stays here.</span> Nothing is saved, remembered, or tracked across sessions.</p>
+                  <p class="line">Conversation state is saved on our server to restore this session after a reload. Your messages are sent to OpenAI to generate replies. New conversation clears the saved conversation for this session. Keep your session link private and avoid sensitive personal details.</p>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -3602,6 +3748,9 @@ def render_home():
             type="primary",
         )
 
+        if st.button("Read Daily Encouragement", use_container_width=True, key="home_open_daily", type="secondary"):
+            goto("daily")
+
         st.markdown(
             '<div class="btm-sanctuary-subnote">One conversation. No menus. No noise.</div>',
             unsafe_allow_html=True,
@@ -3635,6 +3784,10 @@ if st.session_state.view == "home":
 elif st.session_state.view == "angel":
     render_angel_chat()
     render_bottom_nav(active="angel")
+
+elif st.session_state.view == "daily":
+    render_daily_encouragement()
+    render_bottom_nav(active="daily")
 
 elif st.session_state.view == "bible":
     render_story_reader(
