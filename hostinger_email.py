@@ -14,7 +14,9 @@ class SendResult:
 
 
 class MailUnavailable(RuntimeError):
-    pass
+    def __init__(self, message, reason="unavailable"):
+        super().__init__(message)
+        self.reason = reason
 
 
 class HostingerMailer:
@@ -27,7 +29,7 @@ class HostingerMailer:
         self.mailbox_id = None
 
     def _headers(self):
-        return {"Authorization": f"Bearer {self.token}", "Accept": "application/json"}
+        return {"Authorization": f"Bearer {self.token}", "Accept": "application/json", "Content-Type": "application/json"}
 
     def verify_mailbox(self):
         """Read-only token verification; the From address is set by the mailbox."""
@@ -36,15 +38,20 @@ class HostingerMailer:
                 f"{self.API_URL}/me", headers=self._headers(),
                 timeout=(5, 20), allow_redirects=False,
             )
+            failures = {401: "unauthorized", 403: "forbidden", 429: "rate_limited"}
+            if response.status_code in failures:
+                raise MailUnavailable("The email service is temporarily unavailable.", failures[response.status_code])
             response.raise_for_status()
             boxes = response.json()["data"]["mailboxes"]
             matches = [b for b in boxes if b["address"].casefold() == self.mailbox_address.casefold()]
             if len(matches) != 1:
-                raise MailUnavailable("The configured mailbox is not authorized.")
+                raise MailUnavailable("The configured mailbox is not authorized.", "mailbox_not_authorized")
             self.mailbox_id = matches[0]["resourceId"]
             return True
-        except (requests.RequestException, KeyError, ValueError, TypeError):
+        except requests.RequestException:
             raise MailUnavailable("The email service is temporarily unavailable.") from None
+        except (KeyError, ValueError, TypeError):
+            raise MailUnavailable("The email service is temporarily unavailable.", "unrecognized_response") from None
 
     def send(self, recipient, subject, text, html):
         if not self.mailbox_id:

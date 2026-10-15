@@ -42,7 +42,22 @@ class ConnectionCheckTests(unittest.TestCase):
         self.assertEqual(storage_session.post.call_args.args[0], settings.supabase_url + "/rest/v1/rpc/angel_email_backend")
         mail_session.get.assert_called_once()
         self.assertEqual(mail_session.get.call_args.args[0], HostingerMailer.API_URL + "/me")
+        self.assertEqual(mail_session.get.call_args.kwargs["headers"]["Content-Type"], "application/json")
         mail_session.post.assert_not_called()
+
+    def test_mail_rejections_have_safe_reasons_and_never_send(self):
+        settings = self.configuration()
+        for status, reason in [(401, "HTTP 401: token rejected"), (403, "HTTP 403: access denied"), (429, "HTTP 429: rate limited")]:
+            with self.subTest(status=status):
+                session = Mock(spec=["get", "post"])
+                session.get.return_value.status_code = status
+                mailer = HostingerMailer(settings.api_token, settings.mailbox_address, session)
+                with patch.object(check, "SupabaseSubscriptionStore"), \
+                        patch.object(check, "HostingerMailer", return_value=mailer):
+                    checks = check.check_connections(settings)
+                self.assertFalse(checks[f"Hostinger mailbox authorization ({reason})"])
+                session.get.return_value.json.assert_not_called()
+                session.post.assert_not_called()
 
     def test_missing_credentials_do_not_make_network_calls(self):
         with patch.object(check, "SupabaseSubscriptionStore") as store, \

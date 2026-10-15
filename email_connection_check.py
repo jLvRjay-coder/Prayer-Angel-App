@@ -3,7 +3,7 @@
 import re
 
 from email_subscription import EmailSettings
-from hostinger_email import HostingerMailer
+from hostinger_email import HostingerMailer, MailUnavailable
 from supabase_email_store import SupabaseSubscriptionStore
 
 
@@ -32,6 +32,17 @@ def check_connections(settings):
             checks["Hostinger mailbox authorization"] = bool(
                 HostingerMailer(settings.api_token, settings.mailbox_address).verify_mailbox()
             )
+        except MailUnavailable as error:
+            # Only fixed local explanations reach logs, never provider bodies.
+            reasons = {
+                "unauthorized": "HTTP 401: token rejected",
+                "forbidden": "HTTP 403: access denied",
+                "rate_limited": "HTTP 429: rate limited",
+                "mailbox_not_authorized": "configured mailbox not authorized",
+                "unrecognized_response": "response format not recognized",
+            }
+            reason = reasons.get(error.reason, "service unavailable")
+            checks[f"Hostinger mailbox authorization ({reason})"] = checks.pop("Hostinger mailbox authorization")
         except Exception:
             pass
     return checks
