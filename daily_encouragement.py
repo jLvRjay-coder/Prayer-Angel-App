@@ -8,11 +8,13 @@ the future delivery service must send only content explicitly approved to send.
 """
 
 from datetime import date, datetime, timezone
+import html
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 
 SITE_URL = "https://angel.beyondthemessage.org/"
+GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=org.beyondthemessage.angel"
 PREVIEW_TIMEZONE = "America/Denver"
 SOURCE_URL = (
     "https://github.com/jLvRjay-coder/btm-study-hub-streamlit/"
@@ -211,6 +213,14 @@ def message_url(message):
     return SITE_URL + "?" + urlencode({"v": "daily", "message": message["id"]})
 
 
+def exploration_links(message):
+    """Public browser context and the verified Android download listing."""
+    return (
+        ("Open Angel Chat in your browser", SITE_URL + "?" + urlencode({"v": "angel", "message": message["id"]})),
+        ("Get Angel Chat for Android", GOOGLE_PLAY_URL),
+    )
+
+
 def chat_context(message):
     return "\n".join(
         f"{label}: {message[field]}"
@@ -229,6 +239,7 @@ def chat_context(message):
 def email_preview(message):
     """Content-only preview for a future sender; this function sends nothing."""
     opening = f"{message['encouragement']}\n\n" if message.get("devotional") else ""
+    links = "\n\n".join(f"{label}:\n{url}" for label, url in exploration_links(message))
     return (
         f"Angel Chat — {message['title']}\n\n"
         f"{opening}"
@@ -237,5 +248,21 @@ def email_preview(message):
         f"{message.get('devotional', message['encouragement'])}\n\n"
         f"A question to carry: {message['reflection']}\n\n"
         f"A prayer: {message['prayer']}\n\n"
-        f"Explore this message and ask questions in Angel Chat:\n{message_url(message)}\n"
+        f"Explore this message and ask questions in Angel Chat:\n\n{links}\n\n"
+        "Use the browser link on iPhone, iPad, or computer.\n"
     )
+
+
+def email_preview_html(message):
+    """Use the same complete content and named links in preview and delivery."""
+    links = {f"{label}:\n{url}": (label, url) for label, url in exploration_links(message)}
+    paragraphs = []
+    for paragraph in email_preview(message).strip().split("\n\n"):
+        if paragraph in links:
+            label, url = links[paragraph]
+            paragraphs.append(
+                f'<p><a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a></p>'
+            )
+        else:
+            paragraphs.append(f'<p>{html.escape(paragraph).replace(chr(10), "<br>")}</p>')
+    return "".join(paragraphs)

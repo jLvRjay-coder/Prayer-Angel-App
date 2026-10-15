@@ -23,7 +23,7 @@ from email_validator import EmailNotValidError, validate_email
 import psycopg
 from psycopg.rows import dict_row
 
-from daily_encouragement import email_preview
+from daily_encouragement import email_preview, email_preview_html
 from hostinger_email import HostingerMailer, SendResult
 
 
@@ -238,7 +238,7 @@ def render_email(settings, subscriber, message=None, now=None):
     text = main + "\n\n---\n" + footer
     # Escape the complete body before making HTTPS URLs clickable.
     parts = []
-    for line in text.splitlines():
+    for line in (text if message is None else footer).splitlines():
         if line.startswith("https://"):
             escaped = html.escape(line, quote=True)
             label = "Confirm your email" if message is None else "Dive deeper in Angel Chat"
@@ -248,7 +248,8 @@ def render_email(settings, subscriber, message=None, now=None):
             parts.append(f'<p><a href="{html.escape(url, quote=True)}">{html.escape(label)}</a></p>')
         elif line:
             parts.append(f"<p>{html.escape(line)}</p>")
-    body = '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;line-height:1.6;color:#1a1b26">' + "".join(parts) + '</div>'
+    content = "" if message is None else email_preview_html(message) + "<hr>"
+    body = '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;line-height:1.6;color:#1a1b26">' + content + "".join(parts) + '</div>'
     return subject, text, body
 
 

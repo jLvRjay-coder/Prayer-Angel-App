@@ -100,6 +100,11 @@ class LinkAndScheduleTests(unittest.TestCase):
         self.assertIn("I have surely seen the affliction", body)
         self.assertIn("ye shall serve God upon this mountain.", body)
         self.assertIn("Through Christ&#x27;s death and resurrection", body)
+        self.assertIn('href="https://angel.beyondthemessage.org/?v=angel&amp;message=compass-w01-god-sends"', body)
+        self.assertIn('href="https://play.google.com/store/apps/details?id=org.beyondthemessage.angel"', body)
+        self.assertIn(">Open Angel Chat in your browser</a>", body)
+        self.assertIn(">Get Angel Chat for Android</a>", body)
+        self.assertNotIn("apps.apple.com", body)
         url = action_url(settings(), subscriber(), "unsubscribe", NOW)
         query = parse_qs(urlparse(url).query)
         self.assertEqual(set(query), {"v", "action", "token"})
@@ -272,6 +277,21 @@ class DatabaseFlowTests(unittest.TestCase):
 
 
 class EmailScreenTests(unittest.TestCase):
+    def test_home_signup_invitation_appears_only_when_ready_and_opens_signup(self):
+        for config in (settings(signups_enabled=False), settings(api_token=""), settings()):
+            with self.subTest(ready=config.ready, enabled=config.signups_enabled), patch("email_ui.email_settings", return_value=config):
+                at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)
+                at.run()
+                self.assertFalse(at.exception)
+                invitations = [button for button in at.button if button.key == "home_email_signup"]
+                self.assertEqual(bool(invitations), config.ready and config.signups_enabled)
+                if invitations:
+                    self.assertEqual(invitations[0].label, "Sign up for Daily Encouragement")
+                    invitations[0].click().run()
+                    self.assertFalse(at.exception)
+                    self.assertEqual(at.query_params["v"], "email")
+                    self.assertEqual(at.text_input[0].label, "Email address")
+
     def test_only_mail_token_does_not_enable_signup(self):
         with patch.dict(os.environ, {"HOSTINGER_MAIL_API_TOKEN": "local-token"}, clear=True):
             at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)

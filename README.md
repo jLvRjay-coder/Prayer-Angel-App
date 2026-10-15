@@ -35,6 +35,10 @@ The draft adds a seven-day collection adapted from Daily Compass with one additi
 
 “God Sends the Reluctant” is the first expanded devotional model, with a fuller reading (Exodus 3:7–12) and a 300–450-word reflection connecting Moses' calling, God's covenant faithfulness, and Jesus' commission in Matthew 28. The other six reflections remain short drafts for subsequent editorial review. The email preview and eventual sender use the same complete content, and Angel Chat receives the reading and expanded devotional as context.
 
+The email and its preview end with two named, clickable links: **Open Angel Chat in your browser**, which opens that message's context directly in chat, and **Get Angel Chat for Android**, which opens the [verified Google Play listing](https://play.google.com/store/apps/details?id=org.beyondthemessage.angel). The browser option covers iPhone, iPad, and computers; no Apple App Store listing is implied. Plain-text emails retain descriptive labels and full URLs. Neither public link contains conversation identifiers or subscription tokens.
+
+Angel Chat's home page is prepared to show **Sign up for Daily Encouragement** only when the email configuration is ready and signup is explicitly enabled. That button opens the existing email signup screen. When email delivery launches, add the same invitation to the Beyond the Message website home page, linking to `https://angel.beyondthemessage.org/?v=email`; the WordPress home page has not been modified by this preview update.
+
 - Open `?v=daily` or `?v=daily&message=compass-w01-god-sends`.
 - ISO-date links such as `?v=daily&message=2026-10-14` are accepted too.
 - Home, Angel Chat, and How It Works have a Daily Encouragement button.

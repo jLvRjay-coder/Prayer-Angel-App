@@ -24,7 +24,7 @@ from datetime import datetime
 import time
 
 from daily_encouragement import (
-    DAILY_MESSAGES, chat_context, default_message, email_preview,
+    DAILY_MESSAGES, chat_context, default_message, email_preview_html,
     local_today, message_by_key, message_url,
 )
 from email_ui import email_settings, render_email_action, render_email_signup
@@ -3108,7 +3108,7 @@ def render_daily_encouragement():
         st.caption("This link opens the teaching without including your conversation or private session link.")
 
     with st.expander("Preview the daily email"):
-        st.text(email_preview(message))
+        st.markdown(email_preview_html(message), unsafe_allow_html=True)
         st.caption("Content preview only. Sent emails also include sender details, unsubscribe, and delivery-preference links.")
 
     render_email_signup()
@@ -3760,7 +3760,7 @@ def render_home():
             goto("daily")
         settings = email_settings()
         if settings.ready and settings.signups_enabled:
-            if st.button("Get daily encouragement by email", use_container_width=True, key="home_email_signup", type="secondary"):
+            if st.button("Sign up for Daily Encouragement", use_container_width=True, key="home_email_signup", type="secondary"):
                 goto("email")
 
         st.markdown(

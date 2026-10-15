@@ -88,6 +88,9 @@ class AppFlowTests(unittest.TestCase):
             self.assertIn(verse, displayed)
         self.assertIn(message["devotional"], displayed)
         self.assertFalse(any(button.label == "Read the passage" for button in at.get("link_button")))
+        self.assertIn('href="https://angel.beyondthemessage.org/?v=angel&amp;message=compass-w01-god-sends"', displayed)
+        self.assertIn(">Open Angel Chat in your browser</a>", displayed)
+        self.assertIn(">Get Angel Chat for Android</a>", displayed)
 
     def test_expanded_teaching_reaches_chat_with_the_complete_reading(self):
         message = DAILY_MESSAGES[0]
