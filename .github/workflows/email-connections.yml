@@ -6,10 +6,12 @@ on:
     paths:
       - .github/workflows/email-connections.yml
       - email_connection_check.py
+      - email_http_probe.py
       - email_subscription.py
       - supabase_email_store.py
       - hostinger_email.py
       - tests/test_email_connection_check.py
+      - tests/test_email_http_probe.py
       - requirements.txt
   workflow_dispatch:
 
@@ -31,8 +33,11 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: Verify that probes cannot send email
-        run: python -m unittest discover -s tests -p test_email_connection_check.py -v
+        run: |
+          python -m unittest discover -s tests -p test_email_connection_check.py -v
+          python -m unittest discover -s tests -p test_email_http_probe.py -v
       - name: Check saved credentials without sending
+        id: connections
         env:
           HOSTINGER_MAIL_API_TOKEN: ${{ secrets.HOSTINGER_MAIL_API_TOKEN }}
           EMAIL_SUPABASE_URL: ${{ vars.EMAIL_SUPABASE_URL }}
@@ -41,3 +46,8 @@ jobs:
           EMAIL_SIGNUPS_ENABLED: 'false'
           EMAIL_DELIVERY_ENABLED: 'false'
         run: python email_connection_check.py
+      - name: Collect Mail API HTTP metadata if its connection check fails
+        if: failure() && steps.connections.outcome == 'failure'
+        env:
+          HOSTINGER_MAIL_API_TOKEN: ${{ secrets.HOSTINGER_MAIL_API_TOKEN }}
+        run: python email_http_probe.py
