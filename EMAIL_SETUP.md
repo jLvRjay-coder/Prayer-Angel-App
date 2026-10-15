@@ -79,7 +79,19 @@ Add these to **Prayer-Angel-App → Settings → Secrets and variables → Actio
 
 The Hugging Face Secret is not automatically available to GitHub Actions. The workflow is inactive while this PR is a draft branch; scheduled workflows require the default branch.
 
-Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. This confirms the setup steps were completed, not that the saved values or live Space have been authenticated. The postal-address question, worker settings, deployed code, and live connection tests still need completion.
+Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. GitHub Actions also has all three secrets, `EMAIL_SUPABASE_URL`, and `EMAIL_DELIVERY_ENABLED=false`. These are reported setup steps; saved values still need authentication, and the GitHub signing key must match the Space's key exactly. The postal-address question, deployed code, and live connection tests still need completion.
+
+### Check credentials without sending
+
+The separate `.github/workflows/email-connections.yml` runs when its diagnostic code changes on `feat/daily-encouragement-preview`. It uses the saved GitHub settings and runs local tests before checking the live services. This workflow has no scheduled sender and explicitly disables signup and delivery. Its manual trigger becomes available once the file is on the default branch; failed runs can be re-run after correcting settings.
+
+To run the same check from an already configured backend environment:
+
+```bash
+python email_connection_check.py
+```
+
+The check validates signing-key format, calls only the Supabase `health` action over HTTPS, and verifies that the Hostinger token authorizes `contact@beyondthemessage.org` using `/me`. It does not read subscriber records, create subscriptions or delivery attempts, or send email. It works without a postal address. Output is limited to fixed labels and pass/fail, with no raw provider errors or secret values. A successful check does not establish that the two hosts have matching signing keys, that the code is deployed to Hugging Face, or that emails reach an inbox.
 
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
