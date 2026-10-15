@@ -93,29 +93,18 @@ python email_connection_check.py
 
 The check validates signing-key format, calls only the Supabase `health` action over HTTPS, and verifies that the Hostinger token authorizes `contact@beyondthemessage.org` using `/me`. It does not read subscriber records, create subscriptions or delivery attempts, or send email. It works without a postal address. Output is limited to fixed labels and pass/fail, with no raw provider errors or secret values. A successful check does not establish that the two hosts have matching signing keys, that the code is deployed to Hugging Face, or that emails reach an inbox.
 
-Verified on October 15, 2026 at 03:11 UTC in [GitHub run 38674894293](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38674894293):
+Verified on October 15, 2026 at 03:43 UTC in [GitHub run 38677730312](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38677730312):
 
 - Signing-key format: passed. This does not verify entropy or matching Hugging Face values.
 - Supabase backend health over HTTPS using GitHub's saved secret: passed.
-- Hostinger `/api/v1/me`: HTTP 403 with an HTML response, rather than the documented JSON API response. This suggests an upstream access/security filter; the cause is unresolved and this result alone does not prove a bad token. Do not treat it as successful mailbox authorization.
+- Hostinger token and authorization for `contact@beyondthemessage.org`: passed through the application's Python transport.
 - No email sent; no subscriber or delivery records changed.
 
-The connected Hostinger Mail plugin independently returned HTTP 200 for the expected mailbox. That uses a different credential/network route and does not validate GitHub's saved token. Hostinger follow-up is needed for the direct GitHub request and the separate postal-address question. Its API token settings are under **Emails → beyondthemessage.org → Agentic mail → API**, as described in the [Agentic Mail guide](https://www.hostinger.com/support/how-to-use-agentic-mail-in-hostinger/).
+Jamie generated a new Agentic Mail API token for the intended mailbox, and reports saving the same value as `HOSTINGER_MAIL_API_TOKEN` in GitHub and Hugging Face. The curl comparison changed from JSON 401 to HTTP 200 after that update. Python's read-only mailbox check passed after identifying the client with `User-Agent: AngelChat-Mail/1.0`. The old credential rejection and observed Python 403 are resolved in GitHub. Hugging Face credentials and deployed code still need their own check.
 
-### Hostinger support follow-up
+The project consistently uses `HOSTINGER_MAIL_API_TOKEN`; Hostinger support's example name `HOSTINGER_MAIL_TOKEN` is not this project's setting. The actual diagnostic event is a same-repository push, and the secret is present as a bare value without whitespace or surrounding quotes. `email_http_probe.py` remains a failure-only diagnostic: Authorization is passed to curl over stdin, redirects are not followed, response bodies are discarded, and output is limited to selected headers with redaction. Twelve diagnostic tests passed in GitHub; those plus four existing mail-transport tests passed locally (16 focused tests).
 
-Support confirmed that `/api/v1/me` expects an Agentic Mail bearer token and normally reports invalid credentials as JSON HTTP 401. Their example uses `HOSTINGER_MAIL_TOKEN`; this project consistently uses **`HOSTINGER_MAIL_API_TOKEN`** in both the secret reference and application. Keep that project name unchanged.
-
-The actual workflow is a same-repository `push` run, not a pull request from a fork. The code already constructs `Authorization: Bearer <token>`. A follow-up curl diagnostic in [run 38676448247](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38676448247), October 15 at 03:28 UTC, established:
-
-- The Hostinger secret is present and is a bare value with no whitespace or surrounding quotes.
-- No standard HTTP/HTTPS/ALL proxy environment variables are set in the runner.
-- Python's request still received HTML HTTP 403, but curl reached a JSON HTTP 401 response. Therefore the request path is not universally blocked; the saved credential is not accepted through the curl request. The client-specific discrepancy remains unresolved.
-- The curl response included `server: cloudflare`, `via: 1.1 google`, correlation ID `a2fc1098-9969-47f3-a614-b015c161ed11`, and trace ID `9819fb17940ee65709542bb22c46f771`.
-
-Next, create a new **Agentic Mail API** token under the email domain, restricted to `contact@beyondthemessage.org`, and update `HOSTINGER_MAIL_API_TOKEN` in GitHub and Hugging Face with that same value. Leave the Supabase and signing keys as they are. Re-run the no-send workflow after the update; the direct Python mailbox check still must pass before deployment or delivery is enabled. Do not revoke unrelated tokens used by the working plugin.
-
-`email_http_probe.py` runs only after the connection-check step fails. It passes Authorization to curl through stdin rather than argv, follows no redirects, discards the response body, and prints only selected response headers with token redaction. It never dumps cookies, raw stderr, secret values, or proxy addresses. Its five tests and the seven connection-check tests passed in GitHub; those plus the four existing transport tests passed locally. No email was sent and no subscriber/delivery records were changed.
+The postal-address question remains open; successful API authorization does not enable subscriptions or sending. `EMAIL_DELIVERY_ENABLED` remains reported as `false`, signup remains disabled, and all daily messages are unapproved drafts.
 
 The public Hugging Face Space was also checked: it is running commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules. The draft feature is not deployed there yet.
 
