@@ -106,7 +106,17 @@ The project consistently uses `HOSTINGER_MAIL_API_TOKEN`; Hostinger support's ex
 
 The postal-address question remains open; successful API authorization does not enable subscriptions or sending. `EMAIL_DELIVERY_ENABLED` remains reported as `false`, signup remains disabled, and all daily messages are unapproved drafts.
 
-The public Hugging Face Space was also checked: it is running commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules. The draft feature is not deployed there yet.
+Before the preview deployment, the public Hugging Face Space was checked at commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules.
+
+### Deploy the preview to the existing Space
+
+Jamie created a fine-grained Hugging Face token and added it to GitHub as `HF_TOKEN`. It must have write access to the existing `lvRJay18950/Prayer-Angel` Space. Do not put this token in source files or browser code.
+
+`.github/workflows/deploy-space-preview.yml` runs when its deployment helper, workflow, or safety tests change on `feat/daily-encouragement-preview`. It first tests the application and runs the read-only GitHub backend checks. Only its final step receives `HF_TOKEN`. The manual trigger becomes available once this workflow is on the default branch.
+
+The helper uploads an explicit list of application files in one commit, with a parent-commit check to avoid overwriting concurrent source updates. It preserves the Space's existing stories and assets, does not copy local environment/session files, and does not modify hardware, billing, stored credentials, or the daily sender's settings. It verifies that signup and delivery flags are absent (the tested application defaults are `false`) or explicitly `false`; secret-based or enabled flags block the deployment. A public `deployment.json` records only the source repository, GitHub commit, and preview mode.
+
+An upload starts a Docker rebuild. Check the Space's running commit, `/_stcore/health`, and the Daily Encouragement page at the custom domain before considering the preview deployed. A successful upload alone does not prove startup. This deployment does not verify Hugging Face's saved email credentials or matching signing keys across hosts, and it sends no email. Signup, daily delivery, and content approval remain separate rollout steps.
 
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
