@@ -37,6 +37,8 @@ def check_connections(settings):
             reasons = {
                 "unauthorized": "HTTP 401: token rejected",
                 "forbidden": "HTTP 403: access denied",
+                "forbidden_challenge": "HTTP 403: provider security challenge",
+                "forbidden_html": "HTTP 403: HTML access-denied response, not the JSON API",
                 "rate_limited": "HTTP 429: rate limited",
                 "mailbox_not_authorized": "configured mailbox not authorized",
                 "unrecognized_response": "response format not recognized",

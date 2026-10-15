@@ -66,6 +66,24 @@ class ConnectionCheckTests(unittest.TestCase):
         store.assert_not_called()
         mailer.assert_not_called()
 
+    def test_upstream_access_block_is_distinguished_without_printing_body(self):
+        settings = self.configuration()
+        for headers, reason in [
+            ({"CF-Mitigated": "challenge"}, "provider security challenge"),
+            ({"Content-Type": "text/html; charset=utf-8"}, "HTML access-denied response, not the JSON API"),
+        ]:
+            with self.subTest(headers=headers):
+                session = Mock(spec=["get", "post"])
+                session.get.return_value.status_code = 403
+                session.get.return_value.headers = headers
+                mailer = HostingerMailer(settings.api_token, settings.mailbox_address, session)
+                with patch.object(check, "SupabaseSubscriptionStore"), \
+                        patch.object(check, "HostingerMailer", return_value=mailer):
+                    checks = check.check_connections(settings)
+                self.assertFalse(checks[f"Hostinger mailbox authorization (HTTP 403: {reason})"])
+                session.get.return_value.json.assert_not_called()
+                session.post.assert_not_called()
+
     def test_pasted_powershell_command_does_not_pass_signing_key_check(self):
         with patch.object(check, "SupabaseSubscriptionStore") as store, \
                 patch.object(check, "HostingerMailer") as mailer:

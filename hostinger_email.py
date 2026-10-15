@@ -39,6 +39,12 @@ class HostingerMailer:
                 timeout=(5, 20), allow_redirects=False,
             )
             failures = {401: "unauthorized", 403: "forbidden", 429: "rate_limited"}
+            if response.status_code == 403:
+                content_type = response.headers.get("Content-Type", "")
+                if response.headers.get("CF-Mitigated") == "challenge":
+                    failures[403] = "forbidden_challenge"
+                elif isinstance(content_type, str) and "text/html" in content_type.lower():
+                    failures[403] = "forbidden_html"
             if response.status_code in failures:
                 raise MailUnavailable("The email service is temporarily unavailable.", failures[response.status_code])
             response.raise_for_status()
