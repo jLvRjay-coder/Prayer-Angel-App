@@ -93,6 +93,17 @@ python email_connection_check.py
 
 The check validates signing-key format, calls only the Supabase `health` action over HTTPS, and verifies that the Hostinger token authorizes `contact@beyondthemessage.org` using `/me`. It does not read subscriber records, create subscriptions or delivery attempts, or send email. It works without a postal address. Output is limited to fixed labels and pass/fail, with no raw provider errors or secret values. A successful check does not establish that the two hosts have matching signing keys, that the code is deployed to Hugging Face, or that emails reach an inbox.
 
+Verified on October 15, 2026 at 03:11 UTC in [GitHub run 38674894293](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38674894293):
+
+- Signing-key format: passed. This does not verify entropy or matching Hugging Face values.
+- Supabase backend health over HTTPS using GitHub's saved secret: passed.
+- Hostinger `/api/v1/me`: HTTP 403 with an HTML response, rather than the documented JSON API response. This suggests an upstream access/security filter; the cause is unresolved and this result alone does not prove a bad token. Do not treat it as successful mailbox authorization.
+- No email sent; no subscriber or delivery records changed.
+
+The connected Hostinger Mail plugin independently returned HTTP 200 for the expected mailbox. That uses a different credential/network route and does not validate GitHub's saved token. Hostinger follow-up is needed for the direct GitHub request and the separate postal-address question. Its API token settings are under **Emails → beyondthemessage.org → Agentic mail → API**, as described in the [Agentic Mail guide](https://www.hostinger.com/support/how-to-use-agentic-mail-in-hostinger/).
+
+The public Hugging Face Space was also checked: it is running commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules. The draft feature is not deployed there yet.
+
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
 
 ```bash
@@ -135,4 +146,4 @@ Install `requirements.txt`, then run:
 python -m unittest discover -s tests -v
 ```
 
-Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Local validation used an isolated PGlite PostgreSQL engine through its wire-protocol server. The HTTPS adapter was tested against the real RPC SQL through a local session stub, including normal subscription flows, access denial, and a lost outcome update after provider acceptance. All Hostinger and OpenAI calls were stubbed. Hosted SQL write/access checks passed separately. Live HTTPS authentication, Hugging Face/GitHub connectivity, mail-token authentication from the Space, and actual inbox delivery remain deployment checks.
+Set `EMAIL_TEST_DATABASE_URL` to an **isolated test PostgreSQL database** to include database integration tests. Those tests truncate only the `angel_email_` test tables; never point this variable at production. Initial feature validation used an isolated PGlite PostgreSQL engine through its wire-protocol server. The HTTPS adapter was tested against the real RPC SQL through a local session stub, including normal subscription flows, access denial, and a lost outcome update after provider acceptance. All Hostinger and OpenAI calls in those tests were stubbed. Hosted SQL write/access checks passed separately. The new connection checker has seven tests, including no-send guarantees and safe failure classification; all seven passed in GitHub, and those plus four existing mail-transport tests passed locally. GitHub's live Supabase HTTPS authentication has now passed. Hugging Face connectivity/key matching, direct Hostinger authorization, and actual inbox delivery remain deployment checks.
