@@ -102,6 +102,21 @@ Verified on October 15, 2026 at 03:11 UTC in [GitHub run 38674894293](https://gi
 
 The connected Hostinger Mail plugin independently returned HTTP 200 for the expected mailbox. That uses a different credential/network route and does not validate GitHub's saved token. Hostinger follow-up is needed for the direct GitHub request and the separate postal-address question. Its API token settings are under **Emails → beyondthemessage.org → Agentic mail → API**, as described in the [Agentic Mail guide](https://www.hostinger.com/support/how-to-use-agentic-mail-in-hostinger/).
 
+### Hostinger support follow-up
+
+Support confirmed that `/api/v1/me` expects an Agentic Mail bearer token and normally reports invalid credentials as JSON HTTP 401. Their example uses `HOSTINGER_MAIL_TOKEN`; this project consistently uses **`HOSTINGER_MAIL_API_TOKEN`** in both the secret reference and application. Keep that project name unchanged.
+
+The actual workflow is a same-repository `push` run, not a pull request from a fork. The code already constructs `Authorization: Bearer <token>`. A follow-up curl diagnostic in [run 38676448247](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38676448247), October 15 at 03:28 UTC, established:
+
+- The Hostinger secret is present and is a bare value with no whitespace or surrounding quotes.
+- No standard HTTP/HTTPS/ALL proxy environment variables are set in the runner.
+- Python's request still received HTML HTTP 403, but curl reached a JSON HTTP 401 response. Therefore the request path is not universally blocked; the saved credential is not accepted through the curl request. The client-specific discrepancy remains unresolved.
+- The curl response included `server: cloudflare`, `via: 1.1 google`, correlation ID `a2fc1098-9969-47f3-a614-b015c161ed11`, and trace ID `9819fb17940ee65709542bb22c46f771`.
+
+Next, create a new **Agentic Mail API** token under the email domain, restricted to `contact@beyondthemessage.org`, and update `HOSTINGER_MAIL_API_TOKEN` in GitHub and Hugging Face with that same value. Leave the Supabase and signing keys as they are. Re-run the no-send workflow after the update; the direct Python mailbox check still must pass before deployment or delivery is enabled. Do not revoke unrelated tokens used by the working plugin.
+
+`email_http_probe.py` runs only after the connection-check step fails. It passes Authorization to curl through stdin rather than argv, follows no redirects, discards the response body, and prints only selected response headers with token redaction. It never dumps cookies, raw stderr, secret values, or proxy addresses. Its five tests and the seven connection-check tests passed in GitHub; those plus the four existing transport tests passed locally. No email was sent and no subscriber/delivery records were changed.
+
 The public Hugging Face Space was also checked: it is running commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules. The draft feature is not deployed there yet.
 
 The migrations already created the selected hosted storage. To verify HTTPS storage without sending, after configuring credentials and enabling the Data API:
