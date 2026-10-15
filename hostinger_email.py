@@ -29,7 +29,12 @@ class HostingerMailer:
         self.mailbox_id = None
 
     def _headers(self):
-        return {"Authorization": f"Bearer {self.token}", "Accept": "application/json", "Content-Type": "application/json"}
+        return {
+            "Authorization": f"Bearer {self.token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "AngelChat-Mail/1.0",
+        }
 
     def verify_mailbox(self):
         """Read-only token verification; the From address is set by the mailbox."""
