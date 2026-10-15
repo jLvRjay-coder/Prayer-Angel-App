@@ -22,6 +22,7 @@ class ContentTests(unittest.TestCase):
         self.assertEqual(len({m["date"] for m in DAILY_MESSAGES}), 7)
         for message in DAILY_MESSAGES:
             self.assertTrue(message["reference"])
+            self.assertTrue(message["reading"])
             self.assertTrue(message["verse_reference"])
             self.assertTrue(message["context"])
             self.assertFalse(message["approved_for_delivery"])
@@ -78,6 +79,30 @@ class AppFlowTests(unittest.TestCase):
         self.assertFalse(at.exception)
         self.assertEqual(at.query_params["message"], "angel-w01-rest")
         self.assertEqual(at.subheader[0].value, "Make Room to Be Still")
+
+    def test_expanded_reading_and_devotional_are_visible_on_the_page(self):
+        message = DAILY_MESSAGES[0]
+        at = self.run_daily(message["id"])
+        displayed = "\n".join(element.value for element in at.markdown)
+        for verse in message["reading"].split("\n\n"):
+            self.assertIn(verse, displayed)
+        self.assertIn(message["devotional"], displayed)
+        self.assertFalse(any(button.label == "Read the passage" for button in at.get("link_button")))
+
+    def test_expanded_teaching_reaches_chat_with_the_complete_reading(self):
+        message = DAILY_MESSAGES[0]
+        response = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content="A local test response."))])
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "local-test-key"}), patch("openai.OpenAI") as api:
+            api.return_value.chat.completions.create.return_value = response
+            at = self.run_daily(message["id"])
+            at.button(key=f"daily_question_{message['id']}_1").click().run()
+            api.return_value.chat.completions.create.assert_not_called()
+            at.chat_input[0].set_value("How does the covenant fit this reading?").run()
+            self.assertFalse(at.exception)
+            system = api.return_value.chat.completions.create.call_args.kwargs["messages"][0]["content"]
+            self.assertIn(message["reading"], system)
+            self.assertIn(message["devotional"], system)
+            self.assertIn("Matthew 28:18-20", system)
 
     def test_unknown_deep_link_has_recovery(self):
         at = self.run_daily("invalid-id")

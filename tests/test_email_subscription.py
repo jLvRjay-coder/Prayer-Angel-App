@@ -11,7 +11,7 @@ import requests
 import psycopg
 from streamlit.testing.v1 import AppTest
 
-from daily_encouragement import DAILY_MESSAGES
+from daily_encouragement import DAILY_MESSAGES, email_preview
 from email_subscription import (
     CONSENT_VERSION, EmailService, EmailSettings, SubscriptionError, SubscriptionStore,
     action_url, due_message, make_token, read_token, render_email,
@@ -94,6 +94,12 @@ class LinkAndScheduleTests(unittest.TestCase):
         self.assertIn("Email preferences:", text)
         self.assertIn("Test ministry postal address", body)
         self.assertNotIn("sid=", text)
+        self.assertTrue(text.startswith(email_preview(DAILY_MESSAGES[0])))
+        self.assertIn(DAILY_MESSAGES[0]["reading"], text)
+        self.assertIn(DAILY_MESSAGES[0]["devotional"], text)
+        self.assertIn("I have surely seen the affliction", body)
+        self.assertIn("ye shall serve God upon this mountain.", body)
+        self.assertIn("Through Christ&#x27;s death and resurrection", body)
         url = action_url(settings(), subscriber(), "unsubscribe", NOW)
         query = parse_qs(urlparse(url).query)
         self.assertEqual(set(query), {"v", "action", "token"})

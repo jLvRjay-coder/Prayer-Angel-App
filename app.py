@@ -3070,13 +3070,14 @@ def render_daily_encouragement():
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.caption(datetime.fromisoformat(message["date"]).strftime("%A, %B %d, %Y"))
     st.subheader(message["title"])
+    if message.get("devotional"):
+        st.write(message["encouragement"])
     st.markdown(
-        f'<div class="btm-scripture-anchor"><div class="label">Scripture • KJV</div><div class="ref">{html.escape(message["reference"])}</div></div>',
+        f'<div class="btm-scripture-anchor"><div class="label">Today\'s reading • KJV</div><div class="ref">{html.escape(message["reference"])}</div></div>',
         unsafe_allow_html=True,
     )
-    st.markdown(f'> {message["verse"]}\n\n*{message["verse_reference"]}, KJV*')
-    st.write(message["encouragement"])
-    st.link_button("Read the passage", kjv_url(message["reference"]), use_container_width=True)
+    st.markdown("\n".join(f"> {line}" for line in message["reading"].splitlines()))
+    st.write(message.get("devotional", message["encouragement"]))
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)

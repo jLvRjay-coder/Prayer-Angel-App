@@ -23,7 +23,7 @@ from email_validator import EmailNotValidError, validate_email
 import psycopg
 from psycopg.rows import dict_row
 
-from daily_encouragement import message_url
+from daily_encouragement import email_preview
 from hostinger_email import HostingerMailer, SendResult
 
 
@@ -234,12 +234,7 @@ def render_email(settings, subscriber, message=None, now=None):
         )
     else:
         subject = f"Angel Chat — {message['title']}"
-        main = (
-            f"{message['verse']} ({message['verse_reference']}, KJV)\n\n"
-            f"{message['encouragement']}\n\nA question to carry:\n{message['reflection']}\n\n"
-            f"A prayer:\n{message['prayer']}\n\n"
-            f"Explore this message and ask questions in Angel Chat:\n{message_url(message)}"
-        )
+        main = email_preview(message).rstrip()
     text = main + "\n\n---\n" + footer
     # Escape the complete body before making HTTPS URLs clickable.
     parts = []

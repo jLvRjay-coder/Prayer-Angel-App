@@ -7,6 +7,12 @@ on:
       - .github/workflows/deploy-space-preview.yml
       - deploy_space_preview.py
       - tests/test_deploy_space_preview.py
+      - app.py
+      - daily_encouragement.py
+      - email_subscription.py
+      - tests/test_daily_encouragement.py
+      - tests/test_email_subscription.py
+      - README.md
   workflow_dispatch:
 
 permissions:
