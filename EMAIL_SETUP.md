@@ -150,7 +150,7 @@ Finish by testing preference changes and clicking Unsubscribe in the private sam
 - Unsubscribe: Jamie clicked the final button and reported the green banner, "You are unsubscribed from daily encouragement emails." A read-only aggregate database check then confirmed one unsubscribed record with its timestamp, zero active subscribers, zero pending subscribers, and no remaining confirmation nonce. Delivery records show exactly one sent confirmation and one sent devotional, with no additional outcomes.
 - [Final check-only reset](https://github.com/jLvRjay-coder/Prayer-Angel-App/actions/runs/38843081492): passed. `email_test_request.json` is back to `operation: check`. Public signup and scheduled delivery remain off; no draft content was approved for scheduled sending, and the PR remains unmerged.
 
-Before a pilot, finish the privacy/retention wording, confirm a preference change saves successfully, privately verify confirmation sending from the Space's web signup path, and set future publication dates with approved content. The current private test exercised the shared subscription service from the GitHub runner rather than opening the public signup form. Review Google Play privacy/Data safety implications before collecting public subscriptions through the Android app.
+The approved email privacy section is published at https://beyondthemessage.org/privacy-policy/. Before a pilot, confirm a live preference change saves successfully, privately verify confirmation sending from the Space's web signup path, and set future publication dates with approved content. The earlier private test exercised the shared subscription service from the GitHub runner rather than opening the public signup form. Review Google Play privacy/Data safety implications before collecting public subscriptions through the Android app.
 
 ### Automated preference-screen verification
 
@@ -176,7 +176,7 @@ The app throttles confirmations and limits the pilot size, but this is not a ful
 
 ## Privacy and release
 
-Jamie approved the privacy addition and its manual retention/deletion approach on October 15, 2026 (America/Denver). `EMAIL_PRIVACY_NOTICE.md` records that approval; `docs/daily-encouragement-privacy.html` contains the public section without internal publication notes. The existing WordPress policy still needs authenticated publication before signup opens. See `PILOT_LAUNCH.md` for the proposed dates and remaining activation checks. Unsubscribed records remain stored to honor opt-out and preserve consent; no automatic purge is implemented.
+Jamie approved the privacy addition and its manual retention/deletion approach on October 15, 2026 (America/Denver). The approved section is published and verified at https://beyondthemessage.org/privacy-policy/. `EMAIL_PRIVACY_NOTICE.md` records publication; `docs/daily-encouragement-privacy.html` contains the public section without internal notes, and the before/after page source is preserved in `docs/`. See `PILOT_LAUNCH.md` for the proposed dates and remaining activation checks. Unsubscribed records remain stored to honor opt-out and preserve consent; no automatic purge is implemented. Public signup and automatic delivery remain paused.
 
 Before the Android subscription feature goes live, update relevant Google Play Data safety declarations and the privacy policy, and inspect the Android packaging project for any required build/link changes. The repositories inspected so far contain the web application, not the Android package project.
 
