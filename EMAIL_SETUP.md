@@ -43,7 +43,9 @@ Jamie confirmed that Beyond the Message and Angel Chat are entirely free. The pl
 
 [Hostinger's no-spam policy](https://www.hostinger.com/legal/universal-terms-of-service-agreement#12-no-spam-policy) also lists a sender's physical address among requirements that apply as applicable to commercial advertising or bulk communications. Its wording does not explicitly resolve this free devotional use case. Clarify that requirement with Hostinger before enabling delivery without a postal address. If an address is needed, the [FTC's commercial-email guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business) accepts a registered USPS PO Box or qualifying private mailbox as well as a current street address.
 
-Leave `EMAIL_POSTAL_ADDRESS` unset while resolving this. The current sender still requires it and therefore will not accept signups or send confirmation/daily emails without it. Credential setup and the `--initialize` storage check below can continue without a postal address. No exception has been enabled in code, and there is no live delivery yet.
+Jamie has offered to use a Utah or Texas address. Choose one current, valid postal address where the sender receives mail and is comfortable disclosing it to email recipients; either state can be used. Save the complete address as `EMAIL_POSTAL_ADDRESS` in **Secrets** on both Hugging Face and GitHub Actions. The address is printed in confirmation and devotional email footers. Secret storage keeps it out of source code and public configuration; it does not hide it from recipients.
+
+No address has been supplied or verified as saved yet. The current sender still requires it and therefore will not accept signups or send confirmation/daily emails without it. Adding the address does not enable signup or scheduled delivery: keep both enable flags off until the private test is authorized and prepared. Credential setup and the `--initialize` storage check can continue without a postal address. No address exception has been enabled in code, and there is no live delivery yet.
 
 ## Hugging Face settings
 
@@ -53,7 +55,7 @@ Leave `EMAIL_POSTAL_ADDRESS` unset while resolving this. The current sender stil
 | `EMAIL_SUPABASE_URL` | Variable | `https://srjstdtnabzkmnuilceb.supabase.co` |
 | `EMAIL_SUPABASE_SECRET_KEY` | Secret | Backend key beginning `sb_secret_`; never use a publishable key here. |
 | `EMAIL_SIGNING_KEY` | Secret | At least 32 random characters; use the same value in the app and worker. |
-| `EMAIL_POSTAL_ADDRESS` | Variable or Secret | Postal footer required by the current sender; leave unset pending the clarification above. |
+| `EMAIL_POSTAL_ADDRESS` | Secret | Complete chosen postal address for email footers; use the same value in GitHub Actions. Visible to email recipients. |
 | `EMAIL_SIGNUPS_ENABLED` | Variable | Leave `false` until database connectivity, confirmation, policy, and public links are tested. |
 | `EMAIL_BUDGET_24H` | Variable | Default `750`; accepts 1–900. Counts this feature's confirmation and daily-send attempts together over a rolling 24 hours. |
 | `EMAIL_MAX_SUBSCRIBERS` | Variable | Default `50` for the initial pilot. |
@@ -74,12 +76,12 @@ The draft includes `.github/workflows/daily-email.yml`, scheduled at minutes 17 
 
 Add these to **Prayer-Angel-App → Settings → Secrets and variables → Actions**:
 
-- Secrets: `HOSTINGER_MAIL_API_TOKEN`, `EMAIL_SUPABASE_SECRET_KEY`, and `EMAIL_SIGNING_KEY` (same values as Hugging Face).
-- Variables: `EMAIL_SUPABASE_URL`; keep `EMAIL_DELIVERY_ENABLED=false` until ready. Add `EMAIL_POSTAL_ADDRESS` when resolved as described above.
+- Secrets: `HOSTINGER_MAIL_API_TOKEN`, `EMAIL_SUPABASE_SECRET_KEY`, `EMAIL_SIGNING_KEY`, and `EMAIL_POSTAL_ADDRESS` (same values as Hugging Face). The worker reads the postal address from Secrets, not Variables.
+- Variables: `EMAIL_SUPABASE_URL`; keep `EMAIL_DELIVERY_ENABLED=false` until ready.
 
 The Hugging Face Secret is not automatically available to GitHub Actions. The workflow is inactive while this PR is a draft branch; scheduled workflows require the default branch.
 
-Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. GitHub Actions also has all three secrets, `EMAIL_SUPABASE_URL`, and `EMAIL_DELIVERY_ENABLED=false`. These are reported setup steps; saved values still need authentication, and the GitHub signing key must match the Space's key exactly. The postal-address question, deployed code, and live connection tests still need completion.
+Jamie reports that Hugging Face now has the Hostinger mail token, Supabase URL/backend key, and generated signing key. GitHub Actions also has those three secrets, `EMAIL_SUPABASE_URL`, and `EMAIL_DELIVERY_ENABLED=false`. The read-only checks below verify GitHub's service connections; the GitHub signing key must also match the Space's key exactly. The postal address is the next setting to add; private end-to-end inbox testing remains outstanding.
 
 ### Check credentials without sending
 
@@ -104,7 +106,7 @@ Jamie generated a new Agentic Mail API token for the intended mailbox, and repor
 
 The project consistently uses `HOSTINGER_MAIL_API_TOKEN`; Hostinger support's example name `HOSTINGER_MAIL_TOKEN` is not this project's setting. The actual diagnostic event is a same-repository push, and the secret is present as a bare value without whitespace or surrounding quotes. `email_http_probe.py` remains a failure-only diagnostic: Authorization is passed to curl over stdin, redirects are not followed, response bodies are discarded, and output is limited to selected headers with redaction. Twelve diagnostic tests passed in GitHub; those plus four existing mail-transport tests passed locally (16 focused tests).
 
-The postal-address question remains open; successful API authorization does not enable subscriptions or sending. `EMAIL_DELIVERY_ENABLED` remains reported as `false`, signup remains disabled, and all daily messages are unapproved drafts.
+Jamie has offered a postal address for the footer, but it has not yet been supplied or verified as saved. Successful API authorization does not enable subscriptions or sending. `EMAIL_DELIVERY_ENABLED` remains reported as `false`, signup remains disabled, and all daily messages are unapproved drafts.
 
 Before the preview deployment, the public Hugging Face Space was checked at commit `806b90258b8e9e55a4a64e480efa91631a2d5ee9`, without the new daily/email modules.
 
