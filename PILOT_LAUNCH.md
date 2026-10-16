@@ -22,18 +22,18 @@ The app and HTML email share the existing Beyond the Message crest, navy/gold/pa
 
 The crest is a shared public image hosted with the existing Hugging Face app assets. Its URL contains no recipient identifier. No open-tracking pixel or subscriber token is added to public devotional links. Confirmation emails use the same visual identity; unsubscribe, preferences, and business mailing details remain in every real email footer.
 
-## Approved privacy wording — publication pending
+## Approved privacy wording — published
 
 Jamie approved the branded design and, on October 15, 2026 (America/Denver), the privacy wording and manual retention/deletion approach in `EMAIL_PRIVACY_NOTICE.md`. The retention language describes the current implementation: subscription/consent/delivery records remain stored after unsubscribe, there is no automatic purge, and deletion is handled manually after verifying the request. It does not promise an automatic 30-day or 90-day purge that the code does not implement. A fixed deletion timetable would require additional implementation and testing. `docs/daily-encouragement-privacy.html` contains only the approved public section, ready for a WordPress Custom HTML block.
 
-The existing website privacy policy has not been changed: authenticated WordPress editing access is needed. Add the approved email section there before public signup, keeping its existing conversation/OpenAI disclosures consistent. Clarify the existing statement that personal identity information is not required so it distinguishes account-free Angel Chat use from an optional email subscription. Review the Android privacy/Data safety declarations before collecting public subscription details through the app. The subscription service's delivery contact is contact@beyondthemessage.org; the current website policy lists support@beyondthemessage.org for general privacy questions.
+The approved section is published at https://beyondthemessage.org/privacy-policy/, with an October 15, 2026 policy date. WordPress's save confirmation and the public page were verified. The saved source contains the approved email section exactly; the previous policy source is preserved in `docs/privacy-policy-original-2026-10-15.html`. The account-free-use paragraph now distinguishes ordinary Angel Chat use from optional email signup; the existing conversation/OpenAI disclosures and general privacy contact remain. The WordPress home page has not changed. Review the Android privacy/Data safety declarations before collecting public subscription details through the app. The subscription service's delivery contact is contact@beyondthemessage.org; the website policy retains support@beyondthemessage.org for general privacy questions.
 
 ## Checks before activation
 
 - Private confirmation, receipt of the complete devotional, browser/Android link destinations, and persisted unsubscribe have passed. The test subscriber is unsubscribed.
 - Automated screen-to-database checks verify that preference changes persist after reopening the form and cannot reactivate an unsubscribed reader; the real test inbox remains unsubscribed. A final live preference save and confirmation sending from the deployed Space's web signup path still need verification; prior private sends originated in GitHub.
-- The branded preview and privacy wording are approved. No additional test email has been authorized or sent by this update; the existing test inbox remains unsubscribed.
-- Approve the final dates and delivery content, publish the approved privacy addition, and review the Android declarations.
+- The branded preview and privacy wording are approved, and the email privacy addition is published. No additional test email has been authorized or sent by this update; the existing test inbox remains unsubscribed.
+- Approve the final dates and delivery content, finish the live signup/preferences check, and review the Android declarations.
 - Only after those steps, merge the reviewed worker onto the default branch, enable signup for the agreed pilot, and enable scheduled delivery. The existing home-page invitation appears when signup is ready and enabled. Add the corresponding WordPress home-page link at that point.
 
 The YouTube **Listen instead** option remains phase two, attached to each devotional's stable ID only when its recording is ready.

@@ -1,0 +1,338 @@
+<!-- wp:html -->
+<!-- BTM • Scrolling Top Banner (Angel Pull) -->
+<div class="btm-scroll-banner" role="region" aria-label="Announcement">
+  <div class="btm-track">
+    <!-- one slide -->
+    <div class="btm-slide">
+      <span class="btm-angel" aria-hidden="true">😇</span>
+      <span class="btm-rope" aria-hidden="true"></span>
+      <img class="btm-logo"
+           src="http://beyondthemessage.org/wp-content/uploads/2025/09/Faith-Icon.png"
+           alt="Faith At Work">
+      <span class="btm-text">
+        Faith At Work — new series launching soon. Stay tuned!
+      </span>
+    </div>
+    <!-- duplicate slide for seamless loop -->
+    <div class="btm-slide">
+      <span class="btm-angel" aria-hidden="true">😇</span>
+      <span class="btm-rope" aria-hidden="true"></span>
+      <img class="btm-logo"
+           src="http://beyondthemessage.org/wp-content/uploads/2025/09/Faith-Icon.png"
+           alt="Faith At Work">
+      <span class="btm-text">
+        Faith At Work — new series launching soon. Stay tuned!
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Container pinned to the top */
+  .btm-scroll-banner{
+    position:fixed; top:0; left:0; right:0; z-index:9999;
+    background:#0b1224; color:#f8fafc;
+    border-bottom:3px solid #facc15;
+    height:46px; overflow:hidden;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  }
+  /* Make room so the banner doesn’t cover content */
+  :root { --btm-banner-h: 46px; }
+  body{ padding-top:var(--btm-banner-h); }
+
+  /* Scrolling track */
+  .btm-track{
+    display:flex; width:max-content;
+    animation: btm-marquee 22s linear infinite;
+    will-change: transform;
+  }
+  .btm-scroll-banner:hover .btm-track{ animation-play-state: paused; }
+
+  .btm-slide{
+    display:flex; align-items:center; gap:10px;
+    padding:0 18px; height:46px; white-space:nowrap;
+  }
+
+  .btm-logo{
+    height:28px; width:auto;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+  }
+  .btm-text{
+    font-weight:700; letter-spacing:.2px;
+  }
+
+  /* Angel + “rope” */
+  .btm-angel{ font-size:20px; transform:translateY(1px); }
+  .btm-rope{
+    display:inline-block; width:46px; height:6px;
+    background: repeating-linear-gradient(90deg, #facc15 0 8px, #b28f0a 8px 16px);
+    border-radius:4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+    transform:skewX(-10deg);
+  }
+
+  /* Smooth loop: slide 1 + slide 2 */
+  @keyframes btm-marquee{
+    from{ transform: translateX(0); }
+    to  { transform: translateX(-50%); }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .btm-track{ animation: none; }
+  }
+
+  /* Handle WP admin bar */
+  body.admin-bar { padding-top: calc(var(--btm-banner-h) + 32px); }
+  @media (max-width:782px){
+    body.admin-bar { padding-top: calc(var(--btm-banner-h) + 46px); }
+  }
+</style>
+<!-- /wp:html -->
+
+<!-- wp:heading {"className":"is-style-text-subtitle"} -->
+<h2 class="wp-block-heading is-style-text-subtitle">Beyond The Message</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><em>Last Updated: March 2025</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Beyond the Message (“we,” “our,” or “the App”) provides spiritual study tools, devotional content, and AI-assisted reflections rooted in Scripture. This Privacy Policy explains how we collect, use, and protect your information when you use the App.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Information We Collect</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading"><strong>1. Information You Provide</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Questions you submit to the <em>Guardian Angel</em> feature</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Reflections you write in the <em>Daily Compass</em></li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Optional study notes entered into text boxes</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>We do <strong>not</strong> require registration, accounts, or personal identity information.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading"><strong>2. Automatically Collected Information</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>We may collect standard analytics data, such as:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Device type</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Browser type</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Usage statistics</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>General location (city / country)</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>This helps us improve app performance.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading"><strong>3. AI Processing</strong></h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Some content in the App (including Guardian Angel responses) is generated using <strong>OpenAI’s API</strong>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Your text input is securely sent to OpenAI for processing.</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>OpenAI does <strong>not</strong> use your data to train public models.</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>We do <strong>not </strong>store personal identifiers alongside your content.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>How We Use Your Information</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>To deliver personalized spiritual reflections</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>To improve app quality, stability, and experience</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>To detect and fix technical issues</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>We do <strong>not</strong> sell or<strong> </strong>share your information with third parties for advertising or marketing.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Children’s Privacy</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Beyond the Message is not directed to children under 13.<br>We do not knowingly collect personal data from children.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Data Security</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>We use HTTPS encryption and industry-standard safeguards.<br>However, no online service is 100% secure, and you use the App at your own risk.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Not Medical or Crisis Advice</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The App offers Scripture-based spiritual guidance.<br>It is <strong>not</strong> a substitute for:</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>Licensed therapy</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Medical treatment</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Emergency services</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>If you are in crisis, contact your local emergency number.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Changes to This Policy</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>We may update this Privacy Policy periodically. Updates will be posted on this page.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading"><strong>Contact Us</strong></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>If you have any questions, email:<br><strong><a>support@beyondthemessage.org</a></strong></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:separator -->
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:paragraph -->
+<p><em>(END OF PRIVACY POLICY)</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:html -->
+<!-- BTM • One-Page Scrolling Banner (paste in a Custom HTML block) -->
+<div class="btm-one-banner" role="region" aria-label="Scripture ticker">
+  <img src="http://beyondthemessage.org/wp-content/uploads/2025/09/Icon-BTM-Shield.png" alt="BTM Shield">
+  <div class="btm-one-track">
+    <span class="btm-one-line">
+      ✦ Luke 19:10 — “For the Son of man is come to seek and to save that which was lost.” (KJV) •
+      John 14:6 — “I am the way, the truth, and the life…” •
+      Acts 4:12 — “Neither is there salvation in any other…”
+    </span>
+    <!-- duplicate for seamless loop -->
+    <span class="btm-one-line" aria-hidden="true">
+      ✦ Luke 19:10 — “For the Son of man is come to seek and to save that which was lost.” (KJV) •
+      John 14:6 — “I am the way, the truth, and the life…” •
+      Acts 4:12 — “Neither is there salvation in any other…”
+    </span>
+  </div>
+</div>
+
+<style>
+.btm-one-banner{
+  width:100%; background:#1e3a8a; color:#f8fafc;
+  border-top:3px solid #facc15; border-bottom:3px solid #facc15;
+  display:flex; align-items:center; gap:12px; padding:6px 12px; overflow:hidden;
+  font:500 15px/1.4 system-ui,-apple-system,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+}
+.btm-one-banner img{ height:26px; width:auto; filter:drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+.btm-one-track{ display:flex; gap:48px; white-space:nowrap; animation:btm-scroll 26s linear infinite; }
+.btm-one-line{ text-shadow:0 0 6px #facc15; }
+@keyframes btm-scroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@media (prefers-reduced-motion: reduce){ .btm-one-track{ animation:none; } }
+</style>
+<!-- /wp:html -->
