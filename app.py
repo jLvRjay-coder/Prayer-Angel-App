@@ -28,6 +28,7 @@ from daily_encouragement import (
     local_today, message_by_key, message_url,
 )
 from email_ui import email_settings, render_email_action, render_email_signup
+from devotional_design import brand_header_html, devotional_markdown, reflection_html, scripture_anchor_html
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -3036,7 +3037,8 @@ def _open_daily_in_chat(message, question):
 
 def render_daily_encouragement():
     st.markdown('<div class="btm-page">', unsafe_allow_html=True)
-    st.markdown('<div class="btm-hero"><div class="btm-hero-title">Daily Encouragement</div><div class="btm-hero-sub">A moment in Scripture. A question to carry. Room to go deeper.</div></div>', unsafe_allow_html=True)
+    st.markdown(brand_header_html(), unsafe_allow_html=True)
+    st.caption("A moment in Scripture. A question to carry. Room to go deeper.")
 
     today = local_today()
     requested = st.query_params.get("message", "")
@@ -3072,19 +3074,18 @@ def render_daily_encouragement():
     st.subheader(message["title"])
     if message.get("devotional"):
         st.write(message["encouragement"])
+    st.markdown(scripture_anchor_html(message), unsafe_allow_html=True)
     st.markdown(
         f'<div class="btm-scripture-anchor"><div class="label">Today\'s reading • KJV</div><div class="ref">{html.escape(message["reference"])}</div></div>',
         unsafe_allow_html=True,
     )
     st.markdown("\n".join(f"> {line}" for line in message["reading"].splitlines()))
-    st.write(message.get("devotional", message["encouragement"]))
+    st.markdown("### Today's reflection")
+    st.markdown(devotional_markdown(message))
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
-    st.markdown('**A question to carry**')
-    st.write(message["reflection"])
-    st.markdown('**A prayer**')
-    st.write(message["prayer"])
+    st.markdown(reflection_html(message), unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     with st.expander("Explore the passage and its connections"):

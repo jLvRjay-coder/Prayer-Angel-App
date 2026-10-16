@@ -38,7 +38,7 @@ class ContentTests(unittest.TestCase):
         self.assertEqual(default_message(date(2026, 10, 14))["id"], DAILY_MESSAGES[0]["id"])
 
     def test_calendar_does_not_loop_after_preview_ends(self):
-        self.assertEqual(default_message(date(2026, 12, 1))["date"], "2026-10-20")
+        self.assertEqual(default_message(date(2026, 12, 1))["date"], "2026-10-25")
 
     def test_share_link_has_only_public_message_information(self):
         query = parse_qs(urlparse(message_url(DAILY_MESSAGES[2])).query)
@@ -86,7 +86,7 @@ class AppFlowTests(unittest.TestCase):
         displayed = "\n".join(element.value for element in at.markdown)
         for verse in message["reading"].split("\n\n"):
             self.assertIn(verse, displayed)
-        self.assertIn(message["devotional"], displayed)
+        self.assertIn(message["devotional"], displayed.replace("**", ""))
         self.assertFalse(any(button.label == "Read the passage" for button in at.get("link_button")))
         self.assertIn('href="https://angel.beyondthemessage.org/?v=angel&amp;message=compass-w01-god-sends"', displayed)
         self.assertIn(">Open Angel Chat in your browser</a>", displayed)

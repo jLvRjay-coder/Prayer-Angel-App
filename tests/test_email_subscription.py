@@ -20,7 +20,7 @@ from email_worker import run_worker
 from hostinger_email import HostingerMailer, MailUnavailable, SendResult
 
 
-NOW = datetime(2026, 10, 14, 15, 0, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 19, 15, 0, tzinfo=timezone.utc)
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -118,12 +118,12 @@ class LinkAndScheduleTests(unittest.TestCase):
         self.assertIsNone(due_message(subscriber(), [approved], NOW + timedelta(days=1)))
 
     def test_different_timezones_get_their_local_scheduled_date(self):
-        late = datetime(2026, 10, 15, 2, tzinfo=timezone.utc)
+        late = datetime(2026, 10, 20, 2, tzinfo=timezone.utc)
         west = {**subscriber(), "timezone": "America/Los_Angeles"}
         east = {**subscriber(), "timezone": "Asia/Tokyo"}
         approved = [{**m, "approved_for_delivery": True} for m in DAILY_MESSAGES]
-        self.assertEqual(due_message(west, approved, late)["date"], "2026-10-14")
-        self.assertEqual(due_message(east, approved, late)["date"], "2026-10-15")
+        self.assertEqual(due_message(west, approved, late)["date"], "2026-10-19")
+        self.assertEqual(due_message(east, approved, late)["date"], "2026-10-20")
 
     def test_disabled_worker_has_no_side_effects(self):
         store, mailer = Mock(), Mock()

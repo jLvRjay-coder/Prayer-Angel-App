@@ -35,16 +35,18 @@ The draft adds a seven-day collection adapted from Daily Compass with one additi
 
 All seven entries use the expanded devotional format established by “God Sends the Reluctant”: a complete KJV reading, a brief opening thought, approximately 300–450 words of original reflection, a personal question, and a prayer. Each develops its own theme through the passage's setting and relevant connections across Scripture. The email preview and eventual sender use the same complete content, and Angel Chat receives the reading and expanded devotional as context. The collection remains a draft for review before email delivery is enabled.
 
+The app and HTML email now share the existing Beyond the Message crest, navy/gold/parchment styling, a highlighted Scripture excerpt, selective sentence emphasis, and distinct reflection/prayer sections. The complete reading and devotional remain text, including when the email logo is blocked. Confirmation emails share the same identity. See `PILOT_LAUNCH.md` for the proposed October 19–25 pilot and remaining activation steps. Public signup and scheduled sending are still off.
+
 The email and its preview end with two named, clickable links: **Open Angel Chat in your browser**, which opens that message's context directly in chat, and **Get Angel Chat for Android**, which opens the [verified Google Play listing](https://play.google.com/store/apps/details?id=org.beyondthemessage.angel). The browser option covers iPhone, iPad, and computers; no Apple App Store listing is implied. Plain-text emails retain descriptive labels and full URLs. Neither public link contains conversation identifiers or subscription tokens.
 
 Angel Chat's home page is prepared to show **Sign up for Daily Encouragement** only when the email configuration is ready and signup is explicitly enabled. That button opens the existing email signup screen. When email delivery launches, add the same invitation to the Beyond the Message website home page, linking to `https://angel.beyondthemessage.org/?v=email`; the WordPress home page has not been modified by this preview update.
 
 - Open `?v=daily` or `?v=daily&message=compass-w01-god-sends`.
-- ISO-date links such as `?v=daily&message=2026-10-14` are accepted too.
+- ISO-date links such as `?v=daily&message=2026-10-19` are accepted too.
 - Home, Angel Chat, and How It Works have a Daily Encouragement button.
 - Follow-up buttons prepare an editable question in Angel Chat. Nothing is submitted to OpenAI until the user sends a question.
 - The exact teaching is added to the model's context, including the passage's original setting. Returning to the teaching preserves its message ID.
-- Dates cover **October 14–20, 2026** in **America/Denver**, as a finite preview schedule. Before or after this period, the page labels the collection as a preview or archive rather than claiming a new daily message.
+- Dates cover **October 19–25, 2026** in **America/Denver**, as a finite preview schedule. Before or after this period, the page labels the collection as a preview or archive rather than claiming a new daily message.
 - All entries are drafts (`approved_for_delivery=False`). Signup and scheduled delivery are disabled by default until the database, sender details, and rollout are configured. The email preview shows content only. SMS is not implemented.
 
 ### Phase two: recorded devotionals

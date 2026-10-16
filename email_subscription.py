@@ -24,6 +24,7 @@ import psycopg
 from psycopg.rows import dict_row
 
 from daily_encouragement import email_preview, email_preview_html
+from devotional_design import action_button_html, email_shell_html
 from hostinger_email import HostingerMailer, SendResult
 
 
@@ -236,20 +237,26 @@ def render_email(settings, subscriber, message=None, now=None):
         subject = f"Angel Chat — {message['title']}"
         main = email_preview(message).rstrip()
     text = main + "\n\n---\n" + footer
-    # Escape the complete body before making HTTPS URLs clickable.
-    parts = []
-    for line in (text if message is None else footer).splitlines():
-        if line.startswith("https://"):
-            escaped = html.escape(line, quote=True)
-            label = "Confirm your email" if message is None else "Dive deeper in Angel Chat"
-            parts.append(f'<p><a href="{escaped}">{label}</a></p>')
-        elif line.startswith(("Unsubscribe: https://", "Email preferences: https://")):
-            label, url = line.split(": ", 1)
-            parts.append(f'<p><a href="{html.escape(url, quote=True)}">{html.escape(label)}</a></p>')
-        elif line:
-            parts.append(f"<p>{html.escape(line)}</p>")
-    content = "" if message is None else email_preview_html(message) + "<hr>"
-    body = '<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;line-height:1.6;color:#1a1b26">' + content + "".join(parts) + '</div>'
+    address = html.escape(settings.postal_address).replace("\n", "<br>")
+    contact = html.escape(settings.mailbox_address, quote=True)
+    footer_html = (
+        f'<p style="margin:0 0 10px;font-size:12px;color:#5C5A5E"><strong>Angel Chat / Beyond the Message</strong><br>{address}</p>'
+        f'<p style="margin:0 0 10px;font-size:12px;color:#5C5A5E">Questions or delivery problems: '
+        f'<a href="mailto:{contact}" style="color:#4E463E;text-decoration:underline">{contact}</a></p>'
+        f'<p style="margin:0;font-size:12px"><a href="{html.escape(manage, quote=True)}" style="color:#4E463E;text-decoration:underline">Email preferences</a>'
+        f' &nbsp;&middot;&nbsp; <a href="{html.escape(unsubscribe, quote=True)}" style="color:#4E463E;text-decoration:underline">Unsubscribe</a></p>'
+    )
+    if message is None:
+        content = (
+            '<h1 style="font-family:Georgia,serif;font-size:30px;line-height:1.3;color:#1A1B26;margin:0 0 20px">A little encouragement, one day at a time.</h1>'
+            '<p style="font-family:Arial,sans-serif;font-size:16px;line-height:1.8;color:#3A3B45;margin:0 0 18px">You requested one daily Scripture-rooted encouragement email from Angel Chat.</p>'
+            '<p style="font-family:Arial,sans-serif;font-size:16px;line-height:1.8;color:#3A3B45;margin:0 0 18px">Open the link below, then select <strong>Confirm my email</strong> on the page.</p>'
+            + action_button_html("Confirm your email", confirm)
+            + '<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.8;color:#5C5A5E;margin:20px 0 0">This confirmation expires in 24 hours. If you did not request this, you can ignore this email. No daily emails will begin without confirmation.</p>'
+        )
+        body = email_shell_html(content, footer_html)
+    else:
+        body = email_preview_html(message, footer_html=footer_html)
     return subject, text, body
 
 

@@ -8,9 +8,10 @@ the future delivery service must send only content explicitly approved to send.
 """
 
 from datetime import date, datetime, timezone
-import html
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
+
+from devotional_design import render_devotional_email_html
 
 
 SITE_URL = "https://angel.beyondthemessage.org/"
@@ -24,7 +25,8 @@ SOURCE_URL = (
 DAILY_MESSAGES = (
     {
         "id": "compass-w01-god-sends",
-        "date": "2026-10-14",
+        "date": "2026-10-19",
+        "emphasis": ("Moses is being invited into something that begins with God's compassion.", "He promises His own presence."),
         "title": "God Sends the Reluctant",
         "reference": "Exodus 3:7-12",
         "reading": (
@@ -56,7 +58,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "compass-w01-obedience",
-        "date": "2026-10-15",
+        "date": "2026-10-20",
+        "emphasis": ("Israel's freedom would lead them into worship and relationship with Him.", "Scripture gives us things we can return to: truthfulness, mercy, love, forgiveness."),
         "title": "Before You See the Whole Picture",
         "reference": "Exodus 3:10-12",
         "reading": (
@@ -85,7 +88,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "compass-w01-presence",
-        "date": "2026-10-16",
+        "date": "2026-10-21",
+        "emphasis": ("Moses' story makes room for a faith that speaks honestly about suffering while continuing to look toward God for help.", "His trust has someone to speak to."),
         "title": "God's Presence in the Hard Place",
         "reference": "Exodus 3:12",
         "reading": "12 And he said, Certainly I will be with thee; and this shall be a token unto thee, that I have sent thee: When thou hast brought forth the people out of Egypt, ye shall serve God upon this mountain.",
@@ -110,7 +114,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "compass-w01-words",
-        "date": "2026-10-17",
+        "date": "2026-10-22",
+        "emphasis": ("Prayer can begin before we have found a polished sentence.", "Sometimes the words we need become clearer as we listen."),
         "title": "When the Words Feel Difficult",
         "reference": "Exodus 4:10-12",
         "reading": (
@@ -139,7 +144,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "compass-w01-hesitation",
-        "date": "2026-10-18",
+        "date": "2026-10-23",
+        "emphasis": ("His grace gives us a place to bring the parts of ourselves that still need correction.", "You can bring the hesitation itself into prayer."),
         "title": "Bring Your Hesitation to God",
         "reference": "Exodus 4:13-17",
         "reading": (
@@ -170,7 +176,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "compass-w01-willingness",
-        "date": "2026-10-19",
+        "date": "2026-10-24",
+        "emphasis": ("Our limitations do not have to be hidden before we bring our lives to Him.", "God is making Himself known as faithful to His covenant."),
         "title": "You Can Begin with What You Have",
         "reference": "Exodus 4:1-5",
         "reading": (
@@ -201,7 +208,8 @@ DAILY_MESSAGES = (
     },
     {
         "id": "angel-w01-rest",
-        "date": "2026-10-20",
+        "date": "2026-10-25",
+        "emphasis": ("Their refuge has a history of covenant faithfulness.", "The rest He offers reaches the soul."),
         "title": "Make Room to Be Still",
         "reference": "Psalm 46:1-11",
         "reading": (
@@ -307,16 +315,6 @@ def email_preview(message):
     )
 
 
-def email_preview_html(message):
+def email_preview_html(message, footer_html=""):
     """Use the same complete content and named links in preview and delivery."""
-    links = {f"{label}:\n{url}": (label, url) for label, url in exploration_links(message)}
-    paragraphs = []
-    for paragraph in email_preview(message).strip().split("\n\n"):
-        if paragraph in links:
-            label, url = links[paragraph]
-            paragraphs.append(
-                f'<p><a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a></p>'
-            )
-        else:
-            paragraphs.append(f'<p>{html.escape(paragraph).replace(chr(10), "<br>")}</p>')
-    return "".join(paragraphs)
+    return render_devotional_email_html(message, exploration_links(message), footer_html)

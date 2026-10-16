@@ -15,10 +15,10 @@ import tempfile
 SPACE_ID = "lvRJay18950/Prayer-Angel"
 PREVIEW_FLAGS = ("EMAIL_SIGNUPS_ENABLED", "EMAIL_DELIVERY_ENABLED")
 RUNTIME_FILES = (
-    "app.py", "daily_encouragement.py", "email_subscription.py", "email_ui.py",
+    "app.py", "daily_encouragement.py", "devotional_design.py", "email_subscription.py", "email_ui.py",
     "supabase_email_store.py", "hostinger_email.py", "email_worker.py",
     "email_connection_check.py", "requirements.txt", "Dockerfile", "README.md",
-    "EMAIL_SETUP.md", "EMAIL_PRIVACY_NOTICE.md",
+    "EMAIL_SETUP.md", "EMAIL_PRIVACY_NOTICE.md", "PILOT_LAUNCH.md",
 )
 
 
