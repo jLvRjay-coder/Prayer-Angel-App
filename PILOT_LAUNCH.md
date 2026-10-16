@@ -1,6 +1,6 @@
 # Daily Encouragement pilot — review draft
 
-Proposed first week: **October 19–25, 2026**, beginning Monday. These dates are prepared in the preview catalog; they are not authorization to send. Every entry remains `approved_for_delivery=False`, both public email enable flags remain off, and the pull request remains a draft. Canonical message-ID links are unchanged. Date-based preview links now refer to this proposed calendar.
+Proposed first week: **October 19–25, 2026**, beginning Monday. These dates are prepared in the preview catalog; they are not authorization to send. Every entry remains `approved_for_delivery=False`, automatic daily delivery remains off, and the pull request remains a draft. Website signup is temporarily enabled for Jamie's authorized live test on October 16; this does not activate the pilot schedule. Canonical message-ID links are unchanged. Date-based preview links now refer to this proposed calendar.
 
 Invite **5–10 people who choose to opt in** for the first week. The existing software cap remains 50 subscribers. The form starts with 8:00 a.m. America/Denver and allows the subscriber to choose a timezone and time. The worker runs after the chosen time; an exact delivery minute is not promised. Do not import a contact list or subscribe people on their behalf.
 
@@ -30,10 +30,12 @@ The approved section is published at https://beyondthemessage.org/privacy-policy
 
 ## Checks before activation
 
-- Private confirmation, receipt of the complete devotional, browser/Android link destinations, and persisted unsubscribe have passed. The test subscriber is unsubscribed.
-- Automated screen-to-database checks verify that preference changes persist after reopening the form and cannot reactivate an unsubscribed reader; the real test inbox remains unsubscribed. A final live preference save and confirmation sending from the deployed Space's web signup path still need verification; prior private sends originated in GitHub.
-- The branded preview and privacy wording are approved, and the email privacy addition is published. No additional test email has been authorized or sent by this update; the existing test inbox remains unsubscribed.
-- Approve the final dates and delivery content, finish the live signup/preferences check, and review the Android declarations.
-- Only after those steps, merge the reviewed worker onto the default branch, enable signup for the agreed pilot, and enable scheduled delivery. The existing home-page invitation appears when signup is ready and enabled. Add the corresponding WordPress home-page link at that point.
+- The October 15 private test passed confirmation, receipt of the complete devotional, browser/Android link destinations, and persisted unsubscribe.
+- On October 16, Jamie enabled website signup with automatic delivery still disabled. The live form was verified, its confirmation email arrived, and Jamie confirmed through the website and supplied the green success banner. This separately verifies the deployed web signup and sending path.
+- Jamie completed the live preference test and supplied the green saved-preferences banner. A read-only check confirmed the changed delivery preference is persisted and the subscription is active and confirmed. Automated screen-to-database checks also cover reopening saved preferences and preventing an unsubscribed reader from reactivating through that form.
+- At Jamie's request, one preferences-only email was sent to the same test inbox using the current valid management link. Hostinger accepted the single-recipient send and its Sent copy was verified. No subscription status or preference was changed by sending this recovery email.
+- The final live unsubscribe check and closing the temporary signup test remain. The current test subscriber is active; do not describe the earlier unsubscribe as the current state. See `docs/live-email-test-2026-10-16.md` for the live test record.
+- Approve the final dates and delivery content, finish this live test, and review the Android declarations before expanding public collection through the app.
+- Only after those steps, merge the reviewed worker onto the default branch and enable the agreed pilot schedule. The existing app home-page invitation appears when signup is ready and enabled. Add the corresponding WordPress home-page link at launch.
 
 The YouTube **Listen instead** option remains phase two, attached to each devotional's stable ID only when its recording is ready.
