@@ -1,3 +1,5 @@
 {
-  "operation": "check"
+  "operation": "confirmation",
+  "request_id": "private-confirm-20261016-024818-779040b0",
+  "requested_at": "2026-10-16T02:48:18.242671+00:00"
 }
