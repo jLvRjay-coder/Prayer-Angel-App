@@ -16,24 +16,24 @@ Invite **5–10 people who choose to opt in** for the first week. The existing s
 
 The calendar ends after Sunday. The worker does not repeat old messages or generate new teachings when the week ends. Prepare and review the next week before extending delivery.
 
-## Design prepared for review
+## Approved design
 
 The app and HTML email share the existing Beyond the Message crest, navy/gold/parchment palette, a prominent Scripture excerpt, and two carefully selected emphasized sentences per reflection. The complete KJV reading and approved devotional wording remain available. The personal question and prayer have their own visual treatments. Browser and Android calls to action retain their verified destinations. Plain-text email remains complete, and the brand name and teaching remain readable when email images are blocked.
 
 The crest is a shared public image hosted with the existing Hugging Face app assets. Its URL contains no recipient identifier. No open-tracking pixel or subscriber token is added to public devotional links. Confirmation emails use the same visual identity; unsubscribe, preferences, and business mailing details remain in every real email footer.
 
-## Privacy wording for owner review
+## Approved privacy wording — publication pending
 
-`EMAIL_PRIVACY_NOTICE.md` now contains proposed publishable text with a separate owner-only review note. The retention language describes the current implementation: subscription/consent/delivery records remain stored after unsubscribe, there is no automatic purge, and deletion is handled manually after verifying the request. It does not promise an automatic 30-day or 90-day purge that the code does not implement. Jamie must approve this retention approach before publication; a fixed deletion timetable would require additional implementation and testing.
+Jamie approved the branded design and, on October 15, 2026 (America/Denver), the privacy wording and manual retention/deletion approach in `EMAIL_PRIVACY_NOTICE.md`. The retention language describes the current implementation: subscription/consent/delivery records remain stored after unsubscribe, there is no automatic purge, and deletion is handled manually after verifying the request. It does not promise an automatic 30-day or 90-day purge that the code does not implement. A fixed deletion timetable would require additional implementation and testing. `docs/daily-encouragement-privacy.html` contains only the approved public section, ready for a WordPress Custom HTML block.
 
-The existing website privacy policy has not been changed. Add the reviewed email section there before public signup, keeping its existing conversation/OpenAI disclosures consistent. Review the Android privacy/Data safety declarations before collecting public subscription details through the app. The subscription service's delivery contact is contact@beyondthemessage.org; the current website policy lists support@beyondthemessage.org for general privacy questions.
+The existing website privacy policy has not been changed: authenticated WordPress editing access is needed. Add the approved email section there before public signup, keeping its existing conversation/OpenAI disclosures consistent. Clarify the existing statement that personal identity information is not required so it distinguishes account-free Angel Chat use from an optional email subscription. Review the Android privacy/Data safety declarations before collecting public subscription details through the app. The subscription service's delivery contact is contact@beyondthemessage.org; the current website policy lists support@beyondthemessage.org for general privacy questions.
 
 ## Checks before activation
 
 - Private confirmation, receipt of the complete devotional, browser/Android link destinations, and persisted unsubscribe have passed. The test subscriber is unsubscribed.
-- Explicitly verify that a changed delivery preference saves. Privately verify confirmation sending from the deployed Space's web signup path; prior private sends originated in GitHub.
-- Review the branded preview and privacy wording. No additional design-test email has been authorized or sent by this update.
-- Approve the final dates and delivery content, publish the privacy addition, and review the Android declarations.
+- Automated screen-to-database checks verify that preference changes persist after reopening the form and cannot reactivate an unsubscribed reader; the real test inbox remains unsubscribed. A final live preference save and confirmation sending from the deployed Space's web signup path still need verification; prior private sends originated in GitHub.
+- The branded preview and privacy wording are approved. No additional test email has been authorized or sent by this update; the existing test inbox remains unsubscribed.
+- Approve the final dates and delivery content, publish the approved privacy addition, and review the Android declarations.
 - Only after those steps, merge the reviewed worker onto the default branch, enable signup for the agreed pilot, and enable scheduled delivery. The existing home-page invitation appears when signup is ready and enabled. Add the corresponding WordPress home-page link at that point.
 
 The YouTube **Listen instead** option remains phase two, attached to each devotional's stable ID only when its recording is ready.

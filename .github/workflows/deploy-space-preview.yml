@@ -14,6 +14,7 @@ on:
       - email_subscription.py
       - tests/test_daily_encouragement.py
       - tests/test_email_subscription.py
+      - tests/test_supabase_email_store.py
       - README.md
   workflow_dispatch:
 
@@ -29,6 +30,19 @@ jobs:
     if: github.repository == 'jLvRjay-coder/Prayer-Angel-App'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: angel_email_test
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d angel_email_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +57,8 @@ jobs:
           pip install huggingface-hub==2.2.0
       - name: Check preview routes, email safeguards, and deployment boundaries
         env:
+          # This container contains synthetic test data only; never use the live store.
+          EMAIL_TEST_DATABASE_URL: postgresql://postgres:disposable-ci-only@127.0.0.1:${{ job.services.postgres.ports[5432] }}/angel_email_test
           EMAIL_SIGNUPS_ENABLED: 'false'
           EMAIL_DELIVERY_ENABLED: 'false'
         run: python -m unittest discover -s tests -v

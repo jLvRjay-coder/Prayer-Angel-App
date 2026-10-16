@@ -1,9 +1,10 @@
 from dataclasses import replace
+from datetime import time
 from pathlib import Path
 from types import SimpleNamespace
 import os
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import psycopg
 from psycopg.types.json import Jsonb
@@ -98,6 +99,62 @@ class HTTPSDatabaseFlowTests(flow.DatabaseFlowTests):
 
     def make_store(self, configuration):
         return SupabaseSubscriptionStore(configuration, SQLBackedSession(self.postgres))
+
+    def preferences_screen(self, token):
+        screen = flow.AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)
+        screen.query_params.update({"v": "email", "action": "manage", "token": token})
+        screen.run()
+        self.assertFalse(screen.exception)
+        return screen
+
+    def test_preference_form_persists_changes_and_reload_with_sending_off(self):
+        active = self.activate(self.requested())
+        token = flow.make_token(self.settings, active, "manage", flow.NOW)
+        paused = replace(self.settings, signups_enabled=False, delivery_enabled=False, api_token="")
+        with patch("email_ui.email_settings", return_value=paused), \
+             patch("email_ui.subscription_store", return_value=self.store), \
+             patch("email_subscription.utc_now", return_value=flow.NOW), \
+             patch("supabase_email_store.utc_now", return_value=flow.NOW), \
+             patch("hostinger_email.HostingerMailer") as mailer:
+            screen = self.preferences_screen(token)
+            self.assertEqual(self.store.token_subscriber(token, "manage", flow.NOW)["delivery_time"], time(8))
+            screen.selectbox[0].select("America/New_York")
+            screen.time_input[0].set_value(time(9, 30))
+            next(b for b in screen.button if b.label == "Save email preferences").click().run()
+            self.assertFalse(screen.exception)
+            self.assertIn("Your email preferences have been saved.", [s.value for s in screen.success])
+            self.assertNotIn("token", screen.query_params)
+            self.assertNotIn("action", screen.query_params)
+            reloaded = self.preferences_screen(token)
+            self.assertEqual(reloaded.selectbox[0].value, "America/New_York")
+            self.assertEqual(reloaded.time_input[0].value, time(9, 30))
+            self.assertEqual(self.store.active_subscribers()[0]["status"], "active")
+            mailer.assert_not_called()
+
+    def test_preference_form_cannot_reactivate_an_unsubscribed_reader(self):
+        active = self.activate(self.requested())
+        token = flow.make_token(self.settings, active, "manage", flow.NOW)
+        unsubscribe = flow.make_token(self.settings, active, "unsubscribe", flow.NOW)
+        self.store.apply_action(unsubscribe, "unsubscribe", now=flow.NOW)
+        paused = replace(self.settings, signups_enabled=False, delivery_enabled=False, api_token="")
+        with patch("email_ui.email_settings", return_value=paused), \
+             patch("email_ui.subscription_store", return_value=self.store), \
+             patch("email_subscription.utc_now", return_value=flow.NOW), \
+             patch("supabase_email_store.utc_now", return_value=flow.NOW), \
+             patch("hostinger_email.HostingerMailer") as mailer:
+            screen = self.preferences_screen(token)
+            screen.selectbox[0].select("America/New_York")
+            screen.time_input[0].set_value(time(9, 30))
+            next(b for b in screen.button if b.label == "Save email preferences").click().run()
+            self.assertFalse(screen.exception)
+            self.assertTrue(screen.error)
+            self.assertFalse(screen.success)
+            row = self.store.token_subscriber(token, "manage", flow.NOW)
+            self.assertEqual(row["status"], "unsubscribed")
+            self.assertEqual(row["timezone"], "America/Denver")
+            self.assertEqual(row["delivery_time"], time(8))
+            self.assertEqual(self.store.active_subscribers(), [])
+            mailer.assert_not_called()
 
     def test_client_cannot_read_or_write_contacts_even_after_accidental_grants(self):
         self.requested()

@@ -1,6 +1,6 @@
-# Daily encouragement email — proposed privacy-policy addition
+# Daily encouragement email — approved privacy-policy addition
 
-**Owner review note — omit this note when publishing.** This is a concrete draft for the pilot, not a published policy update. It describes the current retention behavior: records remain stored after unsubscribe and are removed manually following a verified deletion request or a retention review. No automatic deletion period is implemented. Jamie must approve that retention approach before public signup; adopting a fixed deletion deadline would require implementing and testing the corresponding cleanup process. Keep the existing website's conversation/OpenAI disclosures alongside this email section. See `PILOT_LAUNCH.md` for the proposed calendar and remaining checks.
+**Publication note — omit this note when publishing.** Jamie approved this wording and its manual retention/deletion approach on October 15, 2026 (America/Denver). Publication on the existing WordPress privacy page is still pending authenticated editing access; approval alone does not mean the public policy has changed. A paste-ready version containing only the approved public section is in `docs/daily-encouragement-privacy.html`. Keep the existing website's conversation/OpenAI disclosures alongside this email section. Adopting a fixed automatic deletion deadline would require implementing and testing cleanup first. See `PILOT_LAUNCH.md` for the proposed calendar and remaining checks.
 
 ---
 

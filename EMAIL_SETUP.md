@@ -152,6 +152,10 @@ Finish by testing preference changes and clicking Unsubscribe in the private sam
 
 Before a pilot, finish the privacy/retention wording, confirm a preference change saves successfully, privately verify confirmation sending from the Space's web signup path, and set future publication dates with approved content. The current private test exercised the shared subscription service from the GitHub runner rather than opening the public signup form. Review Google Play privacy/Data safety implications before collecting public subscriptions through the Android app.
 
+### Automated preference-screen verification
+
+Two additional screen-to-database checks use synthetic subscribers and the real protected RPC SQL in an isolated local test database. They verify that changing timezone and delivery time persists when the form is opened again, works while signup and delivery are disabled and the sending token is absent, and cannot reactivate or change the preferences of an unsubscribed reader. Both focused checks passed locally. No live subscription records or emails were used. The preview workflow now provisions its own disposable PostgreSQL container so the database checks run in CI instead of being skipped. These checks do not establish that the deployed Space's mail token can send or replace a final live preference save.
+
 `daily_encouragement.py` contains a finite seven-day preview calendar for October 19–25, 2026. All entries have `approved_for_delivery=False`. Review both wording and dates before setting an entry to `True`; extend the calendar before it runs out. The worker never repeats an old entry just because no new one is available, and it does not generate daily teaching through AI.
 
 Signup requires an unchecked-by-default consent box. A subscriber becomes active only after opening a confirmation email and clicking Confirm. Email scanners opening links do not change state. Confirmation expires after 24 hours, and repeat requests are limited to one per address per hour. The initial cap includes active subscribers and unexpired pending confirmations.
@@ -172,7 +176,7 @@ The app throttles confirmations and limits the pilot size, but this is not a ful
 
 ## Privacy and release
 
-`EMAIL_PRIVACY_NOTICE.md` is a draft addition to the public privacy policy, covering email addresses, delivery preferences, consent, delivery records, Hostinger, and Supabase. Review the proposed retention and manual deletion wording in that draft, approve it, and publish it before opening signup. See `PILOT_LAUNCH.md` for the proposed dates and remaining activation checks. Unsubscribed records currently remain stored to honor opt-out and preserve consent; there is no automatic purge in this draft.
+Jamie approved the privacy addition and its manual retention/deletion approach on October 15, 2026 (America/Denver). `EMAIL_PRIVACY_NOTICE.md` records that approval; `docs/daily-encouragement-privacy.html` contains the public section without internal publication notes. The existing WordPress policy still needs authenticated publication before signup opens. See `PILOT_LAUNCH.md` for the proposed dates and remaining activation checks. Unsubscribed records remain stored to honor opt-out and preserve consent; no automatic purge is implemented.
 
 Before the Android subscription feature goes live, update relevant Google Play Data safety declarations and the privacy policy, and inspect the Android packaging project for any required build/link changes. The repositories inspected so far contain the web application, not the Android package project.
 
