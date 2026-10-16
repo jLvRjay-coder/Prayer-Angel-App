@@ -3069,7 +3069,6 @@ def render_daily_encouragement():
         st.query_params["message"] = selected_id
         goto("daily")
 
-    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.caption(datetime.fromisoformat(message["date"]).strftime("%A, %B %d, %Y"))
     st.subheader(message["title"])
     if message.get("devotional"):
@@ -3082,11 +3081,8 @@ def render_daily_encouragement():
     st.markdown("\n".join(f"> {line}" for line in message["reading"].splitlines()))
     st.markdown("### Today's reflection")
     st.markdown(devotional_markdown(message))
-    st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.markdown(reflection_html(message), unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
     with st.expander("Explore the passage and its connections"):
         st.write(message["context"])

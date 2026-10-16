@@ -21,12 +21,12 @@ def brand_header_html():
     return (
         f'<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="{NAVY}" '
         f'style="width:100%;border:0;border-collapse:collapse;background:{NAVY};border-radius:14px 14px 0 0">'
-        '<tr><td width="92" style="border:0;padding:24px 0 24px 20px;vertical-align:middle">'
-        f'<img src="{BRAND_MARK_URL}" width="72" height="72" alt="Beyond the Message" '
-        'style="display:block;width:72px;height:72px;border:0;border-radius:8px"></td>'
-        '<td style="border:0;padding:24px 20px 24px 16px;vertical-align:middle">'
+        '<tr><td width="84" style="border:0;padding:24px 0 24px 20px;vertical-align:middle">'
+        f'<img src="{BRAND_MARK_URL}" width="64" height="64" alt="Beyond the Message" '
+        'style="display:block;width:64px;height:64px;border:0;border-radius:8px"></td>'
+        '<td style="border:0;padding:24px 20px 24px 16px;vertical-align:middle;text-align:left">'
         '<p style="font-family:Arial,sans-serif;font-size:10px;letter-spacing:1.8px;color:#D5BB93;margin:0 0 6px">BEYOND THE MESSAGE</p>'
-        '<p style="font-family:Georgia,serif;font-size:29px;line-height:1.15;font-weight:bold;color:#F9F7F2;margin:0 0 8px">Daily Encouragement</p>'
+        '<p style="font-family:Georgia,serif;font-size:26px;line-height:1.2;font-weight:bold;color:#F9F7F2;margin:0 0 8px;overflow-wrap:break-word">Daily Encouragement</p>'
         '<p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#DED8CE;margin:0">Scripture &middot; Reflection &middot; Prayer</p>'
         f'</td></tr><tr><td colspan="2" height="4" bgcolor="{GOLD}" style="height:4px;border:0;padding:0;background:{GOLD};font-size:0"></td></tr></table>'
     )
@@ -84,10 +84,10 @@ def email_shell_html(content, footer_html=""):
     return (
         f'<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;border:0;border-collapse:collapse;background:{PAPER}">'
         '<tr><td align="center" style="border:0;padding:12px 0">'
-        '<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" '
-        f'style="width:100%;max-width:600px;border:1px solid #E3DCCF;border-collapse:separate;border-spacing:0;background:#FFFFFF;border-radius:14px">'
+        '<table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" '
+        f'style="width:100%;max-width:600px;margin:0 auto;border:1px solid #E3DCCF;border-collapse:separate;border-spacing:0;background:#FFFFFF;border-radius:14px">'
         f'<tr><td style="border:0;padding:0">{brand_header_html()}</td></tr>'
-        f'<tr><td style="border:0;padding:28px 24px">{content}</td></tr>{footer}</table></td></tr></table>'
+        f'<tr><td style="border:0;padding:28px 24px;text-align:left">{content}</td></tr>{footer}</table></td></tr></table>'
     )
 
 
