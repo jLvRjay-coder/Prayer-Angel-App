@@ -130,6 +130,18 @@ To start scheduled delivery, after deployment and confirmation testing, set the 
 
 ## Content and unsubscribe
 
+### Private inbox test before launch
+
+Jamie reports saving the business mailing address as `EMAIL_POSTAL_ADDRESS` in both hosts' Secrets. The private test workflow runs only when `email_test_request.json` changes on the preview branch, or when manually invoked after the workflow is on the default branch. Its initial request is `{"operation": "check"}`: it checks GitHub credentials/address readiness, Hugging Face secret names, storage URL, and disabled public email flags without creating subscriptions or sending. It never reads Hugging Face secret values; matching signing keys and working Space credentials must be verified through the live email links.
+
+Before authorizing a send, save the chosen inbox as the GitHub Actions Secret `EMAIL_TEST_RECIPIENT`. Keep public signup and daily delivery disabled. This single-recipient setting is not a mailing list and does not appear in source or logs.
+
+After Jamie explicitly authorizes the private test, prepare a fresh request with `operation: confirmation`, a unique lowercase `request_id`, and a timezone-aware ISO `requested_at`. Requests expire after 30 minutes. The runner uses the existing consent/confirmation flow only for that inbox, with a process-local signup override; it does not change either host's public flags. Test emails have a `[Private test]` subject and explain that automatic daily delivery is paused. Confirmation throttling still applies, and uncertain outcomes must be investigated rather than retried.
+
+Jamie then opens the confirmation link and clicks Confirm. A separate freshly authorized `operation: devotional` request with `message_id: compass-w01-god-sends` sends the complete sample only to that confirmed inbox. It uses the existing delivery reservation/claim ledger, a distinct private-test message key, the actual business footer, and signed preferences/unsubscribe links. It does not approve draft content or activate scheduled delivery. Recipient checks run again immediately before the provider call.
+
+Finish by testing preference changes and clicking Unsubscribe in the private sample. The test subscriber must be unsubscribed before a later pilot; the normal opt-out and delivery records are retained under the documented storage behavior. None of the private test runner/request files are deployed to the public Space.
+
 `daily_encouragement.py` contains a finite seven-day preview calendar for October 14–20, 2026. All entries have `approved_for_delivery=False`. Review both wording and dates before setting an entry to `True`; extend the calendar before it runs out. The worker never repeats an old entry just because no new one is available, and it does not generate daily teaching through AI.
 
 Signup requires an unchecked-by-default consent box. A subscriber becomes active only after opening a confirmation email and clicking Confirm. Email scanners opening links do not change state. Confirmation expires after 24 hours, and repeat requests are limited to one per address per hour. The initial cap includes active subscribers and unexpired pending confirmations.
