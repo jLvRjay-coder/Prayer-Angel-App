@@ -115,7 +115,7 @@ class HTTPSDatabaseFlowTests(flow.DatabaseFlowTests):
              patch("email_ui.subscription_store", return_value=self.store), \
              patch("email_subscription.utc_now", return_value=flow.NOW), \
              patch("supabase_email_store.utc_now", return_value=flow.NOW), \
-             patch("hostinger_email.HostingerMailer") as mailer:
+             patch("email_subscription.HostingerMailer") as mailer:
             screen = self.preferences_screen(token)
             self.assertEqual(self.store.token_subscriber(token, "manage", flow.NOW)["delivery_time"], time(8))
             screen.selectbox[0].select("America/New_York")
@@ -141,7 +141,7 @@ class HTTPSDatabaseFlowTests(flow.DatabaseFlowTests):
              patch("email_ui.subscription_store", return_value=self.store), \
              patch("email_subscription.utc_now", return_value=flow.NOW), \
              patch("supabase_email_store.utc_now", return_value=flow.NOW), \
-             patch("hostinger_email.HostingerMailer") as mailer:
+             patch("email_subscription.HostingerMailer") as mailer:
             screen = self.preferences_screen(token)
             screen.selectbox[0].select("America/New_York")
             screen.time_input[0].set_value(time(9, 30))
