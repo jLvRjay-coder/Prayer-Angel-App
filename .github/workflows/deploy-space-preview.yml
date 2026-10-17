@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/deploy-space-preview.yml
       - deploy_space_preview.py
+      - Dockerfile
       - tests/test_deploy_space_preview.py
       - app.py
       - daily_encouragement.py
