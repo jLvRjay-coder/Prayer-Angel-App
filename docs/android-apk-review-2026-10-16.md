@@ -1,6 +1,6 @@
 # Published Android APK review — October 16, 2026
 
-Status: **production version code 3 inspected statically; whole-app declaration not finalized or submitted.** The Android privacy-policy replacement remains a draft. Signup and automatic email delivery remain disabled.
+Status: **production version code 3 and Open testing version code 4 inspected statically; whole-app declaration not finalized or submitted.** The Android privacy-policy replacement remains a draft. Signup and automatic email delivery remain disabled.
 
 Public sharing of this prepared report and the revised privacy-policy draft in the existing GitHub draft pull request was explicitly authorized on October 16, 2026 (America/Denver). This documentation update does not publish the policy to WordPress or submit a Google Play declaration.
 
@@ -18,6 +18,14 @@ Jamie downloaded **Signed, universal APK** from Play Console's Downloads tab for
 | Code inspected | Both DEX files; 12,074 classes; application activity and network-related references |
 
 Androguard 4.1.4 decoded the binary manifest and disassembled application and relevant library code. The APK was not executed or modified. The original APK, extracted binary assets, and third-party library disassemblies are not uploaded to this repository.
+
+## Open testing version 4 follow-up
+
+The expanded bundle Details screenshot confirms that version code 4 (`1.0.2`) has one active Open testing release and uses the Google Play installer check. Jamie supplied its Signed, universal APK as `4.apk` for comparison.
+
+Version 4 has the same package, size, minimum and target SDKs, permissions, WebView startup code, and network-security settings as version 3. Of the 160 ZIP entries, 157 are byte-for-byte identical. The changed entries are the manifest (version code only), the baseline profile, and the first DEX file. No classes or methods were added or removed; the sole changed method handles a Google Play licensing response. No additional native SDK, application data connection, or TLS bypass was identified. Version 4 was inspected statically and was not executed or modified.
+
+These findings extend the network assessment below to the current Open testing release. The reviewed collection paths support answering **Yes** to encryption in transit. This assessment is based on the reviewed binaries, hosted source, and HTTPS checks; it is not an Android traffic capture or a completed declaration of every data type.
 
 ## Network findings
 
@@ -37,7 +45,7 @@ Declared permissions are INTERNET, ACCESS_NETWORK_STATE, the app's signature-lev
 
 The class inventory contains AndroidX/Compose, Kotlin/coroutines, and Google Play `com.pairip.licensecheck` components. No Firebase Analytics, Crashlytics, Google Mobile Ads, Facebook, AppsFlyer, Mixpanel, or Amplitude SDK was identified in either DEX file. This is a finding about this native package, not a claim that the hosted website or every provider has no telemetry.
 
-The Play licensing component binds to the installed Google Play service. Its reviewed request parcels contain the app package name and Binder callback/control fields. It does not create an Angel Chat user account. Google's protection settings and any optional protection telemetry still need to be checked in Console; do not infer that all Google Play protection modes are enabled from these classes alone.
+The Play licensing component binds to the installed Google Play service. Its reviewed request parcels contain the app package name and Binder callback/control fields. It does not create an Angel Chat user account. Version 4's Console Details identify installer-check protection; do not infer that other Google Play protection modes are enabled from these classes alone.
 
 The website imports typography from Google Fonts over HTTPS. Android WebView's local website storage is enabled. The revised policy draft describes these existing behaviors and includes prominent manual deletion instructions. The public Android-specific policy page remains unchanged until the reviewed notice is published there.
 
@@ -49,10 +57,8 @@ The existing Docker startup did not explicitly set `browser.gatherUsageStats`; S
 
 ## Remaining submission checks
 
-1. The Console list also shows bundle 4 as Active, although the visible Production and test release rows use version code 3. Inspect bundle 4's release details to determine whether it is currently distributed and therefore needs review.
-2. Check the Google Play protection configuration, including any enabled telemetry, against the actual data practices. Do not disable protection solely to simplify the form.
-3. Complete review of the Android-specific privacy notice, including prominent manual deletion instructions, then publish the reviewed wording. Do not use a new deletion-section anchor before it actually exists on the public page.
-4. Review the complete Console form, including chat content, subscription email, identifiers, provider-transfer exceptions, optionality, purposes, and the final preview. The screenshots supplied so far establish initial security/account/deletion questions, not a verified completed set of data-type declarations.
+1. Publish the reviewed Android-specific privacy notice, including prominent manual deletion instructions. Do not use a new deletion-section anchor before it actually exists on the public page.
+2. Review the complete Console form, including chat content, subscription email, identifiers, provider-transfer exceptions, optionality, purposes, and the final preview. The screenshots supplied so far establish initial security/account/deletion questions, not a verified completed set of data-type declarations.
 
 No signed subscription links, recipient addresses, private credentials, or signing keys are included in this report. This is a focused source/binary review, not an independent MASA security certification.
 
