@@ -2920,12 +2920,12 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
     st.markdown("</div>", unsafe_allow_html=True)
 
     # =========================
-    # Journal (mailto + download fallback) — PRIVACY SAFE
+    # Optional journal (server-session processing; mailto + download fallback)
     # =========================
     st.markdown('<div class="btm-card">', unsafe_allow_html=True)
     st.markdown("<div class='btm-sec-title'>Journal Your Thoughts</div>", unsafe_allow_html=True)
     st.markdown(
-        "<div class='btm-small'>Write a prayer, a reflection, or what you feel God is speaking. This stays on your device.</div>",
+        "<div class='btm-small'>Write a prayer, a reflection, or what you feel God is speaking. Journal text is processed on our server during this session to prepare your download or email draft. This journal feature does not add entries to saved chat history or send them to OpenAI. You choose whether to export or email an entry.</div>",
         unsafe_allow_html=True
     )
 
@@ -2938,7 +2938,7 @@ def render_story_reader(series_prefix, page_title: str, subtitle: str):
         height=160
     )
 
-    # ✅ Privacy-safe: do NOT set recipient. User chooses who to send to.
+    # Do not set a recipient; the user chooses where to send an email draft.
     subject = f"Journal Notes — {picked.get('title','Story')}"
     body = journal_text or ""
 
