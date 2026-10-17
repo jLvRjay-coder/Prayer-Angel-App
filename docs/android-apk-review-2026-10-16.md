@@ -1,8 +1,8 @@
 # Published Android APK review — October 16, 2026
 
-Status: **production version code 3 and Open testing version code 4 inspected statically; whole-app declaration not finalized or submitted.** The Android privacy-policy replacement remains a draft. Signup and automatic email delivery remain disabled.
+Status: **production version code 3 and Open testing version code 4 inspected statically; whole-app declaration not finalized or submitted.** The reviewed Android privacy policy was published on October 16, 2026 (America/Denver). Signup and automatic email delivery remain disabled.
 
-Public sharing of this prepared report and the revised privacy-policy draft in the existing GitHub draft pull request was explicitly authorized on October 16, 2026 (America/Denver). This documentation update does not publish the policy to WordPress or submit a Google Play declaration.
+Public sharing of this prepared report and the revised privacy-policy draft in the existing GitHub draft pull request was explicitly authorized on October 16, 2026 (America/Denver). The reviewed notice is now published at the [Angel Chat privacy-policy page](https://beyondthemessage.org/privacy-policy-angel-chat/). The Google Play declaration remains unsubmitted.
 
 ## Artifact and method
 
@@ -47,7 +47,7 @@ The class inventory contains AndroidX/Compose, Kotlin/coroutines, and Google Pla
 
 The Play licensing component binds to the installed Google Play service. Its reviewed request parcels contain the app package name and Binder callback/control fields. It does not create an Angel Chat user account. Version 4's Console Details identify installer-check protection; do not infer that other Google Play protection modes are enabled from these classes alone.
 
-The website imports typography from Google Fonts over HTTPS. Android WebView's local website storage is enabled. The revised policy draft describes these existing behaviors and includes prominent manual deletion instructions. The public Android-specific policy page remains unchanged until the reviewed notice is published there.
+The website imports typography from Google Fonts over HTTPS. Android WebView's local website storage is enabled. The reviewed policy describes these existing behaviors and includes prominent manual deletion instructions. The public Android-specific policy page now contains this notice.
 
 ## Framework telemetry change
 
@@ -57,7 +57,7 @@ The existing Docker startup did not explicitly set `browser.gatherUsageStats`; S
 
 ## Remaining submission checks
 
-1. Publish the reviewed Android-specific privacy notice, including prominent manual deletion instructions. Do not use a new deletion-section anchor before it actually exists on the public page.
+1. Use the verified public [deletion-request section](https://beyondthemessage.org/privacy-policy-angel-chat/#data-deletion) when updating the Console's deletion URL. The published text matches the approved draft, the section anchor is unique, and the deletion-contact email link is present.
 2. Review the complete Console form, including chat content, subscription email, identifiers, provider-transfer exceptions, optionality, purposes, and the final preview. The screenshots supplied so far establish initial security/account/deletion questions, not a verified completed set of data-type declarations.
 
 No signed subscription links, recipient addresses, private credentials, or signing keys are included in this report. This is a focused source/binary review, not an independent MASA security certification.
