@@ -58,7 +58,7 @@ No signed subscription links, recipient addresses, private credentials, or signi
 
 ## Local validation
 
-The four existing preview-deployment boundary tests passed. A synthetic local Streamlit startup accepted the telemetry-off command-line flag and returned a healthy response. The Docker entrypoint and workflow parsed correctly. The revised policy draft preserves the approved email section exactly and parses as valid HTML. The report, revised policy draft, and supporting review notes are saved in a documentation update separate from the verified runtime change. No email was sent by these checks.
+The four existing preview-deployment boundary tests passed. A synthetic local Streamlit startup accepted the telemetry-off command-line flag and returned a healthy response. The Docker entrypoint and workflow parsed correctly. The revised policy draft preserves the approved email section exactly and parses as valid HTML. The report and revised policy draft are saved in a documentation update separate from the verified runtime change. No email was sent by these checks.
 
 ## Primary references
 
