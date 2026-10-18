@@ -1,9 +1,18 @@
 name: Daily encouragement email
 
 on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/daily-email.yml]
   workflow_dispatch:
+    inputs:
+      maintenance_only:
+        description: Verify the schedule without sending email
+        type: boolean
+        default: false
   schedule:
     - cron: '17,47 * * * *'
+    - cron: '19 3 * * 1'
 
 permissions:
   contents: read
@@ -13,8 +22,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  keep-schedule-enabled:
+    if: >-
+      github.repository == 'jLvRjay-coder/Prayer-Angel-App' &&
+      (github.event_name == 'push' ||
+       (github.event_name == 'workflow_dispatch' && inputs.maintenance_only) ||
+       github.event.schedule == '19 3 * * 1')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # A separate job gets only the permission needed to refresh this workflow.
+    # It receives no email credentials and cannot send to subscribers.
+    permissions:
+      actions: write
+    steps:
+      - name: Keep the daily schedule active beyond repository inactivity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/daily-email.yml/enable"
+
   deliver:
-    if: vars.EMAIL_DELIVERY_ENABLED == 'true'
+    if: >-
+      vars.EMAIL_DELIVERY_ENABLED == 'true' &&
+      github.event_name != 'push' &&
+      github.event.schedule != '19 3 * * 1' &&
+      inputs.maintenance_only != true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
