@@ -3051,7 +3051,7 @@ def render_daily_encouragement():
         st.markdown('</div>', unsafe_allow_html=True)
         return
 
-    st.caption("Seven-day preview collection • Scripture, reflection, and room to go deeper.")
+    st.caption("Daily Scripture, reflection, and room to go deeper.")
     if not requested and message["date"] != today.isoformat():
         if message["date"] > today.isoformat():
             st.info("Preview the first message in this collection.")

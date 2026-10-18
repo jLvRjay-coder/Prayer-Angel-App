@@ -127,9 +127,12 @@ class PrivateTestGuards(unittest.TestCase):
         store.reserve.return_value = "sample-delivery"
         store.dispatch.side_effect = lambda delivery, send, now: send(row)
         mailer.send.return_value = SendResult("sent")
-        self.assertEqual(private.run_private_test(
-            configuration(), request("devotional"), RECIPIENT, True, store, mailer, NOW,
-        ), "sent")
+        drafts = [{**m, "approved_for_delivery": False} for m in DAILY_MESSAGES]
+        with patch.object(private, "DAILY_MESSAGES", drafts):
+            self.assertEqual(private.run_private_test(
+                configuration(), request("devotional"), RECIPIENT, True, store, mailer, NOW,
+            ), "sent")
+        self.assertTrue(all(m["approved_for_delivery"] is False for m in drafts))
         self.assertEqual(store.reserve.call_args.args[0], row["id"])
         self.assertTrue(store.reserve.call_args.args[1].startswith("private-test:"))
         args = mailer.send.call_args.args
@@ -137,7 +140,6 @@ class PrivateTestGuards(unittest.TestCase):
         self.assertIn(DAILY_MESSAGES[0]["devotional"], args[2])
         self.assertIn("action=unsubscribe", args[2])
         self.assertIn("action=manage", args[2])
-        self.assertTrue(all(m["approved_for_delivery"] is False for m in DAILY_MESSAGES))
 
     def test_already_reserved_sample_never_reaches_send(self):
         store, mailer = Mock(), Mock()

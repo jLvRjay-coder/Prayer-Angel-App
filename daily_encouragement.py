@@ -1,13 +1,15 @@
-"""Daily Encouragement preview content; no subscriber or delivery data.
+"""Dated Daily Encouragement content; no subscriber or delivery data.
 
 The first six reflections adapt Study Hub's notes/week-1.meta.json.
 The seventh completes the collection with a reflection on rest. Each reading is
 included in full (KJV), followed by an expanded devotional.
-Dates form a finite preview schedule;
-the future delivery service must send only content explicitly approved to send.
+Dates form a finite publication schedule. Delivery never repeats or invents
+content when the calendar ends.
 """
 
 from datetime import date, datetime, timezone
+import json
+from pathlib import Path
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
@@ -25,7 +27,7 @@ SOURCE_URL = (
 DAILY_MESSAGES = (
     {
         "id": "compass-w01-god-sends",
-        "date": "2026-10-19",
+        "date": "2026-10-17",
         "emphasis": ("Moses is being invited into something that begins with God's compassion.", "He promises His own presence."),
         "title": "God Sends the Reluctant",
         "reference": "Exodus 3:7-12",
@@ -54,11 +56,11 @@ DAILY_MESSAGES = (
         "reflection": "Where does your own sense of inadequacy enter your prayers, and what might you notice as you sit with God's promise to Moses?",
         "prayer": "Father, You know the places where I feel inadequate. Help me listen to Your Word, receive wise counsel, and trust Your presence as I learn to respond faithfully. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "compass-w01-obedience",
-        "date": "2026-10-20",
+        "date": "2026-10-18",
         "emphasis": ("Israel's freedom would lead them into worship and relationship with Him.", "Scripture gives us things we can return to: truthfulness, mercy, love, forgiveness."),
         "title": "Before You See the Whole Picture",
         "reference": "Exodus 3:10-12",
@@ -84,11 +86,11 @@ DAILY_MESSAGES = (
         "reflection": "What part of your life are you trying to understand all at once, and what becomes clearer as you bring it before God?",
         "prayer": "Father, I bring You the questions I cannot answer yet. Help me listen to Your Word, welcome wise counsel, and recognize what faithfulness might look like today. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "compass-w01-presence",
-        "date": "2026-10-21",
+        "date": "2026-10-19",
         "emphasis": ("Moses' story makes room for a faith that speaks honestly about suffering while continuing to look toward God for help.", "His trust has someone to speak to."),
         "title": "God's Presence in the Hard Place",
         "reference": "Exodus 3:12",
@@ -110,11 +112,11 @@ DAILY_MESSAGES = (
         "reflection": "What would you want to say to God about a hard place in your life if you did not feel you had to make your prayer sound strong?",
         "prayer": "Lord, You know what this day feels like. Help me bring my questions to You honestly and receive the care and support I need. Teach me to trust Your presence while the way remains difficult. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "compass-w01-words",
-        "date": "2026-10-22",
+        "date": "2026-10-20",
         "emphasis": ("Prayer can begin before we have found a polished sentence.", "Sometimes the words we need become clearer as we listen."),
         "title": "When the Words Feel Difficult",
         "reference": "Exodus 4:10-12",
@@ -140,11 +142,11 @@ DAILY_MESSAGES = (
         "reflection": "When you think about a conversation you are carrying, what do you need to bring to God before you try to find the right words?",
         "prayer": "God, You know the words I struggle to find. Help me listen with care, speak truthfully, and remain willing to learn. Give me humility to ask for help and make things right when I need to. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "compass-w01-hesitation",
-        "date": "2026-10-23",
+        "date": "2026-10-21",
         "emphasis": ("His grace gives us a place to bring the parts of ourselves that still need correction.", "You can bring the hesitation itself into prayer."),
         "title": "Bring Your Hesitation to God",
         "reference": "Exodus 4:13-17",
@@ -172,11 +174,11 @@ DAILY_MESSAGES = (
         "reflection": "What hesitation might you name honestly before God if you trusted that you could come to Him for both mercy and correction?",
         "prayer": "Lord, help me understand what is beneath my hesitation. Give me discernment where I need patience, humility where I need correction, and willingness to receive the help You provide. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "compass-w01-willingness",
-        "date": "2026-10-24",
+        "date": "2026-10-22",
         "emphasis": ("Our limitations do not have to be hidden before we bring our lives to Him.", "God is making Himself known as faithful to His covenant."),
         "title": "You Can Begin with What You Have",
         "reference": "Exodus 4:1-5",
@@ -204,11 +206,11 @@ DAILY_MESSAGES = (
         "reflection": "What ordinary part of your life have you been overlooking as you consider how you might love and serve the people around you?",
         "prayer": "Father, I bring You my real life, with its resources and its limits. Help me notice opportunities to love others and use what I have with care. Keep my attention on Your faithfulness as I learn to serve. Amen.",
         "source": SOURCE_URL,
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
     {
         "id": "angel-w01-rest",
-        "date": "2026-10-25",
+        "date": "2026-10-23",
         "emphasis": ("Their refuge has a history of covenant faithfulness.", "The rest He offers reaches the soul."),
         "title": "Make Room to Be Still",
         "reference": "Psalm 46:1-11",
@@ -242,8 +244,15 @@ DAILY_MESSAGES = (
         "reflection": "What would it mean to place what remains unresolved in God's care as you spend a quiet moment with Him today?",
         "prayer": "Lord, I bring You what is unfinished and unsettled. Help me remember who You are, receive the rest You offer, and return to this day with my attention turned toward You. Amen.",
         "source": "Original reflection to complete the seven-day preview collection.",
-        "approved_for_delivery": False,
+        "approved_for_delivery": True,
     },
+)
+
+
+# The launch collection was authorized for publication and delivery. Existing
+# public IDs remain unchanged so earlier shared links still open their message.
+DAILY_MESSAGES = DAILY_MESSAGES + tuple(
+    json.loads(Path(__file__).with_name("daily_devotionals.json").read_text(encoding="utf-8"))
 )
 
 

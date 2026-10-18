@@ -40,7 +40,7 @@ def subscriber():
 
 
 class DevotionalDesignTests(unittest.TestCase):
-    def test_all_seven_emails_keep_every_reading_and_devotional_paragraph(self):
+    def test_every_email_keeps_every_reading_and_devotional_paragraph(self):
         for message in DAILY_MESSAGES:
             with self.subTest(message=message["id"]):
                 document = Document(email_preview_html(message))
@@ -98,12 +98,13 @@ class DevotionalDesignTests(unittest.TestCase):
                 if message is None:
                     self.assertTrue(any("action=confirm" in link for link in links))
 
-    def test_proposed_pilot_is_a_finite_unapproved_week_with_stable_ids(self):
+    def test_launch_calendar_covers_today_and_ninety_more_days_with_stable_ids(self):
         dates = [date.fromisoformat(message["date"]) for message in DAILY_MESSAGES]
-        self.assertEqual(dates, [date(2026, 10, 19) + timedelta(days=index) for index in range(7)])
-        self.assertTrue(all(message["approved_for_delivery"] is False for message in DAILY_MESSAGES))
+        self.assertEqual(dates, [date(2026, 10, 17) + timedelta(days=index) for index in range(91)])
+        self.assertTrue(all(message["approved_for_delivery"] is True for message in DAILY_MESSAGES))
         self.assertEqual(DAILY_MESSAGES[0]["id"], "compass-w01-god-sends")
-        self.assertEqual(DAILY_MESSAGES[-1]["id"], "angel-w01-rest")
+        self.assertEqual(DAILY_MESSAGES[6]["id"], "angel-w01-rest")
+        self.assertEqual(DAILY_MESSAGES[-1]["date"], "2027-01-15")
 
 
 if __name__ == "__main__":

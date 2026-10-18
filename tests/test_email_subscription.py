@@ -20,7 +20,7 @@ from email_worker import run_worker
 from hostinger_email import HostingerMailer, MailUnavailable, SendResult
 
 
-NOW = datetime(2026, 10, 19, 15, 0, tzinfo=timezone.utc)
+NOW = datetime(2026, 10, 17, 15, 0, tzinfo=timezone.utc)
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -111,7 +111,8 @@ class LinkAndScheduleTests(unittest.TestCase):
         self.assertNotIn("reader@example.com", url)
 
     def test_unapproved_or_wrong_date_message_is_never_due(self):
-        self.assertIsNone(due_message(subscriber(), DAILY_MESSAGES, NOW))
+        unapproved = [{**m, "approved_for_delivery": False} for m in DAILY_MESSAGES]
+        self.assertIsNone(due_message(subscriber(), unapproved, NOW))
         approved = {**DAILY_MESSAGES[0], "approved_for_delivery": True}
         self.assertEqual(due_message(subscriber(), [approved], NOW)["id"], approved["id"])
         self.assertIsNone(due_message(subscriber(), [approved], NOW - timedelta(hours=2)))
@@ -124,6 +125,19 @@ class LinkAndScheduleTests(unittest.TestCase):
         approved = [{**m, "approved_for_delivery": True} for m in DAILY_MESSAGES]
         self.assertEqual(due_message(west, approved, late)["date"], "2026-10-19")
         self.assertEqual(due_message(east, approved, late)["date"], "2026-10-20")
+
+    def test_full_calendar_is_due_once_per_local_day_through_daylight_saving_change(self):
+        from zoneinfo import ZoneInfo
+        for zone in ("America/Denver", "America/New_York", "Asia/Tokyo"):
+            row = {**subscriber(), "timezone": zone}
+            for message in DAILY_MESSAGES:
+                day = datetime.fromisoformat(message["date"])
+                before = day.replace(hour=7, minute=59, tzinfo=ZoneInfo(zone)).astimezone(timezone.utc)
+                after = day.replace(hour=8, tzinfo=ZoneInfo(zone)).astimezone(timezone.utc)
+                self.assertIsNone(due_message(row, DAILY_MESSAGES, before))
+                self.assertEqual(due_message(row, DAILY_MESSAGES, after)["id"], message["id"])
+        end = datetime(2027, 1, 16, 20, tzinfo=timezone.utc)
+        self.assertIsNone(due_message(subscriber(), DAILY_MESSAGES, end))
 
     def test_disabled_worker_has_no_side_effects(self):
         store, mailer = Mock(), Mock()

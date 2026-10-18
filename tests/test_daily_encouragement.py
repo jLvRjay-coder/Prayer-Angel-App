@@ -1,10 +1,11 @@
 import json
 import os
+import re
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import parse_qs, urlparse
 
 from streamlit.testing.v1 import AppTest
@@ -18,14 +19,22 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class ContentTests(unittest.TestCase):
     def test_catalog_has_a_unique_reference_and_date_for_every_message(self):
-        self.assertEqual(len({m["id"] for m in DAILY_MESSAGES}), 7)
-        self.assertEqual(len({m["date"] for m in DAILY_MESSAGES}), 7)
+        self.assertEqual(len({m["id"] for m in DAILY_MESSAGES}), 91)
+        self.assertEqual([m["date"] for m in DAILY_MESSAGES], [
+            (date(2026, 10, 17) + timedelta(days=day)).isoformat() for day in range(91)
+        ])
         for message in DAILY_MESSAGES:
             self.assertTrue(message["reference"])
             self.assertTrue(message["reading"])
             self.assertTrue(message["verse_reference"])
             self.assertTrue(message["context"])
-            self.assertFalse(message["approved_for_delivery"])
+            self.assertTrue(message["approved_for_delivery"])
+            self.assertGreaterEqual(len(message["devotional"].split()), 285)
+            self.assertGreaterEqual(len(message["devotional"].split("\n\n")), 5)
+            self.assertTrue(message["reflection"].endswith("?"))
+            self.assertTrue(message["prayer"].endswith("Amen."))
+            normalize = lambda text: re.sub(r"\W+", " ", text).strip()
+            self.assertIn(normalize(message["verse"]), normalize(message["reading"]))
             self.assertEqual(message_by_key(message["id"]), message_by_key(message["date"]))
 
     def test_invalid_message_does_not_resolve_to_another_teaching(self):
@@ -37,8 +46,14 @@ class ContentTests(unittest.TestCase):
         self.assertEqual(local_today(datetime(2026, 10, 14, 8, tzinfo=timezone.utc)), date(2026, 10, 14))
         self.assertEqual(default_message(date(2026, 10, 14))["id"], DAILY_MESSAGES[0]["id"])
 
-    def test_calendar_does_not_loop_after_preview_ends(self):
-        self.assertEqual(default_message(date(2026, 12, 1))["date"], "2026-10-25")
+    def test_calendar_does_not_loop_after_collection_ends(self):
+        self.assertEqual(default_message(date(2027, 1, 16))["date"], "2027-01-15")
+
+    def test_every_calendar_day_resolves_to_its_own_teaching(self):
+        for message in DAILY_MESSAGES:
+            self.assertEqual(default_message(date.fromisoformat(message["date"]))["id"], message["id"])
+        self.assertEqual(len({m["title"] for m in DAILY_MESSAGES}), 91)
+        self.assertEqual(len({m["devotional"] for m in DAILY_MESSAGES}), 91)
 
     def test_share_link_has_only_public_message_information(self):
         query = parse_qs(urlparse(message_url(DAILY_MESSAGES[2])).query)
