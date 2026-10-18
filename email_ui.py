@@ -33,8 +33,8 @@ def render_email_signup(key="daily_signup"):
     with st.form(key):
         email = st.text_input("Email address", max_chars=254)
         tz = st.selectbox("Your timezone", TIMEZONES, index=TIMEZONES.index("America/Denver"))
-        clock = st.time_input("Preferred delivery time", value=time(8, 0), step=1800)
-        st.caption("Messages arrive in a scheduled run after your chosen time. Delivery can be delayed.")
+        clock = st.time_input("Preferred delivery time", value=time(5, 0), step=1800)
+        st.caption("The default is 5:00 a.m. in your selected timezone. Change it to a time that suits you. Messages arrive after your chosen time; delivery can be delayed.")
         consent = st.checkbox(CONSENT_TEXT, value=False)
         # Honeypot: no normal user needs to complete this optional field.
         st.markdown(f'<style>.st-key-{key}_website {{ display:none !important; }}</style>', unsafe_allow_html=True)

@@ -126,6 +126,19 @@ class LinkAndScheduleTests(unittest.TestCase):
         self.assertEqual(due_message(west, approved, late)["date"], "2026-10-19")
         self.assertEqual(due_message(east, approved, late)["date"], "2026-10-20")
 
+    def test_every_delivery_hour_and_half_hour_uses_the_selected_local_timezone(self):
+        from zoneinfo import ZoneInfo
+        message = DAILY_MESSAGES[1]
+        day = datetime.fromisoformat(message["date"])
+        for zone in ("America/Denver", "America/New_York", "Asia/Kolkata", "Australia/Adelaide", "Pacific/Auckland"):
+            for hour in range(24):
+                for minute in (0, 30):
+                    with self.subTest(zone=zone, hour=hour, minute=minute):
+                        row = {**subscriber(), "timezone": zone, "delivery_time": time(hour, minute)}
+                        due_at = day.replace(hour=hour, minute=minute, tzinfo=ZoneInfo(zone)).astimezone(timezone.utc)
+                        self.assertIsNone(due_message(row, [message], due_at - timedelta(seconds=1)))
+                        self.assertEqual(due_message(row, [message], due_at)["id"], message["id"])
+
     def test_full_calendar_is_due_once_per_local_day_through_daylight_saving_change(self):
         from zoneinfo import ZoneInfo
         for zone in ("America/Denver", "America/New_York", "Asia/Tokyo"):
@@ -291,6 +304,22 @@ class DatabaseFlowTests(unittest.TestCase):
 
 
 class EmailScreenTests(unittest.TestCase):
+    def test_signup_defaults_to_five_am_and_preserves_the_readers_custom_time(self):
+        with patch("email_ui.email_settings", return_value=settings()), patch("email_ui.EmailService") as service:
+            service.return_value.signup.return_value = "sent"
+            screen = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)
+            screen.query_params["v"] = "email"
+            screen.run()
+            self.assertFalse(screen.exception)
+            self.assertEqual(screen.time_input[0].value, time(5))
+            screen.text_input[0].set_value("reader@example.com")
+            screen.selectbox[0].set_value("Asia/Kolkata")
+            screen.time_input[0].set_value(time(6, 30))
+            screen.checkbox[0].check()
+            next(button for button in screen.button if button.label == "Email me a confirmation link").click().run()
+            self.assertFalse(screen.exception)
+            service.return_value.signup.assert_called_once_with("reader@example.com", "Asia/Kolkata", time(6, 30), True)
+
     def test_home_signup_invitation_appears_only_when_ready_and_opens_signup(self):
         for config in (settings(signups_enabled=False), settings(api_token=""), settings()):
             with self.subTest(ready=config.ready, enabled=config.signups_enabled), patch("email_ui.email_settings", return_value=config):
