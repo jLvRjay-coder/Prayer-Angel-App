@@ -1,0 +1,36 @@
+name: Daily encouragement email
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17,47 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: angel-daily-email
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    if: vars.EMAIL_DELIVERY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HOSTINGER_MAIL_API_TOKEN: ${{ secrets.HOSTINGER_MAIL_API_TOKEN }}
+      EMAIL_SUPABASE_URL: ${{ vars.EMAIL_SUPABASE_URL }}
+      EMAIL_SUPABASE_SECRET_KEY: ${{ secrets.EMAIL_SUPABASE_SECRET_KEY }}
+      EMAIL_SIGNING_KEY: ${{ secrets.EMAIL_SIGNING_KEY }}
+      EMAIL_POSTAL_ADDRESS: ${{ secrets.EMAIL_POSTAL_ADDRESS }}
+      EMAIL_BUDGET_24H: '750'
+      EMAIL_MAX_SUBSCRIBERS: '50'
+      EMAIL_DELIVERY_ENABLED: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python email_worker.py

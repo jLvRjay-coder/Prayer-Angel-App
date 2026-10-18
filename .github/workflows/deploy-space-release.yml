@@ -1,0 +1,76 @@
+name: Deploy Daily Encouragement release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - daily_devotionals.json
+      - requirements.txt
+      - Dockerfile
+      - .github/workflows/deploy-space-release.yml
+      - .github/workflows/daily-email.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: angel-space-preview
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'jLvRjay-coder/Prayer-Angel-App' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: angel_email_test
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd "pg_isready -U postgres -d angel_email_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install application and deployment dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install huggingface-hub==2.2.0
+      - name: Check application, content, and delivery safeguards
+        env:
+          EMAIL_TEST_DATABASE_URL: postgresql://postgres:disposable-ci-only@127.0.0.1:${{ job.services.postgres.ports[5432] }}/angel_email_test
+          EMAIL_SIGNUPS_ENABLED: 'false'
+          EMAIL_DELIVERY_ENABLED: 'false'
+        run: python -m unittest discover -s tests -v
+      - name: Verify configured services without sending
+        env:
+          HOSTINGER_MAIL_API_TOKEN: ${{ secrets.HOSTINGER_MAIL_API_TOKEN }}
+          EMAIL_SUPABASE_URL: ${{ vars.EMAIL_SUPABASE_URL }}
+          EMAIL_SUPABASE_SECRET_KEY: ${{ secrets.EMAIL_SUPABASE_SECRET_KEY }}
+          EMAIL_SIGNING_KEY: ${{ secrets.EMAIL_SIGNING_KEY }}
+          EMAIL_POSTAL_ADDRESS: ${{ secrets.EMAIL_POSTAL_ADDRESS }}
+          EMAIL_SIGNUPS_ENABLED: 'false'
+          EMAIL_DELIVERY_ENABLED: 'false'
+        run: |
+          python email_connection_check.py
+          python -c "from email_subscription import EmailSettings; assert EmailSettings.from_env().ready, 'Email configuration is incomplete'"
+      - name: Deploy release and apply repository email switches
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_PROGRESS_BARS: '1'
+          EMAIL_SIGNUPS_ENABLED: ${{ vars.EMAIL_SIGNUPS_ENABLED || 'false' }}
+          EMAIL_DELIVERY_ENABLED: ${{ vars.EMAIL_DELIVERY_ENABLED || 'false' }}
+        run: python deploy_space_release.py

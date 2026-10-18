@@ -13,4 +13,5 @@ COPY . .
 # Hugging Face expects Streamlit on 7860
 EXPOSE 7860
 
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Keep framework usage telemetry off explicitly, including when defaults change.
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0", "--browser.gatherUsageStats=false"]

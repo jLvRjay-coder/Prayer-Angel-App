@@ -1,0 +1,46 @@
+name: Private email test
+
+on:
+  push:
+    branches: [feat/daily-encouragement-preview]
+    paths: [email_test_request.json]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: angel-private-email-test
+  cancel-in-progress: false
+
+jobs:
+  private-test:
+    if: github.repository == 'jLvRjay-coder/Prayer-Angel-App'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: |
+          pip install -r requirements.txt
+          pip install huggingface-hub==2.2.0
+      - name: Verify private test recipient restrictions and no-send checks
+        run: python -m unittest discover -s tests -p test_email_private_test.py -v
+      - name: Run the committed private test request
+        env:
+          HOSTINGER_MAIL_API_TOKEN: ${{ secrets.HOSTINGER_MAIL_API_TOKEN }}
+          EMAIL_SUPABASE_URL: ${{ vars.EMAIL_SUPABASE_URL }}
+          EMAIL_SUPABASE_SECRET_KEY: ${{ secrets.EMAIL_SUPABASE_SECRET_KEY }}
+          EMAIL_SIGNING_KEY: ${{ secrets.EMAIL_SIGNING_KEY }}
+          EMAIL_POSTAL_ADDRESS: ${{ secrets.EMAIL_POSTAL_ADDRESS }}
+          EMAIL_TEST_RECIPIENT: ${{ secrets.EMAIL_TEST_RECIPIENT }}
+          EMAIL_SIGNUPS_ENABLED: 'false'
+          EMAIL_DELIVERY_ENABLED: ${{ vars.EMAIL_DELIVERY_ENABLED || 'false' }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HUB_DISABLE_PROGRESS_BARS: '1'
+        run: python email_private_test.py --request email_test_request.json --send
