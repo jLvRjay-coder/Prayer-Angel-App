@@ -19,9 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class ContentTests(unittest.TestCase):
     def test_catalog_has_a_unique_reference_and_date_for_every_message(self):
-        self.assertEqual(len({m["id"] for m in DAILY_MESSAGES}), 91)
+        self.assertEqual(len({m["id"] for m in DAILY_MESSAGES}), 139)
         self.assertEqual([m["date"] for m in DAILY_MESSAGES], [
-            (date(2026, 10, 17) + timedelta(days=day)).isoformat() for day in range(91)
+            (date(2026, 10, 17) + timedelta(days=day)).isoformat() for day in range(139)
         ])
         for message in DAILY_MESSAGES:
             self.assertTrue(message["reference"])
@@ -47,13 +47,13 @@ class ContentTests(unittest.TestCase):
         self.assertEqual(default_message(date(2026, 10, 14))["id"], DAILY_MESSAGES[0]["id"])
 
     def test_calendar_does_not_loop_after_collection_ends(self):
-        self.assertEqual(default_message(date(2027, 1, 16))["date"], "2027-01-15")
+        self.assertEqual(default_message(date(2027, 3, 5))["date"], "2027-03-04")
 
     def test_every_calendar_day_resolves_to_its_own_teaching(self):
         for message in DAILY_MESSAGES:
             self.assertEqual(default_message(date.fromisoformat(message["date"]))["id"], message["id"])
-        self.assertEqual(len({m["title"] for m in DAILY_MESSAGES}), 91)
-        self.assertEqual(len({m["devotional"] for m in DAILY_MESSAGES}), 91)
+        self.assertEqual(len({(m.get("series_id", "launch"), m["title"]) for m in DAILY_MESSAGES}), 139)
+        self.assertEqual(len({m["devotional"] for m in DAILY_MESSAGES}), 139)
 
     def test_share_link_has_only_public_message_information(self):
         query = parse_qs(urlparse(message_url(DAILY_MESSAGES[2])).query)
@@ -174,3 +174,4 @@ class AppFlowTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
