@@ -149,7 +149,7 @@ class LinkAndScheduleTests(unittest.TestCase):
                 after = day.replace(hour=8, tzinfo=ZoneInfo(zone)).astimezone(timezone.utc)
                 self.assertIsNone(due_message(row, DAILY_MESSAGES, before))
                 self.assertEqual(due_message(row, DAILY_MESSAGES, after)["id"], message["id"])
-        end = datetime(2027, 1, 16, 20, tzinfo=timezone.utc)
+        end = datetime(2027, 3, 5, 20, tzinfo=timezone.utc)
         self.assertIsNone(due_message(subscriber(), DAILY_MESSAGES, end))
 
     def test_disabled_worker_has_no_side_effects(self):
