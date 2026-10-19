@@ -17,6 +17,7 @@ PREVIEW_FLAGS = ("EMAIL_SIGNUPS_ENABLED", "EMAIL_DELIVERY_ENABLED")
 RUNTIME_FILES = (
     "app.py", "daily_encouragement.py", "daily_devotionals.json", "devotional_design.py", "email_subscription.py", "email_ui.py",
     "supabase_email_store.py", "hostinger_email.py", "email_worker.py",
+    "email_scheduler.py", "app_runtime.py",
     "email_connection_check.py", "requirements.txt", "Dockerfile", "README.md",
     "EMAIL_SETUP.md", "EMAIL_PRIVACY_NOTICE.md", "PILOT_LAUNCH.md",
 )

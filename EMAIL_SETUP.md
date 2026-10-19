@@ -1,5 +1,17 @@
 # Daily encouragement email setup
 
+## Current delivery clock — October 19, 2026
+
+The running Docker app uses `app_runtime.py` to supervise Streamlit and `email_scheduler.py`. The scheduler calls the existing worker at startup and each clock minute. It uses the same local timezone, saved preferences, approval checks, consent, rolling budget, and durable delivery reservations. The supervisor restarts a failed scheduler independently of Streamlit. The web process retains its port and disabled telemetry setting.
+
+GitHub's twice-hourly workflow remains a fallback. On October 19 its runs skipped the requested 5:00 a.m. Mountain window; delivery began at 8:43 a.m. when the next run finally started. It is no longer the primary delivery clock. Both workers share the delivery ledger, so simultaneous runs cannot claim the same message twice.
+
+The scheduler writes one backend-only health row through `angel_email_scheduler_heartbeat`: last completed check, fixed outcome counters, status, and source commit. It stores no address, signed link, credential, or chat text. Anonymous and authenticated clients have no access. The corresponding SQL migration also installs a database cron job that checks the public Streamlit health endpoint every five minutes. That GET contains no authentication or send action and provides regular traffic to the existing Space; it does not purchase hardware or change its plan.
+
+The hourly ChatGPT check is a read-only monitor of scheduler health and overdue deliveries. It must not rerun send workflows or send mail. Delivery is performed by the app's own worker. An exact inbox minute cannot be guaranteed during a hosting or provider outage; verify heartbeats and actual delivery records rather than relying on the preference display alone.
+
+The historical setup and test notes below describe the earlier preview and launch stages.
+
 The app now has opt-in signup, email confirmation, preferences, and unsubscribe. The separate worker uses Hostinger Mail to deliver scheduled, approved teachings. All delivery features remain off by default. The existing Hugging Face mail token is only the sending credential; durable subscriber storage and the external worker's credentials still need configuration.
 
 ## Storage
