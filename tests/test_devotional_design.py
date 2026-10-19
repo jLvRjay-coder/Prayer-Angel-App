@@ -98,14 +98,18 @@ class DevotionalDesignTests(unittest.TestCase):
                 if message is None:
                     self.assertTrue(any("action=confirm" in link for link in links))
 
-    def test_launch_calendar_covers_today_and_ninety_more_days_with_stable_ids(self):
+    def test_calendar_appends_connected_series_after_original_ninety_one_days(self):
         dates = [date.fromisoformat(message["date"]) for message in DAILY_MESSAGES]
-        self.assertEqual(dates, [date(2026, 10, 17) + timedelta(days=index) for index in range(91)])
+        self.assertEqual(dates, [date(2026, 10, 17) + timedelta(days=index) for index in range(139)])
         self.assertTrue(all(message["approved_for_delivery"] is True for message in DAILY_MESSAGES))
         self.assertEqual(DAILY_MESSAGES[0]["id"], "compass-w01-god-sends")
         self.assertEqual(DAILY_MESSAGES[6]["id"], "angel-w01-rest")
-        self.assertEqual(DAILY_MESSAGES[-1]["date"], "2027-01-15")
+        self.assertEqual(DAILY_MESSAGES[90]["date"], "2027-01-15")
+        self.assertEqual(DAILY_MESSAGES[91]["date"], "2027-01-16")
+        self.assertEqual(DAILY_MESSAGES[-1]["date"], "2027-03-04")
+        self.assertEqual(DAILY_MESSAGES[91]["previous_message_id"], DAILY_MESSAGES[90]["id"])
 
 
 if __name__ == "__main__":
     unittest.main()
+
