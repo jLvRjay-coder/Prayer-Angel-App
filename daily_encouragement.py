@@ -10,7 +10,7 @@ content when the calendar ends.
 from datetime import date, datetime, timezone
 import json
 from pathlib import Path
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo
 
 from devotional_design import render_devotional_email_html
@@ -284,6 +284,19 @@ def message_url(message):
     return SITE_URL + "?" + urlencode({"v": "daily", "message": message["id"]})
 
 
+def share_email_url(message):
+    """Compose a new email containing only public devotional content."""
+    return "mailto:?" + urlencode({
+        "subject": f"An encouragement for you — {message['title']}",
+        "body": (
+            "I thought you might enjoy this encouragement from Angel Chat.\n\n"
+            f"{message['title']}\n\n{message['encouragement']}\n\n"
+            f"Read the full devotional:\n{message_url(message)}\n\n"
+            "You can also sign up for daily encouragement on that page."
+        ),
+    }, quote_via=quote)
+
+
 def exploration_links(message):
     """Public browser context and the verified Android download listing."""
     return (
@@ -319,6 +332,8 @@ def email_preview(message):
         f"{message.get('devotional', message['encouragement'])}\n\n"
         f"A question to carry: {message['reflection']}\n\n"
         f"A prayer: {message['prayer']}\n\n"
+        f"Share this encouragement:\n{message_url(message)}\n"
+        "Share this public link instead of forwarding your personal subscription links.\n\n"
         f"Explore this message and ask questions in Angel Chat:\n\n{links}\n\n"
         "Use the browser link on iPhone, iPad, or computer.\n"
     )
@@ -326,4 +341,7 @@ def email_preview(message):
 
 def email_preview_html(message, footer_html=""):
     """Use the same complete content and named links in preview and delivery."""
-    return render_devotional_email_html(message, exploration_links(message), footer_html)
+    return render_devotional_email_html(
+        message, exploration_links(message), footer_html,
+        share_url=share_email_url(message), public_url=message_url(message),
+    )

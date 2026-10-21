@@ -102,13 +102,24 @@ def action_button_html(label, url, secondary=False):
     )
 
 
-def render_devotional_email_html(message, links, footer_html=""):
+def render_devotional_email_html(message, links, footer_html="", *, share_url="", public_url=""):
     day = date.fromisoformat(message["date"]).strftime("%A, %B %d, %Y")
     reading = "".join(
         f'<p style="font-family:Georgia,serif;font-size:17px;line-height:1.8;color:{NAVY};margin:0 0 16px">{html.escape(paragraph).replace(chr(10), "<br>")}</p>'
         for paragraph in message["reading"].split("\n\n")
     )
     buttons = "".join(action_button_html(label, url, index > 0) for index, (label, url) in enumerate(links))
+    share = (
+        '<div style="border-top:1px solid #E3DCCF;padding-top:22px;margin-top:26px">'
+        f'<h2 style="font-family:Georgia,serif;font-size:23px;color:{NAVY};margin:0 0 10px">Encourage someone today</h2>'
+        '<p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:#5C5A5E;margin:0 0 14px">Send a friend the public devotional, with a place to subscribe for themselves.</p>'
+        + action_button_html("Share this encouragement", share_url, secondary=True)
+        + f'<p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.7;color:#5C5A5E;margin:14px 0 0">'
+        f'The button opens a new email with the public link. You can also '
+        f'<a href="{html.escape(public_url, quote=True)}" style="color:#4E463E;text-decoration:underline">open the public reading</a> and copy its link. '
+        'Your personal subscription links are not included.</p></div>'
+        if share_url and public_url else ""
+    )
     content = (
         f'<p style="{LABEL_STYLE}">{html.escape(day.upper())}</p>'
         f'<h1 style="font-family:Georgia,serif;font-size:34px;line-height:1.2;color:{NAVY};margin:0 0 16px">{html.escape(message["title"])}</h1>'
@@ -122,6 +133,6 @@ def render_devotional_email_html(message, links, footer_html=""):
         f'<div style="border-top:1px solid #E3DCCF;padding-top:22px;margin-top:26px">'
         f'<h2 style="font-family:Georgia,serif;font-size:23px;color:{NAVY};margin:0 0 10px">Go deeper with Angel Chat</h2>'
         '<p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:#5C5A5E;margin:0 0 14px">Explore this message and ask questions in Angel Chat.</p>'
-        f'{buttons}<p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.7;color:#5C5A5E;margin:14px 0 0">Use the browser link on iPhone, iPad, or computer.</p></div>'
+        f'{buttons}<p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.7;color:#5C5A5E;margin:14px 0 0">Use the browser link on iPhone, iPad, or computer.</p></div>{share}'
     )
     return email_shell_html(content, footer_html)

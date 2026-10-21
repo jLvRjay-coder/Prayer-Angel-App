@@ -3102,7 +3102,8 @@ def render_daily_encouragement():
 
     with st.expander("Share this encouragement"):
         st.markdown(f'[Open a shareable link]({message_url(message)})')
-        st.caption("This link opens the teaching without including your conversation or private session link.")
+        st.code(message_url(message), language=None, wrap_lines=True)
+        st.caption("Use the copy button above to send this public link to a friend. It includes no conversation, private session, or personal subscription controls. Friends can subscribe on this page.")
 
     with st.expander("Preview the daily email"):
         st.markdown(email_preview_html(message), unsafe_allow_html=True)
