@@ -222,6 +222,7 @@ def render_email(settings, subscriber, message=None, now=None):
     footer = (
         f"Angel Chat / Beyond the Message\n{settings.postal_address}\n"
         f"Questions or delivery problems: {settings.mailbox_address}\n"
+        "These personal subscription links belong to the original subscriber.\n"
         f"Unsubscribe: {unsubscribe}\nEmail preferences: {manage}"
     )
     if message is None:
@@ -243,6 +244,7 @@ def render_email(settings, subscriber, message=None, now=None):
         f'<p style="margin:0 0 10px;font-size:12px;color:#5C5A5E"><strong>Angel Chat / Beyond the Message</strong><br>{address}</p>'
         f'<p style="margin:0 0 10px;font-size:12px;color:#5C5A5E">Questions or delivery problems: '
         f'<a href="mailto:{contact}" style="color:#4E463E;text-decoration:underline">{contact}</a></p>'
+        '<p style="margin:0 0 10px;font-size:12px;color:#5C5A5E">These personal subscription links belong to the original subscriber.</p>'
         f'<p style="margin:0;font-size:12px"><a href="{html.escape(manage, quote=True)}" style="color:#4E463E;text-decoration:underline">Email preferences</a>'
         f' &nbsp;&middot;&nbsp; <a href="{html.escape(unsubscribe, quote=True)}" style="color:#4E463E;text-decoration:underline">Unsubscribe</a></p>'
     )

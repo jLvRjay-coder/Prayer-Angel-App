@@ -3,6 +3,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from html.parser import HTMLParser
 import re
 import unittest
+from urllib.parse import parse_qs, urlparse
 
 from daily_encouragement import DAILY_MESSAGES, email_preview, email_preview_html
 from devotional_design import BRAND_MARK_URL, devotional_markdown
@@ -97,6 +98,34 @@ class DevotionalDesignTests(unittest.TestCase):
                 self.assertIn(configuration().postal_address, plain)
                 if message is None:
                     self.assertTrue(any("action=confirm" in link for link in links))
+
+    def test_sharing_starts_a_new_email_without_the_original_subscription_controls(self):
+        readers = (
+            {**subscriber(), "id": "first-private-id", "manage_nonce": "first-private-nonce"},
+            {**subscriber(), "id": "second-private-id", "manage_nonce": "second-private-nonce"},
+        )
+        for message in DAILY_MESSAGES:
+            with self.subTest(message=message["id"]):
+                shared_links = []
+                personal_links = []
+                for reader in readers:
+                    _, plain, body = render_email(configuration(), reader, message)
+                    links = [attrs["href"] for tag, attrs in Document(body).elements if tag == "a"]
+                    share_link = next(link for link in links if link.startswith("mailto:?"))
+                    shared_links.append(share_link)
+                    composed = parse_qs(urlparse(share_link).query)
+                    self.assertEqual(set(composed), {"subject", "body"})
+                    self.assertIn(message["title"], composed["subject"][0])
+                    public_link = next(line for line in composed["body"][0].splitlines() if line.startswith("https://"))
+                    self.assertEqual(parse_qs(urlparse(public_link).query), {
+                        "v": ["daily"], "message": [message["id"]],
+                    })
+                    self.assertIn(public_link, plain)
+                    for private in (reader["id"], reader["manage_nonce"], "token=", "action=", "sid="):
+                        self.assertNotIn(private, composed["body"][0])
+                    personal_links.append(next(link for link in links if "action=unsubscribe" in link))
+                self.assertEqual(shared_links[0], shared_links[1])
+                self.assertNotEqual(personal_links[0], personal_links[1])
 
     def test_calendar_appends_connected_series_after_original_ninety_one_days(self):
         dates = [date.fromisoformat(message["date"]) for message in DAILY_MESSAGES]
