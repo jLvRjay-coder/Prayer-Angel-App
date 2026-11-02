@@ -1,0 +1,785 @@
+{
+  "title": "Parables Series Roadmap",
+  "series": "The Stories Jesus Told",
+  "brand": "Beyond the Message",
+  "channel": "Daily Encouragement",
+  "prepared": "November 1 2026",
+  "status": "Approved by Jamie Dennis on November 1 2026",
+  "weeks": [
+    {
+      "week": 1,
+      "theme": "Hearing Jesus",
+      "summary": "Begin with why Jesus used parables, then let his explanation of the Sower establish how we will listen throughout the series.",
+      "question": "What is helping or hindering me as I receive Jesus' words?",
+      "context": "Day 1 introduces the series. Days 2 through 6 follow the Sower's distinct responses to the word. Day 7 connects hearing with putting Jesus' teaching into practice.",
+      "days": [
+        {
+          "day": 1,
+          "title": "Why Jesus Told Stories",
+          "parable": "Series introduction",
+          "reading": "Matthew 13:10-17",
+          "focus": "Jesus' parables disclose the kingdom while confronting resistant hearing; understanding calls for receptive hearts."
+        },
+        {
+          "day": 2,
+          "title": "A Sower Went Out",
+          "parable": "The Sower",
+          "reading": "Matthew 13:1-9",
+          "focus": "The same seed meets different ground. Introduce the whole story before exploring Jesus' explanation."
+        },
+        {
+          "day": 3,
+          "title": "When the Word Stays on the Surface",
+          "parable": "The Sower",
+          "reading": "Matthew 13:18-19",
+          "focus": "Jesus connects the path with hearing without understanding and the wicked one's removal of the word."
+        },
+        {
+          "day": 4,
+          "title": "Roots for the Difficult Days",
+          "parable": "The Sower",
+          "reading": "Matthew 13:20-21",
+          "focus": "An eager beginning needs depth when trouble or persecution comes because of the word."
+        },
+        {
+          "day": 5,
+          "title": "What Is Crowding the Word",
+          "parable": "The Sower",
+          "reading": "Matthew 13:22",
+          "focus": "Life's cares and the deceitfulness of riches can crowd out the word and its fruit."
+        },
+        {
+          "day": 6,
+          "title": "A Heart That Bears Fruit",
+          "parable": "The Sower",
+          "reading": "Matthew 13:23",
+          "focus": "Hearing with understanding bears fruit; Jesus describes differing yields within a fruitful response."
+        },
+        {
+          "day": 7,
+          "title": "The Foundation Beneath the House",
+          "parable": "Wise and Foolish Builders",
+          "reading": "Matthew 7:21-29",
+          "focus": "Jesus connects a secure foundation with hearing his sayings and doing them."
+        }
+      ],
+      "start": 1,
+      "end": 7
+    },
+    {
+      "week": 2,
+      "theme": "The Kingdom Takes Root",
+      "summary": "Explore the kingdom's growth and incomparable worth through seed, leaven, treasure, and a pearl.",
+      "question": "How is Jesus reshaping what I consider significant and valuable?",
+      "context": "Keep growth and value centered on God's kingdom. The growing seed, mustard seed, and leaven use different pictures of its working; treasure and pearl emphasize its worth.",
+      "days": [
+        {
+          "day": 8,
+          "title": "Growing While We Sleep",
+          "parable": "The Growing Seed",
+          "reading": "Mark 4:26-29",
+          "focus": "The seed grows beyond the farmer's understanding, inviting trust in God's work beyond human control."
+        },
+        {
+          "day": 9,
+          "title": "The Harvest Will Come",
+          "parable": "The Growing Seed",
+          "reading": "Mark 4:26-29",
+          "focus": "The story moves through growth to harvest, giving the kingdom's quiet beginning a purposeful destination."
+        },
+        {
+          "day": 10,
+          "title": "A Beginning Easy to Overlook",
+          "parable": "The Mustard Seed",
+          "reading": "Matthew 13:31-32",
+          "focus": "A small beginning can conceal the scale of the kingdom Jesus is announcing."
+        },
+        {
+          "day": 11,
+          "title": "Branches Beyond the Beginning",
+          "parable": "The Mustard Seed",
+          "reading": "Mark 4:30-32",
+          "focus": "The seed's mature growth reveals a reach far greater than its initial appearance suggests."
+        },
+        {
+          "day": 12,
+          "title": "Until the Whole Was Leavened",
+          "parable": "The Leaven",
+          "reading": "Matthew 13:33",
+          "focus": "Leaven's unseen, pervasive action pictures the kingdom's far-reaching effect."
+        },
+        {
+          "day": 13,
+          "title": "The Joy of Finding Treasure",
+          "parable": "The Hidden Treasure",
+          "reading": "Matthew 13:44",
+          "focus": "The kingdom's surpassing worth explains the finder's joyful, wholehearted response."
+        },
+        {
+          "day": 14,
+          "title": "The Pearl Worth Everything",
+          "parable": "The Pearl of Great Price",
+          "reading": "Matthew 13:45-46",
+          "focus": "Recognizing the kingdom's value reorders the merchant's priorities and possessions."
+        }
+      ],
+      "start": 8,
+      "end": 14
+    },
+    {
+      "week": 3,
+      "theme": "The Joy of Being Found",
+      "summary": "Read Luke 15 as Jesus' response to criticism of his welcome, tracing the joy of recovery through three stories.",
+      "question": "Where do I recognize myself in these stories of being lost, welcomed, and invited to rejoice?",
+      "context": "Luke 15:1-2 supplies the setting. The father goes out to both sons. The older brother's unresolved response leaves Jesus' hearers facing their own response to mercy.",
+      "days": [
+        {
+          "day": 15,
+          "title": "The Shepherd Goes After the One",
+          "parable": "The Lost Sheep",
+          "reading": "Luke 15:1-7",
+          "focus": "Jesus answers criticism of his welcome with a shepherd who actively seeks the lost sheep."
+        },
+        {
+          "day": 16,
+          "title": "Heaven's Joy Over One",
+          "parable": "The Lost Sheep",
+          "reading": "Luke 15:4-7",
+          "focus": "Jesus explicitly connects the shepherd's celebration with heaven's joy over a sinner who repents."
+        },
+        {
+          "day": 17,
+          "title": "The Search and the Celebration",
+          "parable": "The Lost Coin",
+          "reading": "Luke 15:8-10",
+          "focus": "Diligent searching ends in shared joy; Jesus again highlights rejoicing over repentance."
+        },
+        {
+          "day": 18,
+          "title": "The Road Into the Far Country",
+          "parable": "The Lost Son",
+          "reading": "Luke 15:11-16",
+          "focus": "The younger son's departure and loss expose the ruin of life separated from his father."
+        },
+        {
+          "day": 19,
+          "title": "Coming to Himself",
+          "parable": "The Lost Son",
+          "reading": "Luke 15:17-21",
+          "focus": "The son's awakening becomes confession and a return to the father he has wronged."
+        },
+        {
+          "day": 20,
+          "title": "The Father Runs to Meet Him",
+          "parable": "The Lost Son",
+          "reading": "Luke 15:20-24",
+          "focus": "The father's compassion and welcome illuminate the mercy celebrated throughout the chapter."
+        },
+        {
+          "day": 21,
+          "title": "The Brother Outside the Celebration",
+          "parable": "The Lost Son",
+          "reading": "Luke 15:25-32",
+          "focus": "The older son's resentment challenges hearers to examine their response to another person's welcome."
+        }
+      ],
+      "start": 15,
+      "end": 21
+    },
+    {
+      "week": 4,
+      "theme": "Mercy Without Keeping Score",
+      "summary": "Move from receiving mercy to forgiveness, grateful love, and the challenge of celebrating another person's generosity.",
+      "question": "What happens in my heart when mercy reaches someone whose story differs from mine?",
+      "context": "Keep Peter's forgiveness question with the unforgiving servant, and keep Simon's dinner with the two debtors. The laborers confront comparison through the landowner's generosity.",
+      "days": [
+        {
+          "day": 22,
+          "title": "How Many Times Must I Forgive",
+          "parable": "The Unforgiving Servant",
+          "reading": "Matthew 18:21-35",
+          "focus": "Peter's question introduces forgiveness that cannot be reduced to keeping a tally."
+        },
+        {
+          "day": 23,
+          "title": "The Debt He Could Never Repay",
+          "parable": "The Unforgiving Servant",
+          "reading": "Matthew 18:23-27",
+          "focus": "The king's compassion cancels an overwhelming debt the servant cannot repay."
+        },
+        {
+          "day": 24,
+          "title": "Mercy at the Next Door",
+          "parable": "The Unforgiving Servant",
+          "reading": "Matthew 18:28-35",
+          "focus": "Refusing a fellow servant mercy exposes a grave contradiction in receiving forgiveness."
+        },
+        {
+          "day": 25,
+          "title": "Two Debtors and One Creditor",
+          "parable": "The Two Debtors",
+          "reading": "Luke 7:36-43",
+          "focus": "Both debtors lack the means to pay; cancellation frames Jesus' question about love."
+        },
+        {
+          "day": 26,
+          "title": "When Forgiveness Becomes Love",
+          "parable": "The Two Debtors",
+          "reading": "Luke 7:40-50",
+          "focus": "Jesus connects the woman's grateful love, forgiveness, and faith within Simon's judgmental response."
+        },
+        {
+          "day": 27,
+          "title": "The Generous Landowner",
+          "parable": "Laborers in the Vineyard",
+          "reading": "Matthew 20:1-16",
+          "focus": "The landowner's generosity challenges expectations that the kingdom operates by comparative entitlement."
+        },
+        {
+          "day": 28,
+          "title": "When Generosity Feels Unfair",
+          "parable": "Laborers in the Vineyard",
+          "reading": "Matthew 20:9-16",
+          "focus": "The first workers' resentment invites examination of envy toward generosity shown to others."
+        }
+      ],
+      "start": 22,
+      "end": 28
+    },
+    {
+      "week": 5,
+      "theme": "Learning to Love Our Neighbor",
+      "summary": "Explore mercy across boundaries, the invitation to God's banquet, and humility at the table.",
+      "question": "Whom might I see differently after listening to Jesus?",
+      "context": "The lawyer seeks to justify himself before asking about his neighbor. Luke 14 places banquet teaching among questions of status, hospitality, and who belongs at the table.",
+      "days": [
+        {
+          "day": 29,
+          "title": "Who Is My Neighbor",
+          "parable": "The Good Samaritan",
+          "reading": "Luke 10:25-37",
+          "focus": "Jesus answers the lawyer's boundary-setting question through the mercy shown by an unexpected neighbor."
+        },
+        {
+          "day": 30,
+          "title": "The Compassion That Crossed the Road",
+          "parable": "The Good Samaritan",
+          "reading": "Luke 10:30-35",
+          "focus": "The Samaritan's compassion becomes practical care involving time, resources, and personal involvement."
+        },
+        {
+          "day": 31,
+          "title": "Becoming a Neighbor",
+          "parable": "The Good Samaritan",
+          "reading": "Luke 10:36-37",
+          "focus": "Jesus turns attention toward the person who shows mercy and calls his hearer to respond."
+        },
+        {
+          "day": 32,
+          "title": "An Invitation Interrupted by Excuses",
+          "parable": "The Great Banquet",
+          "reading": "Luke 14:15-20",
+          "focus": "Ordinary commitments become excuses for declining the host's invitation."
+        },
+        {
+          "day": 33,
+          "title": "A Table for the Overlooked",
+          "parable": "The Great Banquet",
+          "reading": "Luke 14:21-23",
+          "focus": "The host welcomes people excluded from expected circles of honor and access."
+        },
+        {
+          "day": 34,
+          "title": "The Invitation Calls for an Answer",
+          "parable": "The Great Banquet",
+          "reading": "Luke 14:16-24",
+          "focus": "A generous invitation carries urgency; those who refuse it miss the feast."
+        },
+        {
+          "day": 35,
+          "title": "Taking the Lower Place",
+          "parable": "Places of Honor",
+          "reading": "Luke 14:7-11",
+          "focus": "Jesus confronts the pursuit of status and teaches humility before the one who gives honor."
+        }
+      ],
+      "start": 29,
+      "end": 35
+    },
+    {
+      "week": 6,
+      "theme": "Prayer and the Heart",
+      "summary": "Bring need, weariness, self-righteousness, and service before God through Jesus' teaching on prayer and humility.",
+      "question": "What am I bringing to God honestly, and what am I still trying to prove?",
+      "context": "Read the midnight friend with Jesus' teaching on the Father's goodness. Read the unjust judge as a contrast that strengthens confidence in God's justice. Luke names self-righteousness as the next parable's target.",
+      "days": [
+        {
+          "day": 36,
+          "title": "A Knock in the Middle of the Night",
+          "parable": "The Friend at Midnight",
+          "reading": "Luke 11:5-8",
+          "focus": "A request made in need introduces bold, persistent asking in Jesus' teaching on prayer."
+        },
+        {
+          "day": 37,
+          "title": "The Father Who Gives Good Gifts",
+          "parable": "The Friend at Midnight",
+          "reading": "Luke 11:5-13",
+          "focus": "Jesus grounds asking in the heavenly Father's goodness and his gift of the Holy Spirit."
+        },
+        {
+          "day": 38,
+          "title": "Praying When Weariness Sets In",
+          "parable": "The Persistent Widow",
+          "reading": "Luke 18:1-5",
+          "focus": "Luke states the purpose: keep praying and resist losing heart."
+        },
+        {
+          "day": 39,
+          "title": "Will He Find Faith",
+          "parable": "The Persistent Widow",
+          "reading": "Luke 18:6-8",
+          "focus": "Jesus directs confidence toward God's justice and closes with a searching question about enduring faith."
+        },
+        {
+          "day": 40,
+          "title": "The Prayer That Compares",
+          "parable": "The Pharisee and the Publican",
+          "reading": "Luke 18:9-12",
+          "focus": "The Pharisee's comparison exposes self-trust and contempt for others in the setting of prayer."
+        },
+        {
+          "day": 41,
+          "title": "The Prayer That Asks for Mercy",
+          "parable": "The Pharisee and the Publican",
+          "reading": "Luke 18:13-14",
+          "focus": "The publican depends on God's mercy, and Jesus declares that he goes home justified."
+        },
+        {
+          "day": 42,
+          "title": "Serving Without Keeping an Account",
+          "parable": "The Servant's Duty",
+          "reading": "Luke 17:7-10",
+          "focus": "Faithful obedience calls for humility; service gives us no claim of entitlement over God."
+        }
+      ],
+      "start": 36,
+      "end": 42
+    },
+    {
+      "week": 7,
+      "theme": "What We Treasure",
+      "summary": "Consider possessions, foresight, divided allegiance, and the cost of following Jesus.",
+      "question": "What do my plans and possessions reveal about where I am seeking security?",
+      "context": "Read the steward through Jesus' following instructions on faithfulness and serving God. The tower and king belong to his explicit teaching on the cost of discipleship.",
+      "days": [
+        {
+          "day": 43,
+          "title": "Bigger Barns and a Smaller Horizon",
+          "parable": "The Rich Fool",
+          "reading": "Luke 12:13-19",
+          "focus": "The farmer's abundance exposes a life defined by possessions and plans centered on himself."
+        },
+        {
+          "day": 44,
+          "title": "The Night He Had Not Planned For",
+          "parable": "The Rich Fool",
+          "reading": "Luke 12:16-20",
+          "focus": "The sudden demand for his life reveals how little stored wealth can secure."
+        },
+        {
+          "day": 45,
+          "title": "Being Rich Toward God",
+          "parable": "The Rich Fool",
+          "reading": "Luke 12:20-21",
+          "focus": "Jesus' conclusion redirects the question from accumulated goods to one's relationship with God."
+        },
+        {
+          "day": 46,
+          "title": "A Steward Who Saw What Was Coming",
+          "parable": "The Dishonest Steward",
+          "reading": "Luke 16:1-9",
+          "focus": "The steward's urgent foresight introduces Jesus' challenge to use present resources with eternity in view."
+        },
+        {
+          "day": 47,
+          "title": "The Master My Money Serves",
+          "parable": "The Dishonest Steward",
+          "reading": "Luke 16:9-15",
+          "focus": "Jesus connects faithful stewardship with undivided allegiance to God."
+        },
+        {
+          "day": 48,
+          "title": "Before You Build the Tower",
+          "parable": "The Tower Builder",
+          "reading": "Luke 14:25-30",
+          "focus": "The unfinished tower makes the cost of following Jesus a matter for serious consideration."
+        },
+        {
+          "day": 49,
+          "title": "The King Who Had to Reckon",
+          "parable": "The King Going to War",
+          "reading": "Luke 14:31-33",
+          "focus": "The king's reckoning reinforces the need to face the surrender involved in discipleship."
+        }
+      ],
+      "start": 43,
+      "end": 49
+    },
+    {
+      "week": 8,
+      "theme": "Responding to the Son",
+      "summary": "Follow Jesus' confrontation of empty agreement and resistant leadership, then consider the urgency of repentance.",
+      "question": "Where is Jesus inviting an honest response beyond words of agreement?",
+      "context": "Matthew 21 identifies the leaders who recognize themselves in Jesus' stories. The tenants point toward rejection of the Son and the rejected cornerstone. Luke 13 frames the fig tree with a call to repentance.",
+      "days": [
+        {
+          "day": 50,
+          "title": "The Son Who Changed His Mind",
+          "parable": "The Two Sons",
+          "reading": "Matthew 21:28-32",
+          "focus": "A refusal followed by repentance and action challenges assumptions about who responds to God."
+        },
+        {
+          "day": 51,
+          "title": "The Yes That Never Became a Step",
+          "parable": "The Two Sons",
+          "reading": "Matthew 21:28-32",
+          "focus": "Respectful words without obedience expose the distance between profession and response."
+        },
+        {
+          "day": 52,
+          "title": "A Vineyard Held in Trust",
+          "parable": "The Wicked Tenants",
+          "reading": "Matthew 21:33-41",
+          "focus": "The tenants treat entrusted property as their own and resist the owner's rightful claim."
+        },
+        {
+          "day": 53,
+          "title": "They Rejected the Son",
+          "parable": "The Wicked Tenants",
+          "reading": "Matthew 21:33-46",
+          "focus": "The tenants' violence toward the son anticipates the rejection Jesus is confronting."
+        },
+        {
+          "day": 54,
+          "title": "The Stone the Builders Rejected",
+          "parable": "The Wicked Tenants",
+          "reading": "Matthew 21:42-46",
+          "focus": "Jesus links rejection with God's purpose through the Scripture about the cornerstone."
+        },
+        {
+          "day": 55,
+          "title": "Another Season of Mercy",
+          "parable": "The Barren Fig Tree",
+          "reading": "Luke 13:1-9",
+          "focus": "The gardener's plea pictures patient opportunity within Jesus' urgent call to repentance."
+        },
+        {
+          "day": 56,
+          "title": "The Fruit God Is Seeking",
+          "parable": "The Barren Fig Tree",
+          "reading": "Luke 13:6-9",
+          "focus": "The tree's continued care carries an expectation of fruit and a real limit to delay."
+        }
+      ],
+      "start": 50,
+      "end": 56
+    },
+    {
+      "week": 9,
+      "theme": "Waiting for the Harvest",
+      "summary": "Hold patience, judgment, and hope together while listening to Jesus' own explanation of the wheat and tares.",
+      "question": "How can I entrust final judgment to God while taking Jesus' words seriously today?",
+      "context": "Jesus identifies the field as the world and the harvest as the end of the age. Day 63 is a reflection across Matthew 13, bringing its several kingdom images together.",
+      "days": [
+        {
+          "day": 57,
+          "title": "When Tares Appear in the Field",
+          "parable": "The Wheat and the Tares",
+          "reading": "Matthew 13:24-30",
+          "focus": "The appearance of destructive growth raises the servants' question about the owner's good seed."
+        },
+        {
+          "day": 58,
+          "title": "Let Both Grow Until the Harvest",
+          "parable": "The Wheat and the Tares",
+          "reading": "Matthew 13:27-30, 36-39",
+          "focus": "The owner restrains premature uprooting; Jesus identifies the world and the final harvest."
+        },
+        {
+          "day": 59,
+          "title": "The Righteous Will Shine",
+          "parable": "The Wheat and the Tares",
+          "reading": "Matthew 13:36-43",
+          "focus": "Jesus' explanation joins the reality of judgment with hope for the righteous in the Father's kingdom."
+        },
+        {
+          "day": 60,
+          "title": "The Net Gathered Every Kind",
+          "parable": "The Dragnet",
+          "reading": "Matthew 13:47-48",
+          "focus": "The net's broad gathering leads toward a final separation in Jesus' kingdom comparison."
+        },
+        {
+          "day": 61,
+          "title": "When the Catch Reaches Shore",
+          "parable": "The Dragnet",
+          "reading": "Matthew 13:47-50",
+          "focus": "Jesus explicitly connects the sorting with final judgment, giving the present invitation weight."
+        },
+        {
+          "day": 62,
+          "title": "Treasures New and Old",
+          "parable": "The Householder's Treasure",
+          "reading": "Matthew 13:51-52",
+          "focus": "Understanding the kingdom equips a teacher to bring forth treasures new and old."
+        },
+        {
+          "day": 63,
+          "title": "Hearing the Kingdom Across the Stories",
+          "parable": "Reflection on Matthew 13",
+          "reading": "Matthew 13:31-33, 44-52",
+          "focus": "Bring growth, worth, judgment, and understanding together as a response to Jesus' kingdom teaching."
+        }
+      ],
+      "start": 57,
+      "end": 63
+    },
+    {
+      "week": 10,
+      "theme": "Ready for His Return",
+      "summary": "Explore waiting as faithful readiness, responsibility toward others, and a personal response to the coming Lord.",
+      "question": "What would readiness for Jesus look like in the life I am living today?",
+      "context": "Luke's waiting servants receive a surprising picture of the master's welcome. All ten virgins become sleepy; the distinction concerns preparation for the bridegroom's arrival. Keep the focus on Jesus' call to readiness.",
+      "days": [
+        {
+          "day": 64,
+          "title": "Lamps Burning While We Wait",
+          "parable": "The Watchful Servants",
+          "reading": "Luke 12:35-40",
+          "focus": "Jesus calls his servants to live ready for a return whose timing they cannot control."
+        },
+        {
+          "day": 65,
+          "title": "The Master Who Serves His Servants",
+          "parable": "The Watchful Servants",
+          "reading": "Luke 12:35-38",
+          "focus": "The master's unexpected service pictures the gracious welcome promised to watchful servants."
+        },
+        {
+          "day": 66,
+          "title": "Faithful in the Master's Household",
+          "parable": "The Faithful and Unfaithful Servant",
+          "reading": "Luke 12:41-44",
+          "focus": "The wise steward fulfills entrusted responsibility by caring for the household while the master is away."
+        },
+        {
+          "day": 67,
+          "title": "When Delay Becomes an Excuse",
+          "parable": "The Faithful and Unfaithful Servant",
+          "reading": "Luke 12:45-48",
+          "focus": "Assuming a delayed return becomes a pretext for abuse, exposing accountability for entrusted responsibility."
+        },
+        {
+          "day": 68,
+          "title": "Waiting for the Bridegroom",
+          "parable": "The Ten Virgins",
+          "reading": "Matthew 25:1-5",
+          "focus": "The whole wedding party waits through delay, but preparation distinguishes the wise from the foolish."
+        },
+        {
+          "day": 69,
+          "title": "Readiness Cannot Be Borrowed",
+          "parable": "The Ten Virgins",
+          "reading": "Matthew 25:6-9",
+          "focus": "At the bridegroom's arrival, another person's preparation cannot supply one's own lack."
+        },
+        {
+          "day": 70,
+          "title": "The Door and the Invitation Today",
+          "parable": "The Ten Virgins",
+          "reading": "Matthew 25:10-13",
+          "focus": "The closed door gives urgency to Jesus' command to watch for his coming."
+        }
+      ],
+      "start": 64,
+      "end": 70
+    },
+    {
+      "week": 11,
+      "theme": "Faithful With What He Entrusts",
+      "summary": "Read the talents and pounds in their distinct settings, considering faithful service, fear, accountability, and watchfulness.",
+      "question": "What has been entrusted to me, and how am I responding to the one who entrusted it?",
+      "context": "Talents and pounds are money within these stories. Their teaching concerns faithful responsibility and accountability. Luke 19:11 explains the pounds' setting: expectations that the kingdom would appear immediately.",
+      "days": [
+        {
+          "day": 71,
+          "title": "What the Master Placed in Their Hands",
+          "parable": "The Talents",
+          "reading": "Matthew 25:14-18",
+          "focus": "The master entrusts differing amounts, establishing responsibility in relationship to what each servant receives."
+        },
+        {
+          "day": 72,
+          "title": "Faithfulness and the Master's Joy",
+          "parable": "The Talents",
+          "reading": "Matthew 25:19-23",
+          "focus": "The first two servants receive the same commendation for faithful use of what was entrusted."
+        },
+        {
+          "day": 73,
+          "title": "When Fear Buries What Was Given",
+          "parable": "The Talents",
+          "reading": "Matthew 25:24-30",
+          "focus": "The last servant's account of his master and his fear accompany a refusal to act."
+        },
+        {
+          "day": 74,
+          "title": "The Kingdom and the Time Between",
+          "parable": "The Pounds or Minas",
+          "reading": "Luke 19:11-14",
+          "focus": "Jesus addresses expectations of an immediate kingdom through a nobleman's departure and promised return."
+        },
+        {
+          "day": 75,
+          "title": "Doing Business Until He Returns",
+          "parable": "The Pounds or Minas",
+          "reading": "Luke 19:13-19",
+          "focus": "The servants' entrusted work gives substance to faithfulness during their lord's absence."
+        },
+        {
+          "day": 76,
+          "title": "An Account Before the Returning King",
+          "parable": "The Pounds or Minas",
+          "reading": "Luke 19:20-27",
+          "focus": "The king's return brings accountability for neglected trust and rejection of his rule."
+        },
+        {
+          "day": 77,
+          "title": "Each Servant Has Work to Do",
+          "parable": "The Doorkeeper",
+          "reading": "Mark 13:32-37",
+          "focus": "Jesus connects assigned work with watchfulness while the time of the master's return remains unknown."
+        }
+      ],
+      "start": 71,
+      "end": 77
+    },
+    {
+      "week": 12,
+      "theme": "Receiving What Jesus Brings",
+      "summary": "Return to the invitation itself, exploring response to the King's Son, Jesus' presence, and resistance to God's messengers.",
+      "question": "Where might familiarity, distraction, or criticism be keeping me from receiving Jesus?",
+      "context": "The wedding garment has differing interpretations; the devotional should identify its clear emphasis on an appropriate response to the king. Read cloth and wineskins within the question about fasting and the bridegroom.",
+      "days": [
+        {
+          "day": 78,
+          "title": "The King Prepared a Feast",
+          "parable": "The Wedding Banquet",
+          "reading": "Matthew 22:1-7",
+          "focus": "The king's invitation for his son's wedding meets indifference and violent rejection."
+        },
+        {
+          "day": 79,
+          "title": "Guests From the Highways",
+          "parable": "The Wedding Banquet",
+          "reading": "Matthew 22:8-10",
+          "focus": "The invitation reaches beyond the first guests and gathers people from the roads."
+        },
+        {
+          "day": 80,
+          "title": "A Response Worthy of the Invitation",
+          "parable": "The Wedding Banquet",
+          "reading": "Matthew 22:11-14",
+          "focus": "The wedding garment scene gives weight to the response required by the king's invitation."
+        },
+        {
+          "day": 81,
+          "title": "Joy in the Bridegroom's Presence",
+          "parable": "The Bridegroom Saying",
+          "reading": "Luke 5:27-35",
+          "focus": "Jesus explains his disciples' present joy and coming fasting through the bridegroom's presence and departure."
+        },
+        {
+          "day": 82,
+          "title": "Making Room for What Jesus Brings",
+          "parable": "New Cloth and New Wineskins",
+          "reading": "Luke 5:36-39",
+          "focus": "The paired images illuminate Jesus' new work and the resistance created by attachment to the familiar."
+        },
+        {
+          "day": 83,
+          "title": "When Every Messenger Is Criticized",
+          "parable": "Children in the Marketplace",
+          "reading": "Matthew 11:16-19",
+          "focus": "Jesus exposes a generation's refusal of both John's austerity and his own table fellowship."
+        },
+        {
+          "day": 84,
+          "title": "Recognizing Wisdom by Its Fruit",
+          "parable": "Children in the Marketplace",
+          "reading": "Matthew 11:16-19",
+          "focus": "Jesus' conclusion invites recognition of God's wisdom through its outworking amid hostile judgments."
+        }
+      ],
+      "start": 78,
+      "end": 84
+    },
+    {
+      "week": 13,
+      "theme": "Bringing the Stories Home",
+      "summary": "Close with six deliberate reflection days, revisiting earlier passages and leaving room for prayer and personal response.",
+      "question": "What do I want to keep bringing before God after this series ends?",
+      "context": "These six entries are revisits, each with a fresh reflective question. They return the reader to Jesus' words and their own relationship with God as the series closes.",
+      "days": [
+        {
+          "day": 85,
+          "title": "What Am I Building On",
+          "parable": "Reflection on the Two Builders",
+          "reading": "Matthew 7:24-29",
+          "focus": "Revisit the foundation: where are Jesus' words becoming part of the way I live?"
+        },
+        {
+          "day": 86,
+          "title": "The Mercy I Have Received",
+          "parable": "Reflection on the Unforgiving Servant",
+          "reading": "Matthew 18:21-35",
+          "focus": "Revisit forgiveness: how is the mercy I have received shaping my response to others?"
+        },
+        {
+          "day": 87,
+          "title": "Whom Am I Passing By",
+          "parable": "Reflection on the Good Samaritan",
+          "reading": "Luke 10:25-37",
+          "focus": "Revisit neighbor-love: whose need am I beginning to see differently?"
+        },
+        {
+          "day": 88,
+          "title": "What Is Worth Everything",
+          "parable": "Reflection on Treasure and Pearl",
+          "reading": "Matthew 13:44-46",
+          "focus": "Revisit the kingdom's worth: what is Jesus changing about my priorities?"
+        },
+        {
+          "day": 89,
+          "title": "What Has Been Placed in My Care",
+          "parable": "Reflection on the Talents",
+          "reading": "Matthew 25:14-30",
+          "focus": "Revisit entrusted responsibility: what needs an honest response to God today?"
+        },
+        {
+          "day": 90,
+          "title": "How Am I Hearing Jesus Now",
+          "parable": "Reflection on the Sower",
+          "reading": "Matthew 13:18-23",
+          "focus": "Return to the opening story: what has taken root, and what do I want to bring before God?"
+        }
+      ],
+      "start": 85,
+      "end": 90
+    }
+  ],
+  "start_date": "2027-03-05",
+  "end_date": "2027-06-02"
+}
