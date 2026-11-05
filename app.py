@@ -33,6 +33,18 @@ from devotional_design import brand_header_html, devotional_markdown, reflection
 import streamlit as st
 import streamlit.components.v1 as components
 
+
+def belief_files_url():
+    """Return the optional public research-library destination."""
+    value = os.environ.get("BELIEF_FILES_URL", "").strip()
+    try:
+        parsed = urllib.parse.urlsplit(value)
+        if parsed.scheme == "https" and parsed.netloc and not (parsed.username or parsed.password):
+            return value
+    except ValueError:
+        pass
+    return ""
+
 # =========================
 # PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND)
 # =========================
@@ -3753,6 +3765,15 @@ def render_home():
             use_container_width=True,
             type="primary",
         )
+
+        research_url = belief_files_url()
+        if research_url:
+            st.link_button(
+                "Explore The Belief Files",
+                research_url,
+                use_container_width=True,
+                type="primary",
+            )
 
         if st.button("Read Daily Encouragement", use_container_width=True, key="home_open_daily", type="secondary"):
             goto("daily")
