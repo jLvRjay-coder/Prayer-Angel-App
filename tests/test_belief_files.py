@@ -97,7 +97,7 @@ class BeliefCaseTests(unittest.TestCase):
                     self.assertNotIn("token=", attrs["href"])
                 elif attrs.get("class") == "bf-citation":
                     self.assertEqual(parse_qs(url.query)["section"], ["sources"])
-                    self.assertIn(int(url.fragment.split("-")[-1]), source_ids)
+                    self.assertIn(int(parse_qs(url.query)["source"][0]), source_ids)
         bad = reader_html(href, '<script>alert("unsafe")</script>')
         self.assertIn('aria-label="Overview"', bad)
         self.assertNotIn("<script>", bad)
@@ -144,11 +144,17 @@ class BeliefAppTests(unittest.TestCase):
                 self.assertFalse(self.at.exception, section)
                 self.assertIn('aria-label="' + label + '"', self.markup())
                 self.assertEqual(len(self.at.get("download_button")), 1)
+            self.at.query_params.update({"section": "sources", "source": "13"})
+            self.at.run()
+            self.assertFalse(self.at.exception)
+            self.assertIn('class="bf-source-focus" aria-label="Referenced source 13"', self.markup())
+            self.assertIn("Three Witnesses statement", self.markup())
             self.at.query_params["v"] = "home"
             self.at.run()
             self.assertFalse(self.at.exception)
             self.assertNotIn("case=", unescape(self.markup()))
             self.assertNotIn("section=", unescape(self.markup()))
+            self.assertNotIn("source=", unescape(self.markup()))
             api.return_value.chat.completions.create.assert_not_called()
 
     def test_unknown_case_recovers_to_the_library(self):

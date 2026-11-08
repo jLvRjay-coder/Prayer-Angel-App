@@ -71,6 +71,12 @@ BELIEF_CSS = """<style>
 #belief-files .bf-source{padding:16px 0;border-bottom:1px solid var(--bf-line);scroll-margin-top:25px;}
 #belief-files .bf-source:target{background:#f1eadb;border-radius:8px;outline:2px solid #b09a78;outline-offset:5px;}
 #belief-files .bf-source p{font-size:14px;line-height:1.8;margin:0;}
+#belief-files .bf-source-focus{padding:20px;border:1px solid #b09a78;border-radius:12px;background:#f4efe3;margin:20px 0;}
+#belief-files .bf-source-focus p{font-size:15px;line-height:1.8;}
+#belief-files .bf-source-focus .bf-eyebrow{font-size:11px;}
+#belief-files .bf-source-focus > a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;}
+#belief-files .bf-register{margin:20px 0;border:1px solid var(--bf-line);border-radius:12px;padding:0 17px;background:var(--bf-paper);}
+#belief-files .bf-register summary{cursor:pointer;min-height:52px;padding:14px 0;font-size:14px;font-weight:650;}
 #belief-files .bf-reader-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border-top:1px solid var(--bf-line);margin-top:30px;padding-top:20px;}
 #belief-files .bf-reader-nav a{display:flex;flex-direction:column;justify-content:center;min-height:65px;padding:12px 15px;border:1px solid var(--bf-line);border-radius:10px;background:var(--bf-paper);font-size:14px;font-weight:600;text-decoration:none;line-height:1.5;}
 #belief-files .bf-reader-nav a:last-child{background:var(--bf-ink);color:#fffdf8;border-color:var(--bf-ink);}
@@ -97,18 +103,20 @@ def _value(value):
     return str(value or "")
 
 
-def case_href(href, section=None, *, case_id=CASE_ID, fragment=""):
+def case_href(href, section=None, *, case_id=CASE_ID, source=None):
     """Use normal app navigation without forwarding email actions or old cases."""
     base = urlsplit(href("belief"))
     query = dict(parse_qsl(base.query, keep_blank_values=True))
-    for name in ("token", "action", "message", "case", "section"):
+    for name in ("token", "action", "message", "case", "section", "source"):
         query.pop(name, None)
     query["v"] = "belief"
     if case_id == CASE_ID:
         query["case"] = CASE_ID
         if section and section != "overview":
             query["section"] = section
-    return urlunsplit((base.scheme, base.netloc, base.path, urlencode(query), fragment))
+        if section == "sources" and str(source) in {str(i) for i in range(1, 23)}:
+            query["source"] = str(source)
+    return urlunsplit((base.scheme, base.netloc, base.path, urlencode(query), ""))
 
 
 def manuscript_sections():
@@ -140,7 +148,7 @@ def inline_html(text, href=None):
             output.append("<em>" + inline_html(italic, href) + "</em>")
         elif href:
             first = re.match(r"\d+", citation)[0]
-            target = case_href(href, "sources", fragment="source-" + first)
+            target = case_href(href, "sources", source=first)
             output.append(f'<a class="bf-citation" href="{escape(target, quote=True)}" target="_self" aria-label="Open source notes {escape(citation)}">[{escape(citation)}]</a>')
         else:
             output.append("[" + escape(citation) + "]")
@@ -219,14 +227,14 @@ def library_html(href, published_url=""):
 <div class="bf-meta"><span>LDS origins and authority</span><span>Beyond the Message</span></div>
 <div class="bf-library-grid">
 <a class="bf-case bf-featured" href="{escape(case_href(href), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 002 · Read in the app</span><h2>{CASE_TITLE}</h2><p>The English manuscripts, the reported translation process, and the testimony behind the ancient-record claim.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(first_vision, quote=True)}" target="_blank" rel="noopener noreferrer" aria-label="Read Case File 001 The First Vision on Beyond the Message (opens in a new tab)"><span class="bf-eyebrow">Case File 001</span><h2>The First Vision</h2><p>One reported experience. Four surviving accounts. Examine what the documents establish and what remains a judgment.</p><span class="bf-case-link">Read on Beyond the Message ↗</span></a>
+<a class="bf-case" href="{escape(first_vision, quote=True)}" target="_blank" rel="noopener noreferrer" aria-label="Read Case File 001 The First Vision on Beyond the Message (opens in a new tab)"><span class="bf-eyebrow">Case File 001</span><h2>The First Vision</h2><p>One reported experience. Four surviving accounts. Examine what the documents establish and what remains a judgment.</p><span class="bf-case-link">Read on Beyond the Message →</span></a>
 </div>
-<div class="bf-library-note">New to the comparison?<br><a href="{escape(introduction, quote=True)}" target="_blank" rel="noopener noreferrer">Begin with LDS &amp; biblical Christianity ↗</a><br><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the full collection on our website ↗</a></div>
+<div class="bf-library-note">New to the comparison?<br><a href="{escape(introduction, quote=True)}" target="_blank" rel="noopener noreferrer">Begin with LDS &amp; biblical Christianity →</a><br><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the full collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''
 
 
-def reader_html(href, section="overview"):
+def reader_html(href, section="overview", *, source=""):
     index = next((i for i, chapter in enumerate(CHAPTERS) if chapter[0] == section), 0)
     key, label, headings = CHAPTERS[index]
     sections = manuscript_sections()
@@ -236,6 +244,16 @@ def reader_html(href, section="overview"):
         target = escape(case_href(href, chapter_key), quote=True)
         chapter_links.append(f'<a href="{target}" target="_self"{current}><span>{number:02}</span>{chapter_label}</a>')
     body = "\n\n".join("## " + heading + "\n\n" + sections[heading] for heading in headings)
+    article = markdown_html(body, href, sources=key == "sources")
+    if key == "sources" and str(source) in {str(i) for i in range(1, 23)}:
+        paragraphs = sections["Sources and reading"].split("\n\n")
+        selected = next(p for p in paragraphs if p.startswith("**[" + str(source) + "]"))
+        article = ('<h2>Sources and reading</h2>' + markdown_html(paragraphs[0])
+                   + '<section class="bf-source-focus" aria-label="Referenced source ' + str(source) + '">'
+                   + '<p class="bf-eyebrow">Referenced source ' + str(source) + '</p><p>' + inline_html(selected) + '</p>'
+                   + '<a href="' + escape(case_href(href, "sources"), quote=True) + '" target="_self">View all 22 sources →</a></section>'
+                   + '<details class="bf-register"><summary>All 22 sources</summary>'
+                   + markdown_html("\n\n".join(paragraphs[1:]), sources=True) + '</details>')
     if index:
         previous_key, previous_label, _ = CHAPTERS[index - 1]
         previous_url = case_href(href, previous_key)
@@ -255,7 +273,7 @@ def reader_html(href, section="overview"):
 <p class="bf-eyebrow">Case File 002 · LDS origins and authority</p><h1 id="bf-title">{CASE_TITLE}</h1>
 <div class="bf-meta"><span>Historical investigation and biblical assessment</span><span>About 25 minutes in full</span></div>
 <details class="bf-contents"><summary>Contents <span>Section {index + 1} of {len(CHAPTERS)} · {label}</span></summary><nav class="bf-chapters" aria-label="Case File 002 sections">{''.join(chapter_links)}</nav></details>
-<article class="bf-article" aria-label="{label}">{markdown_html(body, href, sources=key == 'sources')}</article>
+<article class="bf-article" aria-label="{label}">{article}</article>
 <nav class="bf-reader-nav" aria-label="Continue reading"><a href="{escape(previous_url, quote=True)}" target="_self"><span>Back</span>{previous_label}</a><a href="{escape(next_url, quote=True)}" target="_self"><span>{next_direction}</span>{next_label} →</a></nav>
 <p class="bf-perspective">The Belief Files · Beyond the Message<br>Evidence is weighed separately from the project's Christian theological assessment.</p>
 </main>'''
@@ -268,7 +286,7 @@ def render_belief_files(href, query, published_url=""):
     if case != CASE_ID:
         st.html(BELIEF_CSS + library_html(href, published_url))
         return
-    st.html(BELIEF_CSS + reader_html(href, _value(query.get("section"))))
+    st.html(BELIEF_CSS + reader_html(href, _value(query.get("section")), source=_value(query.get("source"))))
     st.download_button(
         "Download the complete case PDF · 22 pages",
         data=CASE_PDF.read_bytes(),

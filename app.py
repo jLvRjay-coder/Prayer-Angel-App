@@ -125,6 +125,7 @@ def goto(view_key: str):
         if view_key != "belief":
             st.query_params.pop("case", None)
             st.query_params.pop("section", None)
+            st.query_params.pop("source", None)
         if view_key != "email":
             st.query_params.pop("token", None)
             st.query_params.pop("action", None)
@@ -1919,6 +1920,7 @@ def _build_href(view_key: str) -> str:
     # Case links are added explicitly by the reader, never carried into chat.
     qp.pop("case", None)
     qp.pop("section", None)
+    qp.pop("source", None)
     # normalize: Streamlit may store lists; keep simple
     for k, v in list(qp.items()):
         if isinstance(v, (list, tuple)) and v:
