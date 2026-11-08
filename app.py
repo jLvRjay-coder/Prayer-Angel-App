@@ -30,7 +30,8 @@ from daily_encouragement import (
 from email_ui import email_settings, render_email_action, render_email_signup
 from devotional_design import brand_header_html, devotional_markdown, reflection_html, scripture_anchor_html
 
-from home_hub import HOME_CSS, NAV_CSS, belief_files_url, bottom_nav_html, home_html, utility_bar_html
+from home_hub import HOME_CSS, NAV_CSS, bottom_nav_html, home_html, utility_bar_html
+from belief_files import render_belief_files
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -97,7 +98,7 @@ PROD_FOOTER = "BEYOND THE MESSAGE • angel.beyondthemessage.org"
 # ROUTER STATE
 # =========================
 if "view" not in st.session_state:
-    st.session_state.view = "home"  # home | angel | daily | email | bible | steps | about
+    st.session_state.view = "home"  # home | angel | daily | email | bible | steps | about | belief
 
 # Sync view from URL (so bottom nav links + deep-links work)
 try:
@@ -105,7 +106,7 @@ try:
 except Exception:
     _qp = {}
 _v = _qp.get("v")
-if _v in {"home", "angel", "daily", "email", "bible", "steps", "about"} and _v != st.session_state.view:
+if _v in {"home", "angel", "daily", "email", "bible", "steps", "about", "belief"} and _v != st.session_state.view:
     st.session_state.view = _v
 elif not _v and _qp.get("message"):
     st.session_state.view = "daily"
@@ -121,6 +122,9 @@ def goto(view_key: str):
     st.session_state.view = view_key
     try:
         st.query_params["v"] = view_key
+        if view_key != "belief":
+            st.query_params.pop("case", None)
+            st.query_params.pop("section", None)
         if view_key != "email":
             st.query_params.pop("token", None)
             st.query_params.pop("action", None)
@@ -1912,6 +1916,9 @@ def _build_href(view_key: str) -> str:
     # A confirmation/preferences token is never forwarded into navigation links.
     qp.pop("token", None)
     qp.pop("action", None)
+    # Case links are added explicitly by the reader, never carried into chat.
+    qp.pop("case", None)
+    qp.pop("section", None)
     # normalize: Streamlit may store lists; keep simple
     for k, v in list(qp.items()):
         if isinstance(v, (list, tuple)) and v:
@@ -1920,7 +1927,7 @@ def _build_href(view_key: str) -> str:
 
 def render_bottom_nav(active: str):
     st.html(
-        NAV_CSS + bottom_nav_html(active, _build_href, belief_files_url(os.getenv("BELIEF_FILES_URL", ""))),
+        NAV_CSS + bottom_nav_html(active, _build_href),
     )
 
 # =========================
@@ -3642,7 +3649,6 @@ def render_home():
         HOME_CSS + home_html(
             _build_href,
             show_signup=bool(settings.ready and settings.signups_enabled),
-            belief_url=belief_files_url(os.getenv("BELIEF_FILES_URL", "")),
         ),
     )
 
@@ -3663,6 +3669,10 @@ elif st.session_state.view == "angel":
 elif st.session_state.view == "daily":
     render_daily_encouragement()
     render_bottom_nav(active="daily")
+
+elif st.session_state.view == "belief":
+    render_belief_files(_build_href, dict(st.query_params), os.getenv("BELIEF_FILES_URL", ""))
+    render_bottom_nav(active="belief")
 
 elif st.session_state.view == "email":
     render_email_action(goto)
