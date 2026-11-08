@@ -1,12 +1,13 @@
-# The Belief Files entry point
+# Angel Chat home hub and The Belief Files
 
-The home screen can show **Explore The Belief Files** alongside King's Counsel. Its destination is the optional `BELIEF_FILES_URL` environment variable.
+The home screen keeps Angel Chat as the main invitation, adds a Daily Encouragement entry and four resource cards, and links to the published Belief Files page at https://beyondthemessage.org/the-belief-files/.
 
-- Leave `BELIEF_FILES_URL` unset or empty until the collection has a public, reachable destination.
-- Set it to the public landing-page URL after launch; the planned WordPress page is `/belief-files/`.
-- The value must be an HTTPS URL with a host and no embedded credentials.
-- The existing five bottom navigation tabs are preserved.
-- No email switches, subscription records, or devotional schedules are changed.
-- The new research library currently has an owner-private review version. Do not send public app users to that private preview.
+The fifth bottom navigation position is now Belief Files. How it works remains available in the home header and in a Home/help utility bar on the other views. Existing `?v=about` links still open help. The five navigation destinations are Angel Chat, King's Counsel, Bible Stories, Study Hub, and Belief Files.
 
-Validation: the modified app compiles with Python. The separate research library has browser checks for mobile navigation, search, and First Vision account switching. A full Android-wrapper release has not been tested or submitted by this change.
+`home_hub.py` supplies the home markup and the navigation. Streamlit's native `st.html` renders the markup without embedded JavaScript or positioning logic. Internal links use the existing query builder; external links use their public URLs and do not receive session IDs or private email-action tokens. Signup visibility continues to follow the existing readiness and enable settings.
+
+The public WordPress URL is the default. An optional `BELIEF_FILES_URL` environment value may replace it with an HTTPS destination without embedded credentials. An empty or invalid value falls back to the public page, keeping the resource visible.
+
+`home_hub.py` is included in `deploy_space_preview.RUNTIME_FILES`, which is also used by the existing release publisher. The existing main-branch release workflow publishes the change after its checks pass. This update does not change the email switches, subscription logic, devotional calendar, chat prompts, or Android package.
+
+Validation covers home/resource destinations, five-item navigation, signup visibility, escaped internal links, invalid destination overrides, existing deployment boundaries, and real app routes. Desktop and phone browser checks exercise the home, help, chat, and daily entry points. A web update reaches the published app only if its Android wrapper loads the hosted page; a new Android store package is not included.

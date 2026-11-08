@@ -15,7 +15,7 @@ import tempfile
 SPACE_ID = "lvRJay18950/Prayer-Angel"
 PREVIEW_FLAGS = ("EMAIL_SIGNUPS_ENABLED", "EMAIL_DELIVERY_ENABLED")
 RUNTIME_FILES = (
-    "app.py", "daily_encouragement.py", "daily_devotionals.json", "devotional_design.py", "email_subscription.py", "email_ui.py",
+    "app.py", "home_hub.py", "daily_encouragement.py", "daily_devotionals.json", "devotional_design.py", "email_subscription.py", "email_ui.py",
     "supabase_email_store.py", "hostinger_email.py", "email_worker.py",
     "email_scheduler.py", "app_runtime.py",
     "email_connection_check.py", "requirements.txt", "Dockerfile", "README.md",
@@ -101,3 +101,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

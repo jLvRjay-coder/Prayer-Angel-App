@@ -30,20 +30,10 @@ from daily_encouragement import (
 from email_ui import email_settings, render_email_action, render_email_signup
 from devotional_design import brand_header_html, devotional_markdown, reflection_html, scripture_anchor_html
 
+from home_hub import HOME_CSS, NAV_CSS, belief_files_url, bottom_nav_html, home_html, utility_bar_html
+
 import streamlit as st
 import streamlit.components.v1 as components
-
-
-def belief_files_url():
-    """Return the optional public research-library destination."""
-    value = os.environ.get("BELIEF_FILES_URL", "").strip()
-    try:
-        parsed = urllib.parse.urlsplit(value)
-        if parsed.scheme == "https" and parsed.netloc and not (parsed.username or parsed.password):
-            return value
-    except ValueError:
-        pass
-    return ""
 
 # =========================
 # PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND)
@@ -1929,43 +1919,8 @@ def _build_href(view_key: str) -> str:
     return "?" + urllib.parse.urlencode(qp, doseq=False)
 
 def render_bottom_nav(active: str):
-    # 5-tab bottom nav: Angel Chat | King's Counsel | Bible Stories | Study Hub | How It Works
-    items = [
-        {"key": "angel", "label": "Angel Chat", "href": _build_href("angel"), "external": False},
-        {
-            "key": "counsel",
-            "label": "King's Counsel",
-            "href": "https://king-s-counsel-leadership-app.vercel.app/",
-            "external": True,
-        },
-        {"key": "bible", "label": "Bible Stories", "href": _build_href("bible"), "external": False},
-        {
-            "key": "study",
-            "label": "Study Hub",
-            "href": "https://beyondthemessage.org/study-hub/",
-            "external": True,
-        },
-        {"key": "about", "label": "How It Works", "href": _build_href("about"), "external": False},
-    ]
-
-    links_html = []
-    for item in items:
-        key = item["key"]
-        label = item["label"]
-        href = item["href"]
-        cls = "btm-nav-item active" if key == active else "btm-nav-item"
-        target = ' target="_blank" rel="noopener noreferrer"' if item.get("external") else ""
-        links_html.append(
-            f'<a class="{cls}" href="{href}" aria-label="{label}" title="{label}"{target}>'
-            f'<span class="btm-nav-label">{label}</span>'
-            '</a>'
-        )
-
-    st.markdown(
-        '<div class="btm-bottom-nav" role="navigation" aria-label="Bottom Navigation">'
-        + "".join(links_html)
-        + "</div>",
-        unsafe_allow_html=True,
+    st.html(
+        NAV_CSS + bottom_nav_html(active, _build_href, belief_files_url(os.getenv("BELIEF_FILES_URL", ""))),
     )
 
 # =========================
@@ -3682,135 +3637,24 @@ def render_angel_chat():
 # HOME
 # =========================
 def render_home():
-    st.markdown('<div class="btm-wrap btm-sanctuary-wrap">', unsafe_allow_html=True)
-
-    # Single invitation — no dashboard, no path cards, no chip rows on first view.
-    # The sanctuary asks one thing: come in.
-    left_sp, center_col, right_sp = st.columns([1, 2, 1])
-    with center_col:
-        st.markdown(
-            """
-            <div class="btm-sanctuary-invite">
-              <div class="btm-sanctuary-ornament">✦</div>
-              <div class="btm-sanctuary-kicker">A quiet place in Scripture</div>
-              <h1 class="btm-sanctuary-title">Beyond the <em>Message</em></h1>
-              <p class="btm-sanctuary-whisper">Bring what is on your heart. The Word will meet you here.</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        if st.button(
-            "Enter Angel Chat",
-            use_container_width=True,
-            key="home_enter_angel_chat",
-            type="primary",
-        ):
-            goto("angel")
-
-        st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
-
-        st.markdown(
-            """
-            <style>
-              .btm-sanctuary-wrap div[data-testid="stLinkButton"] a,
-              .btm-sanctuary-wrap a[data-testid="stBaseButton-primary"] {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                min-height: 58px !important;
-                background: linear-gradient(180deg, #232430 0%, #1A1B26 100%) !important;
-                color: #F9F7F2 !important;
-                border: 1px solid rgba(166,137,102,0.55) !important;
-                border-radius: 999px !important;
-                font-family: 'Cormorant Garamond', serif !important;
-                font-style: italic !important;
-                font-size: 20px !important;
-                font-weight: 500 !important;
-                letter-spacing: 0.04em !important;
-                text-decoration: none !important;
-                box-shadow:
-                  0 1px 0 rgba(255,255,255,0.05) inset,
-                  0 1px 2px rgba(26,27,38,0.24),
-                  0 18px 44px rgba(26,27,38,0.24) !important;
-                transition: transform 200ms ease, letter-spacing 300ms ease, box-shadow 200ms ease !important;
-              }
-              .btm-sanctuary-wrap div[data-testid="stLinkButton"] a:hover,
-              .btm-sanctuary-wrap a[data-testid="stBaseButton-primary"]:hover {
-                transform: translateY(-1px) !important;
-                letter-spacing: 0.08em !important;
-                box-shadow:
-                  0 1px 0 rgba(255,255,255,0.07) inset,
-                  0 1px 2px rgba(26,27,38,0.28),
-                  0 24px 56px rgba(26,27,38,0.30),
-                  0 0 0 1px rgba(166,137,102,0.45) !important;
-              }
-              .btm-sanctuary-wrap div[data-testid="stLinkButton"] p {
-                color: #F9F7F2 !important;
-                font-family: 'Cormorant Garamond', serif !important;
-                font-style: italic !important;
-                font-size: 20px !important;
-                font-weight: 500 !important;
-                letter-spacing: inherit !important;
-              }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        st.link_button(
-            "Enter King's Counsel",
-            "https://king-s-counsel-leadership-app.vercel.app/",
-            use_container_width=True,
-            type="primary",
-        )
-
-        research_url = belief_files_url()
-        if research_url:
-            st.link_button(
-                "Explore The Belief Files",
-                research_url,
-                use_container_width=True,
-                type="primary",
-            )
-
-        if st.button("Read Daily Encouragement", use_container_width=True, key="home_open_daily", type="secondary"):
-            goto("daily")
-        settings = email_settings()
-        if settings.ready and settings.signups_enabled:
-            if st.button("Sign up for Daily Encouragement", use_container_width=True, key="home_email_signup", type="secondary"):
-                goto("email")
-
-        st.markdown(
-            '<div class="btm-sanctuary-subnote">One conversation. No menus. No noise.</div>',
-            unsafe_allow_html=True,
-        )
-
-    # Quiet secondary tools — tucked into a soft pop-over, not shouting.
-    with st.expander("⋯  Other ways in", expanded=False):
-        st.markdown(
-            '<div class="btm-quiet-menu-intro">When you are ready to go deeper, these stay accessible.</div>',
-            unsafe_allow_html=True,
-        )
-        qmenu_a, qmenu_b, qmenu_c = st.columns(3)
-        with qmenu_a:
-            if st.button("Bible Stories", use_container_width=True, key="home_quiet_bible", type="secondary"):
-                goto("bible")
-        with qmenu_b:
-            render_external_pill("Study Hub", "https://beyondthemessage.org/study-hub/", variant="secondary")
-        with qmenu_c:
-            if st.button("How this works", use_container_width=True, key="home_quiet_about", type="secondary"):
-                goto("about")
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    settings = email_settings()
+    st.html(
+        HOME_CSS + home_html(
+            _build_href,
+            show_signup=bool(settings.ready and settings.signups_enabled),
+            belief_url=belief_files_url(os.getenv("BELIEF_FILES_URL", "")),
+        ),
+    )
 
 # =========================
 # RENDER ROUTES
 # =========================
+if st.session_state.view != "home":
+    st.html(utility_bar_html(_build_href))
+
 if st.session_state.view == "home":
     render_home()
-    render_bottom_nav(active="angel")
+    render_bottom_nav(active="home")
 
 elif st.session_state.view == "angel":
     render_angel_chat()
@@ -3854,5 +3698,6 @@ elif st.session_state.view == "about":
 
 else:
     render_home()
-    render_bottom_nav(active="angel")
+    render_bottom_nav(active="home")
+
 
