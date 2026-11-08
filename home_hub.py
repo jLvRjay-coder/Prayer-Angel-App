@@ -104,13 +104,13 @@ NAV_CSS = """<style>
 </style>"""
 
 
-def bottom_nav_html(active, href, belief_url=DEFAULT_BELIEF_FILES_URL):
+def bottom_nav_html(active, href):
     items = (
         ("angel", "Angel Chat", href("angel"), False),
         ("counsel", "King’s Counsel", COUNSEL_URL, True),
         ("bible", "Bible Stories", href("bible"), False),
         ("study", "Study Hub", STUDY_URL, True),
-        ("belief", "Belief Files", belief_files_url(belief_url), True),
+        ("belief", "Belief Files", href("belief"), False),
     )
     links = []
     for key, label, url, external in items:
@@ -128,12 +128,12 @@ def utility_bar_html(href):
     return f'''<style>#angel-hub-utility{{display:flex;justify-content:space-between;align-items:center;gap:15px;max-width:780px;margin:0 auto 24px;padding:0 0 14px;border-bottom:1px solid #dedbd3;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:12px;}}#angel-hub-utility a{{color:#455567;text-decoration:none;}}#angel-hub-utility a:hover{{text-decoration:underline;}}#angel-hub-utility a:focus-visible{{outline:3px solid #a18050;outline-offset:4px;}}</style><nav id="angel-hub-utility" aria-label="Home and help"><a href="{home}" target="_self">← Home</a><a href="{about}" target="_self">How it works</a></nav>'''
 
 
-def home_html(href, *, show_signup=False, belief_url=DEFAULT_BELIEF_FILES_URL):
+def home_html(href, *, show_signup=False):
     def destination(view):
         return escape(href(view), quote=True)
 
     cards = (
-        ("belief", "The Belief Files", "Faith, history, and evidence. Start with the LDS comparison.", "Explore the files", belief_files_url(belief_url), True, True),
+        ("belief", "The Belief Files", "Faith, history, and evidence. Start with the LDS comparison.", "Explore the files", href("belief"), False, True),
         ("counsel", "King’s Counsel", "Biblical wisdom for the way you lead and the decisions you make.", "Find counsel", COUNSEL_URL, True, False),
         ("bible", "Bible Stories", "Step into Scripture with stories and questions for every age.", "Read a story", href("bible"), False, False),
         ("study", "Study Hub", "Go deeper with guided lessons, study notes, and daily readings.", "Open Study Hub", STUDY_URL, True, False),

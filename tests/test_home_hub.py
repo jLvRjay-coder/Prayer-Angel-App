@@ -18,18 +18,18 @@ class Links(HTMLParser):
 
 
 class HomeHubTests(unittest.TestCase):
-    def test_published_belief_files_is_visible_on_home_and_navigation(self):
+    def test_in_app_belief_files_is_visible_on_home_and_navigation(self):
         home = Links(home_html(lambda view: '?v=' + view))
         nav = Links(bottom_nav_html('angel', lambda view: '?v=' + view))
-        self.assertEqual(sum(link['href'] == DEFAULT_BELIEF_FILES_URL for link in home.links), 1)
-        self.assertEqual(sum(link['href'] == DEFAULT_BELIEF_FILES_URL for link in nav.links), 1)
+        self.assertEqual(sum(link['href'] == '?v=belief' for link in home.links), 1)
+        self.assertEqual(sum(link['href'] == '?v=belief' for link in nav.links), 1)
         self.assertEqual(len(nav.links), 5)
         self.assertIn('How it works', home_html(lambda view: '?v=' + view))
 
     def test_resource_links_keep_internal_routes_and_external_destinations(self):
         href = lambda view: '?sid=existing-session&theme=light&v=' + view
         markup = Links(home_html(href, show_signup=True))
-        for view in ('home', 'about', 'angel', 'daily', 'bible', 'email'):
+        for view in ('home', 'about', 'angel', 'daily', 'bible', 'email', 'belief'):
             self.assertTrue(any(parse_qs(urlsplit(link['href']).query).get('v') == [view] for link in markup.links))
         for link in markup.links:
             if link['href'].startswith('https:'):

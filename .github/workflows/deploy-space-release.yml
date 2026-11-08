@@ -6,6 +6,8 @@ on:
     paths:
       - '**.py'
       - daily_devotionals.json
+      - 'belief_case_*.md'
+      - 'belief_case_*.pdf'
       - requirements.txt
       - Dockerfile
       - .github/workflows/deploy-space-release.yml
