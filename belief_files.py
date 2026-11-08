@@ -48,6 +48,28 @@ EXALTATION_CHAPTERS = (
     ("sources", "Sources", ("Sources and reading",)),
 )
 
+DNA_CHAPTERS = (
+    ("overview", "Overview", ("Investigation summary", "The claim under investigation", "How this investigation weighs evidence")),
+    ("evidence", "Evidence", ("The historical timeline", "Exhibit one The ancestry claim", "Exhibit two The genetic findings", "Exhibit three What can remain undetected")),
+    ("witnesses", "Evidence quality", ("Assessing the principal evidence",)),
+    ("explanations", "Explanations", ("The strongest LDS argument", "Competing explanations", "Motives benefits and costs")),
+    ("scripture", "Scripture", ("A biblical assessment",)),
+    ("assessment", "Assessment", ("Findings and confidence", "Overall assessment")),
+    ("discuss", "Discuss", ("Read compare and discuss", "Accuracy notes and further research")),
+    ("sources", "Sources", ("Sources and reading",)),
+)
+
+PRIESTHOOD_CHAPTERS = (
+    ("overview", "Overview", ("Investigation summary", "The claim under investigation", "How this investigation weighs evidence")),
+    ("evidence", "Evidence", ("The historical timeline", "Exhibit one The Relief Society records", "Exhibit two Healing and changing practice", "Exhibit three The temple connection")),
+    ("witnesses", "Witnesses", ("Assessing the principal accounts",)),
+    ("explanations", "Explanations", ("The strongest LDS argument", "Competing explanations", "Motives benefits and costs")),
+    ("scripture", "Scripture", ("A biblical assessment",)),
+    ("assessment", "Assessment", ("Findings and confidence", "Overall assessment")),
+    ("discuss", "Discuss", ("Read compare and discuss", "Accuracy notes and further research")),
+    ("sources", "Sources", ("Sources and reading",)),
+)
+
 # Publication order is independent of the source packet count. The final guide
 # closes the collection separately and does not consume a numbered case slot.
 COLLECTION_PLAN = (
@@ -86,6 +108,20 @@ CASE_FILES = {
         "chapters": EXALTATION_CHAPTERS, "sources": 22,
         "download_name": "Case_File_004_Becoming_Like_God.pdf",
     },
+    "005": {
+        "title": "The Book of Mormon and DNA",
+        "markdown": Path(__file__).with_name("belief_case_005.md"),
+        "pdf": Path(__file__).with_name("belief_case_005.pdf"),
+        "chapters": DNA_CHAPTERS, "sources": 20,
+        "download_name": "Case_File_005_The_Book_of_Mormon_and_DNA.pdf",
+    },
+    "006": {
+        "title": "Priesthood Temples and Women",
+        "markdown": Path(__file__).with_name("belief_case_006.md"),
+        "pdf": Path(__file__).with_name("belief_case_006.pdf"),
+        "chapters": PRIESTHOOD_CHAPTERS, "sources": 21,
+        "download_name": "Case_File_006_Priesthood_Temples_and_Women.pdf",
+    },
 }
 
 
@@ -112,6 +148,9 @@ BELIEF_CSS = """<style>
 #belief-files .bf-new{display:inline-block;border:1px solid #b09a78;border-radius:20px;padding:1px 7px;margin-left:7px;font-size:10px;letter-spacing:.04em;vertical-align:1px;}
 #belief-files .bf-library-note{padding:20px 0;border-top:1px solid var(--bf-line);font-size:14px;line-height:1.75;color:var(--bf-muted);}
 #belief-files .bf-library-note a{display:inline-flex;align-items:center;min-height:44px;}
+#belief-files .bf-plan{list-style:none;padding:0;margin:0 0 16px;}
+#belief-files .bf-plan li{font-size:14px;line-height:1.7;padding:9px 0;border-bottom:1px solid var(--bf-line);}
+#belief-files .bf-plan strong{display:inline-block;color:var(--bf-gold);min-width:36px;font-size:12px;}
 #belief-files .bf-contents{border:1px solid var(--bf-line);border-radius:12px;background:var(--bf-paper);margin:0 0 25px;padding:0 17px;}
 #belief-files .bf-contents summary{cursor:pointer;min-height:52px;padding:15px 0;font-size:14px;font-weight:650;line-height:1.6;}
 #belief-files .bf-contents summary span{float:right;font-size:12px;font-weight:400;color:var(--bf-muted);margin-left:8px;}
@@ -285,7 +324,7 @@ def library_html(href, published_url=""):
     parsed = urlsplit(public)
     first_vision = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, "tbf-first-vision"))
     introduction = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, "tbf-intro"))
-    planned = "".join(f'<li><strong>{number}</strong> {escape(title)}</li>' for number, title in COLLECTION_PLAN[5:])
+    planned = "".join(f'<li><strong>{number}</strong> {escape(title)}</li>' for number, title in COLLECTION_PLAN if number != "00" and int(number) > max(map(int, CASE_FILES)))
     return f'''<main id="belief-files" aria-labelledby="bf-title">
 <p class="bf-eyebrow">Faith. History. Evidence.</p><h1 id="bf-title">The Belief Files</h1>
 <p class="bf-lead">Know the claim. Examine the evidence. Explore religious beliefs through historical records and Scripture, with care for the people who hold them.</p>
@@ -295,10 +334,12 @@ def library_html(href, published_url=""):
 <a class="bf-case" href="{escape(first_vision, quote=True)}" target="_blank" rel="noopener noreferrer" aria-label="Read Case File 001 The First Vision on Beyond the Message (opens in a new tab)"><span class="bf-eyebrow">Case File 001</span><h2>The First Vision</h2><p>One reported experience. Four surviving accounts. Examine what the documents establish and what remains a judgment.</p><span class="bf-case-link">Read on Beyond the Message →</span></a>
 <a class="bf-case" href="{escape(case_href(href), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 002 · Read in the app</span><h2>{CASE_TITLE}</h2><p>The English manuscripts, the reported translation process, and the testimony behind the ancient-record claim.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='003'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 003 · Read in the app</span><h2>The Book of Abraham</h2><p>The surviving Egyptian papyri, the facsimiles, and the question of translation and revelation.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(case_href(href, case_id='004'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 004 <span class="bf-new">New</span></span><h2>Becoming Like God</h2><p>The development of exaltation teaching, the King Follett discourse, and the comparison with ancient Christian deification.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='004'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 004 · Read in the app</span><h2>Becoming Like God</h2><p>The development of exaltation teaching, the King Follett discourse, and the comparison with ancient Christian deification.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='005'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 005 <span class="bf-new">New</span></span><h2>The Book of Mormon and DNA</h2><p>Ancient genomes, ancestry claims, and what genetic evidence can establish about the reported migrations.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='006'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 006 <span class="bf-new">New</span></span><h2>Priesthood Temples and Women</h2><p>The Relief Society records, healing blessings, temple participation, and the question of restored authority.</p><span class="bf-case-link">Open the case →</span></a>
 </div>
 <div class="bf-library-note">The LDS collection: 00 introduction, 12 case files, and a separate closing Christian conversation guide. Follow the collection in order, or open the case you want to examine.</div>
-<details class="bf-contents"><summary>Planned case files · 005–012</summary><ol class="bf-plan" start="5">{planned}</ol><p class="bf-perspective">These studies are planned and will open as they are published. The Christian conversation guide follows Case 012; its draft is prepared and will be published separately.</p></details>
+<details class="bf-contents"><summary>Planned case files · 007–012</summary><ol class="bf-plan" start="7">{planned}</ol><p class="bf-perspective">These studies are planned and will open as they are published. The Christian conversation guide follows Case 012; its draft is prepared and will be published separately.</p></details>
 <div class="bf-library-note"><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''

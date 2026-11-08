@@ -9,8 +9,8 @@ The collection contains **00 introduction plus twelve numbered cases**, followed
 | 002 | The Book of Mormon Translation | Published in Angel Chat |
 | 003 | The Book of Abraham | Published in Angel Chat |
 | 004 | Becoming Like God | Published in Angel Chat |
-| 005 | The Book of Mormon and DNA | Planned; individual source review and preparation remain |
-| 006 | Priesthood Temples and Women | Planned; individual source review and preparation remain |
+| 005 | The Book of Mormon and DNA | Published in Angel Chat |
+| 006 | Priesthood Temples and Women | Published in Angel Chat |
 | 007 | Mother in Heaven | Planned; individual source review and preparation remain |
 | 008 | Peace and Violence in the Nineteenth Century | Planned; individual source review and preparation remain |
 | 009 | Plural Marriage in Kirtland and Nauvoo | Planned; individual source review and preparation remain |
@@ -34,3 +34,5 @@ A possible first volume is The Belief Files LDS and Biblical Christianity, with 
 Retain editable chapter manuscripts, numbered source registers, qualifications, discussion questions, and a record of sources reviewed. Before book publication, reconcile chapter overlap, add transitions and a glossary, review quotations and permissions, and obtain a fuller historical and theological source review. Treat other religions as later volumes or collections once their own research is complete. Page count, publisher, pricing, and release date remain undecided.
 
 Updated November 8, 2026.
+
+Current release: Cases 005 and 006. The next case is 007 Mother in Heaven. The source register for Case 005 includes selected 2025 and 2026 research; Case 006 distinguishes early records, retrospective accounts, current authority categories, and formal healing practice.

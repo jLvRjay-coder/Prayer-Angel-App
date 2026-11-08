@@ -116,10 +116,10 @@ class BeliefCaseTests(unittest.TestCase):
     def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 5)
+        self.assertEqual(len(cards), 7)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004"])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006"])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -150,7 +150,7 @@ class BeliefCaseTests(unittest.TestCase):
                 self.assertIn('aria-label="Referenced source ' + number + '"', focused)
             invalid = reader_html(href, "sources", case_id=case_id, source="../../private")
             self.assertNotIn('class="bf-source-focus"', invalid)
-            self.assertIn('id="source-22"', invalid)
+            self.assertIn('id="source-' + str(case["sources"]) + '"', invalid)
         abraham = reader_html(href, "sources", case_id="003", source="13")
         self.assertIn("Joseph Coe", abraham)
         self.assertNotIn("Three Witnesses statement", abraham)
@@ -183,13 +183,33 @@ class BeliefCaseTests(unittest.TestCase):
         doc = Document(library_html(href))
         self.assertIn("12 case files, and a separate closing Christian conversation guide", doc.text)
         self.assertIn("The Christian conversation guide follows Case 012", doc.text)
-        self.assertIn("005 The Book of Mormon and DNA", doc.text)
+        self.assertIn("007 Mother in Heaven", doc.text)
         self.assertIn("012 Race and the Priesthood", doc.text)
         for tag, attrs in doc.elements:
             if tag == "a":
                 params = parse_qs(urlsplit(attrs["href"]).query)
                 if "case" in params:
                     self.assertIn(params["case"][0], CASE_FILES)
+
+    def test_dna_qualifications_and_recent_research_remain_visible(self):
+        evidence = Document(reader_html(href, "evidence", case_id="005")).text
+        assessment = Document(reader_html(href, "assessment", case_id="005")).text
+        sources = Document(reader_html(href, "sources", case_id="005", source="20")).text
+        self.assertIn("A 2026 Nature study adds 128", evidence)
+        self.assertIn("not automatically evidence for a migration from Jerusalem around 600 BC", evidence)
+        self.assertIn("every possible ancestor or tiny migration has been excluded", assessment)
+        self.assertIn("The evolutionary history and unique genetic diversity", sources)
+        self.assertIn("All 20 sources", sources)
+
+    def test_priesthood_retains_distinct_authority_and_historical_context(self):
+        evidence = Document(reader_html(href, "evidence", case_id="006")).text
+        witnesses = Document(reader_html(href, "witnesses", case_id="006")).text
+        scripture = Document(reader_html(href, "scripture", case_id="006")).text
+        self.assertIn("not claim independent inspection of the archival original", evidence)
+        self.assertIn("forbidden to pray for sick people", evidence)
+        self.assertIn("Taylor said the earlier ordination did not confer priesthood", witnesses)
+        self.assertIn("holding a portion of priesthood in connection with their husbands", witnesses)
+        self.assertIn("Christians interpret them alongside", scripture)
 
 
 class BeliefAppTests(unittest.TestCase):
@@ -282,6 +302,26 @@ class BeliefAppTests(unittest.TestCase):
             self.assertIn('aria-label="Referenced source 15"', self.markup())
             self.assertIn("On the Incarnation", self.markup())
             self.assertNotIn("Joseph Coe", self.markup())
+            api.return_value.chat.completions.create.assert_not_called()
+
+    def test_new_cases_direct_entry_every_section_distinct_sources_and_pdf(self):
+        with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
+            for case_id in ("005", "006"):
+                case = CASE_FILES[case_id]
+                self.at.query_params.update({"v": "belief", "case": case_id})
+                for section, label, _ in case["chapters"]:
+                    self.at.query_params["section"] = section
+                    self.at.run()
+                    self.assertFalse(self.at.exception, (case_id, section))
+                    self.assertIn('id="bf-title">' + case["title"], self.markup())
+                    self.assertIn('aria-label="' + label + '"', self.markup())
+                    self.assertEqual(len(self.at.get("download_button")), 1)
+                    self.assertEqual(download.call_args.kwargs["file_name"], case["download_name"])
+                    self.assertEqual(download.call_args.kwargs["data"], case["pdf"].read_bytes())
+                self.at.query_params.update({"section": "sources", "source": str(case["sources"])})
+                self.at.run()
+                self.assertIn('aria-label="Referenced source ' + str(case["sources"]) + '"', self.markup())
+                self.assertIn("All " + str(case["sources"]) + " sources", self.markup())
             api.return_value.chat.completions.create.assert_not_called()
 
 
