@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from html import unescape
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -80,7 +81,13 @@ class AppFlowTests(unittest.TestCase):
 
     def test_home_entry_and_back_navigation(self):
         self.at.run()
-        self.at.button(key="home_open_daily").click().run()
+        markup = "\n".join(element.proto.body for element in self.at.get("html"))
+        entry = re.search(r'<a\b[^>]*aria-label="Read Daily Encouragement"[^>]*>', markup)
+        self.assertIsNotNone(entry)
+        destination = unescape(re.search(r'href="([^"]+)"', entry.group()).group(1))
+        self.assertEqual((urlparse(destination).scheme, urlparse(destination).netloc), ("", ""))
+        self.at.query_params.update({key: values[-1] for key, values in parse_qs(urlparse(destination).query).items()})
+        self.at.run()
         self.assertFalse(self.at.exception)
         self.assertEqual(self.at.session_state["view"], "daily")
         self.at.button(key="daily_back_home").click().run()
@@ -174,5 +181,6 @@ class AppFlowTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 
 

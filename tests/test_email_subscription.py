@@ -321,16 +321,23 @@ class EmailScreenTests(unittest.TestCase):
             service.return_value.signup.assert_called_once_with("reader@example.com", "Asia/Kolkata", time(6, 30), True)
 
     def test_home_signup_invitation_appears_only_when_ready_and_opens_signup(self):
+        import re
+        from html import unescape
+        from urllib.parse import parse_qs, urlsplit
+
         for config in (settings(signups_enabled=False), settings(api_token=""), settings()):
             with self.subTest(ready=config.ready, enabled=config.signups_enabled), patch("email_ui.email_settings", return_value=config):
                 at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=15)
                 at.run()
                 self.assertFalse(at.exception)
-                invitations = [button for button in at.button if button.key == "home_email_signup"]
-                self.assertEqual(bool(invitations), config.ready and config.signups_enabled)
-                if invitations:
-                    self.assertEqual(invitations[0].label, "Sign up for Daily Encouragement")
-                    invitations[0].click().run()
+                markup = "\n".join(element.proto.body for element in at.get("html"))
+                invitation = re.search(r'<a\b[^>]*href="([^"]+)"[^>]*>Sign up for daily emails</a>', markup)
+                self.assertEqual(bool(invitation), config.ready and config.signups_enabled)
+                if invitation:
+                    destination = urlsplit(unescape(invitation.group(1)))
+                    self.assertEqual((destination.scheme, destination.netloc), ("", ""))
+                    at.query_params.update({key: values[-1] for key, values in parse_qs(destination.query).items()})
+                    at.run()
                     self.assertFalse(at.exception)
                     self.assertEqual(at.query_params["v"], "email")
                     self.assertEqual(at.text_input[0].label, "Email address")
@@ -362,4 +369,5 @@ class EmailScreenTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 
