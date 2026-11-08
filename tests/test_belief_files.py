@@ -13,7 +13,7 @@ from unittest.mock import patch
 from streamlit.testing.v1 import AppTest
 
 from belief_files import (
-    CASE_MARKDOWN, CASE_PDF, CHAPTERS, CASE_FILES, case_href, inline_html,
+    CASE_MARKDOWN, CASE_PDF, CHAPTERS, CASE_FILES, COLLECTION_PLAN, case_href, inline_html,
     library_html, manuscript_sections, reader_html,
 )
 from deploy_space_preview import RUNTIME_FILES
@@ -113,13 +113,13 @@ class BeliefCaseTests(unittest.TestCase):
         self.assertIn(CASE_PDF.name, RUNTIME_FILES)
         self.assertTrue(CASE_PDF.read_bytes().startswith(b"%PDF-"))
 
-    def test_collection_order_intro_and_both_download_assets(self):
+    def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 4)
+        self.assertEqual(len(cards), 5)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003"])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004"])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -165,6 +165,31 @@ class BeliefCaseTests(unittest.TestCase):
         self.assertIn("Their precise order and role remain contested", evidence)
         self.assertIn("A naturalistic explanation", explanations)
         self.assertIn("An Abrahamic text on missing papyri", explanations)
+
+    def test_exaltation_preserves_historical_limits_and_real_christian_theosis(self):
+        evidence = Document(reader_html(href, "evidence", case_id="004")).text
+        witnesses = Document(reader_html(href, "witnesses", case_id="004")).text
+        explanations = Document(reader_html(href, "explanations", case_id="004")).text
+        scripture = Document(reader_html(href, "scripture", case_id="004")).text
+        self.assertIn("six surviving individual accounts", evidence)
+        self.assertIn("The same work also affirms God's creation of the universe from nothing", evidence)
+        self.assertIn("a canonical section", witnesses)
+        self.assertIn("does not prove that Smith consciously fabricated revelation", explanations)
+        self.assertIn("referents in Psalm 82 are debated", scripture)
+        self.assertIn("LDS interpreters distinguish marriages made after resurrection", scripture)
+
+    def test_definitive_index_separates_intro_twelve_cases_and_closing_guide(self):
+        self.assertEqual([number for number, _ in COLLECTION_PLAN], ["00"] + [f"{n:03}" for n in range(1, 13)])
+        doc = Document(library_html(href))
+        self.assertIn("12 case files, and a separate closing Christian conversation guide", doc.text)
+        self.assertIn("The Christian conversation guide follows Case 012", doc.text)
+        self.assertIn("005 The Book of Mormon and DNA", doc.text)
+        self.assertIn("012 Race and the Priesthood", doc.text)
+        for tag, attrs in doc.elements:
+            if tag == "a":
+                params = parse_qs(urlsplit(attrs["href"]).query)
+                if "case" in params:
+                    self.assertIn(params["case"][0], CASE_FILES)
 
 
 class BeliefAppTests(unittest.TestCase):
@@ -238,6 +263,25 @@ class BeliefAppTests(unittest.TestCase):
             self.at.query_params["case"] = "002"
             self.at.run()
             self.assertIn("Three Witnesses statement", self.markup())
+            api.return_value.chat.completions.create.assert_not_called()
+
+    def test_exaltation_reader_sections_source_focus_and_own_pdf(self):
+        self.at.query_params.update({"v": "belief", "case": "004"})
+        with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
+            for section, label, _ in CASE_FILES["004"]["chapters"]:
+                self.at.query_params["section"] = section
+                self.at.run()
+                self.assertFalse(self.at.exception, section)
+                self.assertIn('id="bf-title">Becoming Like God', self.markup())
+                self.assertIn('aria-label="' + label + '"', self.markup())
+                self.assertEqual(len(self.at.get("download_button")), 1)
+                self.assertEqual(download.call_args.kwargs["file_name"], "Case_File_004_Becoming_Like_God.pdf")
+                self.assertEqual(download.call_args.kwargs["data"], CASE_FILES["004"]["pdf"].read_bytes())
+            self.at.query_params.update({"section": "sources", "source": "15"})
+            self.at.run()
+            self.assertIn('aria-label="Referenced source 15"', self.markup())
+            self.assertIn("On the Incarnation", self.markup())
+            self.assertNotIn("Joseph Coe", self.markup())
             api.return_value.chat.completions.create.assert_not_called()
 
 
