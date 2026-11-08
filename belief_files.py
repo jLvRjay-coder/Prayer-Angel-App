@@ -26,6 +26,32 @@ CHAPTERS = (
     ("sources", "Sources", ("Sources and reading",)),
 )
 
+ABRAHAM_CHAPTERS = (
+    ("overview", "Overview", ("Investigation summary", "The claim under investigation", "How this investigation weighs evidence")),
+    ("evidence", "Evidence", ("The historical timeline", "Exhibit one The surviving papyri", "Exhibit two The Egyptian working papers", "Exhibit three The facsimiles")),
+    ("witnesses", "Witnesses", ("Assessing the principal accounts",)),
+    ("explanations", "Explanations", ("The strongest LDS argument", "Competing explanations", "Motives benefits and costs")),
+    ("scripture", "Scripture", ("A biblical assessment",)),
+    ("assessment", "Assessment", ("Findings and confidence", "Overall assessment")),
+    ("discuss", "Discuss", ("Read compare and discuss", "Accuracy notes and further research")),
+    ("sources", "Sources", ("Sources and reading",)),
+)
+
+CASE_FILES = {
+    "002": {
+        "title": CASE_TITLE, "markdown": CASE_MARKDOWN, "pdf": CASE_PDF,
+        "chapters": CHAPTERS, "sources": 22,
+        "download_name": "Case_File_002_Book_of_Mormon_Translation.pdf",
+    },
+    "003": {
+        "title": "The Book of Abraham",
+        "markdown": Path(__file__).with_name("belief_case_003.md"),
+        "pdf": Path(__file__).with_name("belief_case_003.pdf"),
+        "chapters": ABRAHAM_CHAPTERS, "sources": 22,
+        "download_name": "Case_File_003_Book_of_Abraham.pdf",
+    },
+}
+
 
 BELIEF_CSS = """<style>
 .block-container:has(#belief-files){padding-top:1rem;padding-bottom:115px;}
@@ -47,6 +73,7 @@ BELIEF_CSS = """<style>
 #belief-files .bf-featured .bf-eyebrow{color:#e0c28f;}
 #belief-files .bf-featured p{color:#d5dee5;}
 #belief-files .bf-featured .bf-case-link{border-color:#47586a;}
+#belief-files .bf-new{display:inline-block;border:1px solid #b09a78;border-radius:20px;padding:1px 7px;margin-left:7px;font-size:10px;letter-spacing:.04em;vertical-align:1px;}
 #belief-files .bf-library-note{padding:20px 0;border-top:1px solid var(--bf-line);font-size:14px;line-height:1.75;color:var(--bf-muted);}
 #belief-files .bf-library-note a{display:inline-flex;align-items:center;min-height:44px;}
 #belief-files .bf-contents{border:1px solid var(--bf-line);border-radius:12px;background:var(--bf-paper);margin:0 0 25px;padding:0 17px;}
@@ -110,17 +137,18 @@ def case_href(href, section=None, *, case_id=CASE_ID, source=None):
     for name in ("token", "action", "message", "case", "section", "source"):
         query.pop(name, None)
     query["v"] = "belief"
-    if case_id == CASE_ID:
-        query["case"] = CASE_ID
-        if section and section != "overview":
+    if case_id in CASE_FILES:
+        case = CASE_FILES[case_id]
+        query["case"] = case_id
+        if section and section != "overview" and section in {chapter[0] for chapter in case["chapters"]}:
             query["section"] = section
-        if section == "sources" and str(source) in {str(i) for i in range(1, 23)}:
+        if section == "sources" and str(source) in {str(i) for i in range(1, case["sources"] + 1)}:
             query["source"] = str(source)
     return urlunsplit((base.scheme, base.netloc, base.path, urlencode(query), ""))
 
 
-def manuscript_sections():
-    parts = re.split(r"^## (.+)$", CASE_MARKDOWN.read_text(encoding="utf-8"), flags=re.M)
+def manuscript_sections(case_id=CASE_ID):
+    parts = re.split(r"^## (.+)$", CASE_FILES[case_id]["markdown"].read_text(encoding="utf-8"), flags=re.M)
     return {parts[i].strip(): parts[i + 1].strip() for i in range(1, len(parts), 2)}
 
 
@@ -129,7 +157,7 @@ _INLINE = re.compile(
 )
 
 
-def inline_html(text, href=None):
+def inline_html(text, href=None, *, case_id=CASE_ID):
     """Render the manuscript's small Markdown vocabulary with escaped text."""
     output = []
     cursor = 0
@@ -143,12 +171,12 @@ def inline_html(text, href=None):
             else:
                 output.append(escape(label))
         elif bold:
-            output.append("<strong>" + inline_html(bold, href) + "</strong>")
+            output.append("<strong>" + inline_html(bold, href, case_id=case_id) + "</strong>")
         elif italic:
-            output.append("<em>" + inline_html(italic, href) + "</em>")
+            output.append("<em>" + inline_html(italic, href, case_id=case_id) + "</em>")
         elif href:
             first = re.match(r"\d+", citation)[0]
-            target = case_href(href, "sources", source=first)
+            target = case_href(href, "sources", case_id=case_id, source=first)
             output.append(f'<a class="bf-citation" href="{escape(target, quote=True)}" target="_self" aria-label="Open source notes {escape(citation)}">[{escape(citation)}]</a>')
         else:
             output.append("[" + escape(citation) + "]")
@@ -157,7 +185,7 @@ def inline_html(text, href=None):
     return "".join(output)
 
 
-def markdown_html(markdown, href=None, *, sources=False):
+def markdown_html(markdown, href=None, *, sources=False, case_id=CASE_ID):
     """Keep tables semantic on desktop and label their cells for phone cards."""
     lines = markdown.splitlines()
     output = []
@@ -168,9 +196,9 @@ def markdown_html(markdown, href=None, *, sources=False):
             i += 1
             continue
         if line.startswith("### "):
-            output.append("<h3>" + inline_html(line[4:], href) + "</h3>")
+            output.append("<h3>" + inline_html(line[4:], href, case_id=case_id) + "</h3>")
         elif line.startswith("## "):
-            output.append("<h2>" + inline_html(line[3:], href) + "</h2>")
+            output.append("<h2>" + inline_html(line[3:], href, case_id=case_id) + "</h2>")
         elif line.startswith("|"):
             rows = []
             while i < len(lines) and lines[i].strip().startswith("|"):
@@ -179,14 +207,14 @@ def markdown_html(markdown, href=None, *, sources=False):
                     rows.append(cells)
                 i += 1
             headers = rows[0]
-            output.append('<table class="bf-table"><thead><tr>' + "".join('<th scope="col">' + inline_html(x, href) + '</th>' for x in headers) + '</tr></thead><tbody>')
+            output.append('<table class="bf-table"><thead><tr>' + "".join('<th scope="col">' + inline_html(x, href, case_id=case_id) + '</th>' for x in headers) + '</tr></thead><tbody>')
             for row in rows[1:]:
                 output.append('<tr>')
                 for col, value in enumerate(row):
                     if col == 0:
-                        output.append('<th scope="row">' + inline_html(value, href) + '</th>')
+                        output.append('<th scope="row">' + inline_html(value, href, case_id=case_id) + '</th>')
                     else:
-                        output.append(f'<td data-label="{escape(headers[col], quote=True)}">' + inline_html(value, href) + '</td>')
+                        output.append(f'<td data-label="{escape(headers[col], quote=True)}">' + inline_html(value, href, case_id=case_id) + '</td>')
                 output.append('</tr>')
             output.append('</tbody></table>')
             continue
@@ -197,7 +225,7 @@ def markdown_html(markdown, href=None, *, sources=False):
             pattern = r"^\d+\. " if ordered else r"^- "
             while i < len(lines) and re.match(pattern, lines[i].strip()):
                 value = re.sub(pattern, "", lines[i].strip(), count=1)
-                output.append("<li>" + inline_html(value, href) + "</li>")
+                output.append("<li>" + inline_html(value, href, case_id=case_id) + "</li>")
                 i += 1
             output.append("</" + tag + ">")
             continue
@@ -211,7 +239,7 @@ def markdown_html(markdown, href=None, *, sources=False):
             if source:
                 output.append('<div class="bf-source" id="source-' + source[1] + '"><p>' + inline_html(text) + '</p></div>')
             else:
-                output.append('<p>' + inline_html(text, href) + '</p>')
+                output.append('<p>' + inline_html(text, href, case_id=case_id) + '</p>')
         i += 1
     return "".join(output)
 
@@ -226,43 +254,48 @@ def library_html(href, published_url=""):
 <p class="bf-lead">Know the claim. Examine the evidence. Explore religious beliefs through historical records and Scripture, with care for the people who hold them.</p>
 <div class="bf-meta"><span>LDS origins and authority</span><span>Beyond the Message</span></div>
 <div class="bf-library-grid">
-<a class="bf-case bf-featured" href="{escape(case_href(href), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 002 · Read in the app</span><h2>{CASE_TITLE}</h2><p>The English manuscripts, the reported translation process, and the testimony behind the ancient-record claim.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case bf-featured" href="{escape(introduction, quote=True)}" target="_blank" rel="noopener noreferrer" aria-label="Read 00 Start Here LDS and biblical Christianity on Beyond the Message (opens in a new tab)"><span class="bf-eyebrow">00 · Start Here</span><h2>LDS &amp; biblical Christianity</h2><p>God, grace, Scripture, and restoration. Begin with the foundational comparison before opening the historical cases.</p><span class="bf-case-link">Read on Beyond the Message →</span></a>
 <a class="bf-case" href="{escape(first_vision, quote=True)}" target="_blank" rel="noopener noreferrer" aria-label="Read Case File 001 The First Vision on Beyond the Message (opens in a new tab)"><span class="bf-eyebrow">Case File 001</span><h2>The First Vision</h2><p>One reported experience. Four surviving accounts. Examine what the documents establish and what remains a judgment.</p><span class="bf-case-link">Read on Beyond the Message →</span></a>
+<a class="bf-case" href="{escape(case_href(href), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 002 · Read in the app</span><h2>{CASE_TITLE}</h2><p>The English manuscripts, the reported translation process, and the testimony behind the ancient-record claim.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='003'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 003 <span class="bf-new">New</span></span><h2>The Book of Abraham</h2><p>The surviving Egyptian papyri, the facsimiles, and the question of translation and revelation.</p><span class="bf-case-link">Open the case →</span></a>
 </div>
-<div class="bf-library-note">New to the comparison?<br><a href="{escape(introduction, quote=True)}" target="_blank" rel="noopener noreferrer">Begin with LDS &amp; biblical Christianity →</a><br><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the full collection on our website →</a></div>
+<div class="bf-library-note">Follow the collection in order, or open the case you want to examine.<br><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the full collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''
 
 
-def reader_html(href, section="overview", *, source=""):
-    index = next((i for i, chapter in enumerate(CHAPTERS) if chapter[0] == section), 0)
-    key, label, headings = CHAPTERS[index]
-    sections = manuscript_sections()
+def reader_html(href, section="overview", *, source="", case_id=CASE_ID):
+    case = CASE_FILES[case_id]
+    chapters = case["chapters"]
+    source_count = case["sources"]
+    index = next((i for i, chapter in enumerate(chapters) if chapter[0] == section), 0)
+    key, label, headings = chapters[index]
+    sections = manuscript_sections(case_id)
     chapter_links = []
-    for number, (chapter_key, chapter_label, _) in enumerate(CHAPTERS, 1):
+    for number, (chapter_key, chapter_label, _) in enumerate(chapters, 1):
         current = ' aria-current="page"' if chapter_key == key else ''
-        target = escape(case_href(href, chapter_key), quote=True)
+        target = escape(case_href(href, chapter_key, case_id=case_id), quote=True)
         chapter_links.append(f'<a href="{target}" target="_self"{current}><span>{number:02}</span>{chapter_label}</a>')
     body = "\n\n".join("## " + heading + "\n\n" + sections[heading] for heading in headings)
-    article = markdown_html(body, href, sources=key == "sources")
-    if key == "sources" and str(source) in {str(i) for i in range(1, 23)}:
+    article = markdown_html(body, href, sources=key == "sources", case_id=case_id)
+    if key == "sources" and str(source) in {str(i) for i in range(1, source_count + 1)}:
         paragraphs = sections["Sources and reading"].split("\n\n")
         selected = next(p for p in paragraphs if p.startswith("**[" + str(source) + "]"))
         article = ('<h2>Sources and reading</h2>' + markdown_html(paragraphs[0])
                    + '<section class="bf-source-focus" aria-label="Referenced source ' + str(source) + '">'
                    + '<p class="bf-eyebrow">Referenced source ' + str(source) + '</p><p>' + inline_html(selected) + '</p>'
-                   + '<a href="' + escape(case_href(href, "sources"), quote=True) + '" target="_self">View all 22 sources →</a></section>'
-                   + '<details class="bf-register"><summary>All 22 sources</summary>'
+                   + '<a href="' + escape(case_href(href, "sources", case_id=case_id), quote=True) + '" target="_self">View all ' + str(source_count) + ' sources →</a></section>'
+                   + '<details class="bf-register"><summary>All ' + str(source_count) + ' sources</summary>'
                    + markdown_html("\n\n".join(paragraphs[1:]), sources=True) + '</details>')
     if index:
-        previous_key, previous_label, _ = CHAPTERS[index - 1]
-        previous_url = case_href(href, previous_key)
+        previous_key, previous_label, _ = chapters[index - 1]
+        previous_url = case_href(href, previous_key, case_id=case_id)
     else:
         previous_label = "All case files"
         previous_url = case_href(href, case_id=None)
-    if index + 1 < len(CHAPTERS):
-        next_key, next_label, _ = CHAPTERS[index + 1]
-        next_url = case_href(href, next_key)
+    if index + 1 < len(chapters):
+        next_key, next_label, _ = chapters[index + 1]
+        next_url = case_href(href, next_key, case_id=case_id)
         next_direction = "Next section"
     else:
         next_label = "All case files"
@@ -270,9 +303,9 @@ def reader_html(href, section="overview", *, source=""):
         next_direction = "Explore"
     return f'''<main id="belief-files" aria-labelledby="bf-title">
 <a class="bf-back" href="{escape(case_href(href, case_id=None), quote=True)}" target="_self">← All case files</a>
-<p class="bf-eyebrow">Case File 002 · LDS origins and authority</p><h1 id="bf-title">{CASE_TITLE}</h1>
+<p class="bf-eyebrow">Case File {case_id} · LDS origins and authority</p><h1 id="bf-title">{case['title']}</h1>
 <div class="bf-meta"><span>Historical investigation and biblical assessment</span><span>About 25 minutes in full</span></div>
-<details class="bf-contents"><summary>Contents <span>Section {index + 1} of {len(CHAPTERS)} · {label}</span></summary><nav class="bf-chapters" aria-label="Case File 002 sections">{''.join(chapter_links)}</nav></details>
+<details class="bf-contents"><summary>Contents <span>Section {index + 1} of {len(chapters)} · {label}</span></summary><nav class="bf-chapters" aria-label="Case File {case_id} sections">{''.join(chapter_links)}</nav></details>
 <article class="bf-article" aria-label="{label}">{article}</article>
 <nav class="bf-reader-nav" aria-label="Continue reading"><a href="{escape(previous_url, quote=True)}" target="_self"><span>Back</span>{previous_label}</a><a href="{escape(next_url, quote=True)}" target="_self"><span>{next_direction}</span>{next_label} →</a></nav>
 <p class="bf-perspective">The Belief Files · Beyond the Message<br>Evidence is weighed separately from the project's Christian theological assessment.</p>
@@ -283,15 +316,16 @@ def render_belief_files(href, query, published_url=""):
     import streamlit as st
 
     case = _value(query.get("case"))
-    if case != CASE_ID:
+    if case not in CASE_FILES:
         st.html(BELIEF_CSS + library_html(href, published_url))
         return
-    st.html(BELIEF_CSS + reader_html(href, _value(query.get("section")), source=_value(query.get("source"))))
+    selected = CASE_FILES[case]
+    st.html(BELIEF_CSS + reader_html(href, _value(query.get("section")), source=_value(query.get("source")), case_id=case))
     st.download_button(
-        "Download the complete case PDF · 22 pages",
-        data=CASE_PDF.read_bytes(),
-        file_name="Case_File_002_Book_of_Mormon_Translation.pdf",
+        "Download the complete case PDF",
+        data=selected["pdf"].read_bytes(),
+        file_name=selected["download_name"],
         mime="application/pdf",
-        key="belief_case_002_pdf",
+        key="belief_case_" + case + "_pdf",
         use_container_width=True,
     )
