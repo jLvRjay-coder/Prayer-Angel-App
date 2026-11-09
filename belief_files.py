@@ -136,6 +136,17 @@ RACE_CHAPTERS = (
     ('sources', 'Sources', ('Sources and reading',)),
 )
 
+GUIDE_CHAPTERS = (
+    ("overview", "Start Here", ("The purpose of this guide", "A simple first conversation")),
+    ("listen", "Listen", ("Begin with the person", "Listen and reflect before answering")),
+    ("clarify", "Clarify", ("Clarify the words you share", "Explain the differences carefully")),
+    ("gospel", "The Gospel", ("Share the gospel plainly", "Read a passage rather than trade slogans")),
+    ("questions", "Hard Questions", ("Work through common questions",)),
+    ("evidence", "Use the Cases", ("Use the investigations when they answer a real question", "Keep evidence and conclusions distinct")),
+    ("practice", "Practice and Follow Up", ("Practice the conversation", "Invite a response and follow through")),
+    ("sources", "Sources", ("Sources and reading",)),
+)
+
 # Publication order is independent of the source packet count. The final guide
 # closes the collection separately and does not consume a numbered case slot.
 COLLECTION_PLAN = (
@@ -229,6 +240,18 @@ CASE_FILES = {
         "pdf": Path(__file__).with_name("belief_case_012.pdf"),
         "chapters": RACE_CHAPTERS, "sources": 23,
         "download_name": "Case_File_012_Race_and_the_Priesthood.pdf",
+    },
+    "conversation": {
+        "title": "A Christian Conversation Guide for LDS Friends",
+        "markdown": Path(__file__).with_name("belief_conversation_lds.md"),
+        "pdf": Path(__file__).with_name("belief_conversation_lds.pdf"),
+        "chapters": GUIDE_CHAPTERS, "sources": 15,
+        "label": "Christian conversation guide",
+        "topic": "LDS faith and Christian witness",
+        "description": "Sharing the gospel with clarity and respect",
+        "download_name": "LDS_Christian_Conversation_Guide.pdf",
+        "download_label": "Download the conversation guide PDF",
+        "perspective": "Practical guidance from an evangelical and Trinitarian Christian perspective.",
     },
 }
 
@@ -449,10 +472,11 @@ def library_html(href, published_url=""):
 <a class="bf-case" href="{escape(case_href(href, case_id='009'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 009 · Read in the app</span><h2>Plural Marriage in Kirtland and Nauvoo</h2><p>The surviving documents, women's accounts, and the claim that God commanded Joseph Smith's plural marriages.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='010'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 010 · Read in the app</span><h2>Plural Marriage and Families in Early Utah</h2><p>Women's public and private accounts, family responsibilities, demographic claims, and the costs of the practice.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='011'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 011 · Read in the app</span><h2>The Manifesto and the End of Plural Marriage</h2><p>The 1890 declaration, continued relationships and new unions, Senate testimony, and the 1904 prohibition.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(case_href(href, case_id='012'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 012 <span class="bf-new">New</span></span><h2>Race and the Priesthood</h2><p>Early Black priesthood holders, temple restrictions, members' petitions, and the change announced in 1978.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='012'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 012</span><h2>Race and the Priesthood</h2><p>Early Black priesthood holders, temple restrictions, members' petitions, and the change announced in 1978.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='conversation'), quote=True)}" target="_self"><span class="bf-eyebrow">Closing conversation guide <span class="bf-new">New</span></span><h2>A Christian Conversation Guide for LDS Friends</h2><p>How to begin, explain the gospel, discuss real differences, and follow up with clarity and respect.</p><span class="bf-case-link">Open the guide →</span></a>
 </div>
 <div class="bf-library-note">The LDS collection: 00 introduction, 12 case files, and a separate closing Christian conversation guide. Follow the collection in order, or open the case you want to examine.</div>
-<div class="bf-library-note"><strong>Next: the Christian conversation guide.</strong> The Christian conversation guide follows Case 012; its draft is prepared and will be published separately. All twelve numbered investigations are now available.</div>
+<div class="bf-library-note">The Christian conversation guide follows Case 012 as the closing resource. All fourteen resources are now available: the introduction, twelve numbered investigations, and the guide.</div>
 <div class="bf-library-note"><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''
@@ -460,6 +484,10 @@ def library_html(href, published_url=""):
 
 def reader_html(href, section="overview", *, source="", case_id=CASE_ID):
     case = CASE_FILES[case_id]
+    reader_label = case.get("label", "Case File " + case_id)
+    topic = case.get("topic", "LDS origins and authority")
+    description = case.get("description", "Historical investigation and biblical assessment")
+    perspective = case.get("perspective", "Evidence is weighed separately from the project's Christian theological assessment.")
     chapters = case["chapters"]
     source_count = case["sources"]
     index = next((i for i, chapter in enumerate(chapters) if chapter[0] == section), 0)
@@ -497,12 +525,12 @@ def reader_html(href, section="overview", *, source="", case_id=CASE_ID):
         next_direction = "Explore"
     return f'''<main id="belief-files" aria-labelledby="bf-title">
 <a class="bf-back" href="{escape(case_href(href, case_id=None), quote=True)}" target="_self">← All case files</a>
-<p class="bf-eyebrow">Case File {case_id} · LDS origins and authority</p><h1 id="bf-title">{case['title']}</h1>
-<div class="bf-meta"><span>Historical investigation and biblical assessment</span><span>About 25 minutes in full</span></div>
-<details class="bf-contents"><summary>Contents <span>Section {index + 1} of {len(chapters)} · {label}</span></summary><nav class="bf-chapters" aria-label="Case File {case_id} sections">{''.join(chapter_links)}</nav></details>
+<p class="bf-eyebrow">{escape(reader_label)} · {escape(topic)}</p><h1 id="bf-title">{escape(case['title'])}</h1>
+<div class="bf-meta"><span>{escape(description)}</span><span>About 25 minutes in full</span></div>
+<details class="bf-contents"><summary>Contents <span>Section {index + 1} of {len(chapters)} · {label}</span></summary><nav class="bf-chapters" aria-label="{escape(reader_label, quote=True)} sections">{''.join(chapter_links)}</nav></details>
 <article class="bf-article" aria-label="{label}">{article}</article>
 <nav class="bf-reader-nav" aria-label="Continue reading"><a href="{escape(previous_url, quote=True)}" target="_self"><span>Back</span>{previous_label}</a><a href="{escape(next_url, quote=True)}" target="_self"><span>{next_direction}</span>{next_label} →</a></nav>
-<p class="bf-perspective">The Belief Files · Beyond the Message<br>Evidence is weighed separately from the project's Christian theological assessment.</p>
+<p class="bf-perspective">The Belief Files · Beyond the Message<br>{escape(perspective)}</p>
 </main>'''
 
 
@@ -516,7 +544,7 @@ def render_belief_files(href, query, published_url=""):
     selected = CASE_FILES[case]
     st.html(BELIEF_CSS + reader_html(href, _value(query.get("section")), source=_value(query.get("source")), case_id=case))
     st.download_button(
-        "Download the complete case PDF",
+        selected.get("download_label", "Download the complete case PDF"),
         data=selected["pdf"].read_bytes(),
         file_name=selected["download_name"],
         mime="application/pdf",

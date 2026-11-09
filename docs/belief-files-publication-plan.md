@@ -17,7 +17,7 @@ The collection contains **00 introduction plus twelve numbered cases**, followed
 | 010 | Plural Marriage and Families in Early Utah | Published in Angel Chat |
 | 011 | The Manifesto and the End of Plural Marriage | Published in Angel Chat |
 | 012 | Race and the Priesthood | Published in Angel Chat |
-| Closing guide | How to have a conversation with someone of LDS faith | Draft prepared; publish after Case 012 |
+| Closing guide | A Christian Conversation Guide for LDS Friends | Published in Angel Chat |
 
 ## Research inventory and case count
 
@@ -25,7 +25,7 @@ The original 366-page PDF has twelve source packets including the introductory c
 
 ## Publication sequence
 
-Complete and verify the LDS cases, publish the closing Christian conversation guide, then begin the Islam research. Each subsequent religious collection should also end with a conversation guide. Historical observations, the religion's self-description, and the project's evangelical and Trinitarian Christian assessment remain distinguishable.
+The LDS cases and separate closing Christian conversation guide are published. Islam research can now begin as its own investigation. A whole-collection editorial review remains before book adaptation. Each subsequent religious collection should also end with a conversation guide. Historical observations, the religion's self-description, and the project's evangelical and Trinitarian Christian assessment remain distinguishable.
 
 ## Future book adaptation
 
@@ -35,7 +35,7 @@ Retain editable chapter manuscripts, numbered source registers, qualifications, 
 
 Updated November 8, 2026.
 
-Current release: Cases 009 through 012, completing the twelve numbered LDS investigations. The next resource is the separate Christian conversation guide. The source register for Case 005 includes selected 2025 and 2026 research; Case 006 distinguishes early records, retrospective accounts, current authority categories, and formal healing practice.
+Current release: the separate Christian conversation guide, completing the fourteen-resource LDS collection. The native guide follows Case 012 and keeps its own eight-section reader, source register, and PDF. It includes openings for friends, family, and missionaries; shared terminology; the gospel; common questions; careful use of the investigations; illustrative conversations; and follow-up. Its perspective is explicitly evangelical and Trinitarian, while official LDS sources establish LDS self-description. The conversations are examples, not claimed testimony. Its reusable framework is retained for future collections. The source register for Case 005 includes selected 2025 and 2026 research; Case 006 distinguishes early records, retrospective accounts, current authority categories, and formal healing practice.
 
 Case 007 distinguishes 1845 publications, later recollections about Smith, institutional affirmation, and the difference between a claim of revelation and a surviving formal revelation document. Its biblical comparison retains maternal imagery, divine offspring language, and the context of adoption and marriage.
 

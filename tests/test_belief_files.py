@@ -116,10 +116,10 @@ class BeliefCaseTests(unittest.TestCase):
     def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 13)
+        self.assertEqual(len(cards), 14)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], [f"{n:03}" for n in range(2, 13)])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], [f"{n:03}" for n in range(2, 13)] + ["conversation"])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -200,6 +200,28 @@ class BeliefCaseTests(unittest.TestCase):
         self.assertIn("every possible ancestor or tiny migration has been excluded", assessment)
         self.assertIn("The evolutionary history and unique genetic diversity", sources)
         self.assertIn("All 20 sources", sources)
+
+    def test_conversation_guide_is_separate_from_numbered_investigations(self):
+        guide = Document(reader_html(href, case_id="conversation"))
+        self.assertIn("Christian conversation guide", guide.text)
+        self.assertIn("Start Here", guide.text)
+        self.assertNotIn("Case File conversation", guide.text)
+        self.assertNotIn("Case File 013", guide.text)
+        self.assertNotIn("Historical investigation and biblical assessment", guide.text)
+        self.assertIn("All fourteen resources are now available", Document(library_html(href)).text)
+        self.assertNotIn("draft is prepared", Document(library_html(href)).text)
+
+    def test_conversation_guide_preserves_context_and_honest_practice(self):
+        clarify = Document(reader_html(href, "clarify", case_id="conversation")).text
+        gospel = Document(reader_html(href, "gospel", case_id="conversation")).text
+        practice = Document(reader_html(href, "practice", case_id="conversation")).text
+        questions = Document(reader_html(href, "questions", case_id="conversation")).text
+        self.assertIn("grace is freely given and cannot be earned", clarify)
+        self.assertIn("evangelical explanation", gospel)
+        self.assertIn("Romans 4:1–8 and James 2:14–26", gospel)
+        self.assertIn("illustrative examples, not quotations from real people", practice)
+        self.assertIn("A repeated formula does not itself establish conversion", practice)
+        self.assertIn("If the person says they do not want to discuss religion, honor that request", questions)
 
     def test_priesthood_retains_distinct_authority_and_historical_context(self):
         evidence = Document(reader_html(href, "evidence", case_id="006")).text
@@ -367,7 +389,7 @@ class BeliefAppTests(unittest.TestCase):
 
     def test_new_cases_direct_entry_every_section_distinct_sources_and_pdf(self):
         with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
-            for case_id in ("005", "006", "007", "008", "009", "010", "011", "012"):
+            for case_id in ("005", "006", "007", "008", "009", "010", "011", "012", "conversation"):
                 case = CASE_FILES[case_id]
                 self.at.query_params.update({"v": "belief", "case": case_id})
                 for section, label, _ in case["chapters"]:
