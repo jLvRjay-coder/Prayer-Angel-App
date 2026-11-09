@@ -92,6 +92,50 @@ VIOLENCE_CHAPTERS = (
     ("sources", "Sources", ("Sources and reading",)),
 )
 
+NAUVOO_CHAPTERS = (
+    ('overview', 'Overview', ('Investigation summary', 'The claim under investigation', 'How this investigation weighs evidence')),
+    ('evidence', 'Evidence', ('The historical timeline', 'Exhibit one The Kirtland record', 'Exhibit two The Nauvoo documents', 'Exhibit three Women consent and differing relationships')),
+    ('witnesses', 'Witnesses', ('Exhibit four The angel and spiritual testimony', 'Assessing the principal accounts')),
+    ('explanations', 'Explanations', ('The strongest LDS argument', 'Competing explanations', 'Motives benefits and costs')),
+    ('scripture', 'Scripture', ('A biblical assessment',)),
+    ('assessment', 'Assessment', ('Findings and confidence', 'Overall assessment')),
+    ('discuss', 'Discuss', ('Read compare and discuss', 'Accuracy notes and further research')),
+    ('sources', 'Sources', ('Sources and reading',)),
+)
+
+UTAH_FAMILIES_CHAPTERS = (
+    ('overview', 'Overview', ('Investigation summary', 'The claim under investigation', 'How this investigation weighs evidence')),
+    ('evidence', 'Evidence', ('The historical timeline', 'Exhibit one Counting plural households', 'Exhibit two Women speaking in public and private', 'Exhibit three Consent provision and family responsibility')),
+    ('witnesses', 'Witnesses', ('Assessing the principal accounts',)),
+    ('explanations', 'Explanations', ('The strongest LDS argument', 'Competing explanations', 'Motives benefits and costs')),
+    ('scripture', 'Scripture', ('A biblical assessment',)),
+    ('assessment', 'Assessment', ('Findings and confidence', 'Overall assessment')),
+    ('discuss', 'Discuss', ('Read compare and discuss', 'Accuracy notes and further research')),
+    ('sources', 'Sources', ('Sources and reading',)),
+)
+
+MANIFESTO_CHAPTERS = (
+    ('overview', 'Overview', ('Investigation summary', 'The claim under investigation', 'How this investigation weighs evidence')),
+    ('evidence', 'Evidence', ('The historical timeline', "Exhibit one The pressure and Woodruff's response", 'Exhibit two What the first Manifesto said', 'Exhibit three What continued after 1890', 'Exhibit four The Second Manifesto')),
+    ('witnesses', 'Witnesses', ('Assessing the principal accounts',)),
+    ('explanations', 'Explanations', ('The strongest LDS argument', 'Competing explanations', 'Motives benefits and costs')),
+    ('scripture', 'Scripture', ('A biblical assessment',)),
+    ('assessment', 'Assessment', ('Findings and confidence', 'Overall assessment')),
+    ('discuss', 'Discuss', ('Read compare and discuss', 'Accuracy notes and further research')),
+    ('sources', 'Sources', ('Sources and reading',)),
+)
+
+RACE_CHAPTERS = (
+    ('overview', 'Overview', ('Investigation summary', 'The claim under investigation', 'How this investigation weighs evidence')),
+    ('evidence', 'Evidence', ('The historical timeline', 'Exhibit one An early elder and a later restriction', "Exhibit two Jane Manning James's request", 'Exhibit three The authority of the explanations', 'Exhibit four The 1978 change')),
+    ('witnesses', 'Witnesses', ('Assessing the principal accounts',)),
+    ('explanations', 'Explanations', ('The strongest LDS argument', 'Competing explanations', 'Motives benefits and costs')),
+    ('scripture', 'Scripture', ('A biblical assessment',)),
+    ('assessment', 'Assessment', ('Findings and confidence', 'Overall assessment')),
+    ('discuss', 'Discuss', ('Read compare and discuss', 'Accuracy notes and further research')),
+    ('sources', 'Sources', ('Sources and reading',)),
+)
+
 # Publication order is independent of the source packet count. The final guide
 # closes the collection separately and does not consume a numbered case slot.
 COLLECTION_PLAN = (
@@ -157,6 +201,34 @@ CASE_FILES = {
         "pdf": Path(__file__).with_name("belief_case_008.pdf"),
         "chapters": VIOLENCE_CHAPTERS, "sources": 22,
         "download_name": "Case_File_008_Peace_and_Violence_in_the_Nineteenth_Century.pdf",
+    },
+    "009": {
+        "title": "Plural Marriage in Kirtland and Nauvoo",
+        "markdown": Path(__file__).with_name("belief_case_009.md"),
+        "pdf": Path(__file__).with_name("belief_case_009.pdf"),
+        "chapters": NAUVOO_CHAPTERS, "sources": 22,
+        "download_name": "Case_File_009_Plural_Marriage_in_Kirtland_and_Nauvoo.pdf",
+    },
+    "010": {
+        "title": "Plural Marriage and Families in Early Utah",
+        "markdown": Path(__file__).with_name("belief_case_010.md"),
+        "pdf": Path(__file__).with_name("belief_case_010.pdf"),
+        "chapters": UTAH_FAMILIES_CHAPTERS, "sources": 20,
+        "download_name": "Case_File_010_Plural_Marriage_and_Families_in_Early_Utah.pdf",
+    },
+    "011": {
+        "title": "The Manifesto and the End of Plural Marriage",
+        "markdown": Path(__file__).with_name("belief_case_011.md"),
+        "pdf": Path(__file__).with_name("belief_case_011.pdf"),
+        "chapters": MANIFESTO_CHAPTERS, "sources": 15,
+        "download_name": "Case_File_011_The_Manifesto_and_the_End_of_Plural_Marriage.pdf",
+    },
+    "012": {
+        "title": "Race and the Priesthood",
+        "markdown": Path(__file__).with_name("belief_case_012.md"),
+        "pdf": Path(__file__).with_name("belief_case_012.pdf"),
+        "chapters": RACE_CHAPTERS, "sources": 23,
+        "download_name": "Case_File_012_Race_and_the_Priesthood.pdf",
     },
 }
 
@@ -360,7 +432,6 @@ def library_html(href, published_url=""):
     parsed = urlsplit(public)
     first_vision = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, "tbf-first-vision"))
     introduction = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, parsed.query, "tbf-intro"))
-    planned = "".join(f'<li><strong>{number}</strong> {escape(title)}</li>' for number, title in COLLECTION_PLAN if number != "00" and int(number) > max(map(int, CASE_FILES)))
     return f'''<main id="belief-files" aria-labelledby="bf-title">
 <p class="bf-eyebrow">Faith. History. Evidence.</p><h1 id="bf-title">The Belief Files</h1>
 <p class="bf-lead">Know the claim. Examine the evidence. Explore religious beliefs through historical records and Scripture, with care for the people who hold them.</p>
@@ -374,10 +445,14 @@ def library_html(href, published_url=""):
 <a class="bf-case" href="{escape(case_href(href, case_id='005'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 005 · Read in the app</span><h2>The Book of Mormon and DNA</h2><p>Ancient genomes, ancestry claims, and what genetic evidence can establish about the reported migrations.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='006'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 006 · Read in the app</span><h2>Priesthood Temples and Women</h2><p>The Relief Society records, healing blessings, temple participation, and the question of restored authority.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='007'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 007 · Read in the app</span><h2>Mother in Heaven</h2><p>The early publications, later recollections, and the biblical questions behind the doctrine of heavenly parents.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(case_href(href, case_id='008'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 008 <span class="bf-new">New</span></span><h2>Peace and Violence in the Nineteenth Century</h2><p>Persecution, violent preaching, Mountain Meadows, and the evidence for responsibility and accountability.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='008'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 008 · Read in the app</span><h2>Peace and Violence in the Nineteenth Century</h2><p>Persecution, violent preaching, Mountain Meadows, and the evidence for responsibility and accountability.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='009'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 009 · Read in the app</span><h2>Plural Marriage in Kirtland and Nauvoo</h2><p>The surviving documents, women's accounts, and the claim that God commanded Joseph Smith's plural marriages.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='010'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 010 · Read in the app</span><h2>Plural Marriage and Families in Early Utah</h2><p>Women's public and private accounts, family responsibilities, demographic claims, and the costs of the practice.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='011'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 011 · Read in the app</span><h2>The Manifesto and the End of Plural Marriage</h2><p>The 1890 declaration, continued relationships and new unions, Senate testimony, and the 1904 prohibition.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='012'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 012 <span class="bf-new">New</span></span><h2>Race and the Priesthood</h2><p>Early Black priesthood holders, temple restrictions, members' petitions, and the change announced in 1978.</p><span class="bf-case-link">Open the case →</span></a>
 </div>
 <div class="bf-library-note">The LDS collection: 00 introduction, 12 case files, and a separate closing Christian conversation guide. Follow the collection in order, or open the case you want to examine.</div>
-<details class="bf-contents"><summary>Planned case files · 009–012</summary><ol class="bf-plan" start="9">{planned}</ol><p class="bf-perspective">These studies are planned and will open as they are published. The Christian conversation guide follows Case 012; its draft is prepared and will be published separately.</p></details>
+<div class="bf-library-note"><strong>Next: the Christian conversation guide.</strong> The Christian conversation guide follows Case 012; its draft is prepared and will be published separately. All twelve numbered investigations are now available.</div>
 <div class="bf-library-note"><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''

@@ -116,10 +116,10 @@ class BeliefCaseTests(unittest.TestCase):
     def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 9)
+        self.assertEqual(len(cards), 13)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006", "007", "008"])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], [f"{n:03}" for n in range(2, 13)])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -183,8 +183,8 @@ class BeliefCaseTests(unittest.TestCase):
         doc = Document(library_html(href))
         self.assertIn("12 case files, and a separate closing Christian conversation guide", doc.text)
         self.assertIn("The Christian conversation guide follows Case 012", doc.text)
-        self.assertIn("009 Plural Marriage in Kirtland and Nauvoo", doc.text)
-        self.assertIn("012 Race and the Priesthood", doc.text)
+        self.assertIn("Plural Marriage in Kirtland and Nauvoo", doc.text)
+        self.assertIn("Race and the Priesthood", doc.text)
         for tag, attrs in doc.elements:
             if tag == "a":
                 params = parse_qs(urlsplit(attrs["href"]).query)
@@ -237,6 +237,40 @@ class BeliefCaseTests(unittest.TestCase):
         sources = Document(reader_html(href, "sources", case_id="008", source="15")).text
         self.assertIn("We Shall Remain: The Paiute", sources)
         self.assertIn("All 22 sources", sources)
+
+
+    def test_nauvoo_keeps_transmission_consent_and_late_testimony_limits(self):
+        evidence = Document(reader_html(href, "evidence", case_id="009")).text
+        witnesses = Document(reader_html(href, "witnesses", case_id="009")).text
+        self.assertIn("1912 typescript", evidence)
+        self.assertIn("The original is not extant", evidence)
+        self.assertIn("fourteen", evidence.lower())
+        self.assertIn("not independent", witnesses)
+
+    def test_utah_families_keeps_denominators_and_womens_distinct_accounts(self):
+        evidence = Document(reader_html(href, "evidence", case_id="010")).text
+        self.assertIn("Neither says half of Utah's husbands", evidence)
+        self.assertIn("not a confidential poll", evidence)
+        self.assertIn("does not prove that every plural wife was impoverished", evidence)
+        self.assertIn("continuing marital relations", evidence)
+
+    def test_manifesto_distinguishes_new_unions_cohabitation_and_support(self):
+        evidence = Document(reader_html(href, "evidence", case_id="011")).text
+        self.assertIn("Smoot himself was a monogamist", evidence)
+        self.assertIn("September 24", evidence)
+        self.assertIn("public release on September 25", evidence)
+        self.assertIn("possibility of excommunication", Document(reader_html(href, case_id="011")).text)
+        self.assertIn("both were excommunicated immediately", evidence)
+
+    def test_race_preserves_womens_access_primary_voices_and_announcement_dates(self):
+        overview = Document(reader_html(href, case_id="012")).text
+        evidence = Document(reader_html(href, "evidence", case_id="012")).text
+        self.assertIn("Black women and men", overview)
+        self.assertIn("contemporary certificate-book copy", evidence)
+        self.assertIn("adoption as a daughter", evidence)
+        self.assertIn("media release on June 9", evidence)
+        self.assertIn("does not attribute a formal apology", evidence)
+        self.assertNotIn("Planned case files", Document(library_html(href)).text)
 
 
 class BeliefAppTests(unittest.TestCase):
@@ -333,7 +367,7 @@ class BeliefAppTests(unittest.TestCase):
 
     def test_new_cases_direct_entry_every_section_distinct_sources_and_pdf(self):
         with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
-            for case_id in ("005", "006", "007", "008"):
+            for case_id in ("005", "006", "007", "008", "009", "010", "011", "012"):
                 case = CASE_FILES[case_id]
                 self.at.query_params.update({"v": "belief", "case": case_id})
                 for section, label, _ in case["chapters"]:
