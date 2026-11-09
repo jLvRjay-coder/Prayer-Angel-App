@@ -70,6 +70,17 @@ PRIESTHOOD_CHAPTERS = (
     ("sources", "Sources", ("Sources and reading",)),
 )
 
+MOTHER_CHAPTERS = (
+    ("overview", "Overview", ("Investigation summary", "The claim under investigation", "How this investigation weighs evidence")),
+    ("evidence", "Evidence", ("The historical timeline", "Exhibit one The early publications", "Exhibit two Recollections about Joseph Smith", "Exhibit three Institutional teaching and prayer")),
+    ("witnesses", "Witnesses", ("Assessing the principal accounts",)),
+    ("explanations", "Explanations", ("The strongest LDS argument", "Competing explanations", "Motives benefits and costs")),
+    ("scripture", "Scripture", ("A biblical assessment",)),
+    ("assessment", "Assessment", ("Findings and confidence", "Overall assessment")),
+    ("discuss", "Discuss", ("Read compare and discuss", "Accuracy notes and further research")),
+    ("sources", "Sources", ("Sources and reading",)),
+)
+
 # Publication order is independent of the source packet count. The final guide
 # closes the collection separately and does not consume a numbered case slot.
 COLLECTION_PLAN = (
@@ -121,6 +132,13 @@ CASE_FILES = {
         "pdf": Path(__file__).with_name("belief_case_006.pdf"),
         "chapters": PRIESTHOOD_CHAPTERS, "sources": 21,
         "download_name": "Case_File_006_Priesthood_Temples_and_Women.pdf",
+    },
+    "007": {
+        "title": "Mother in Heaven",
+        "markdown": Path(__file__).with_name("belief_case_007.md"),
+        "pdf": Path(__file__).with_name("belief_case_007.pdf"),
+        "chapters": MOTHER_CHAPTERS, "sources": 19,
+        "download_name": "Case_File_007_Mother_in_Heaven.pdf",
     },
 }
 
@@ -335,11 +353,12 @@ def library_html(href, published_url=""):
 <a class="bf-case" href="{escape(case_href(href), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 002 · Read in the app</span><h2>{CASE_TITLE}</h2><p>The English manuscripts, the reported translation process, and the testimony behind the ancient-record claim.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='003'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 003 · Read in the app</span><h2>The Book of Abraham</h2><p>The surviving Egyptian papyri, the facsimiles, and the question of translation and revelation.</p><span class="bf-case-link">Open the case →</span></a>
 <a class="bf-case" href="{escape(case_href(href, case_id='004'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 004 · Read in the app</span><h2>Becoming Like God</h2><p>The development of exaltation teaching, the King Follett discourse, and the comparison with ancient Christian deification.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(case_href(href, case_id='005'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 005 <span class="bf-new">New</span></span><h2>The Book of Mormon and DNA</h2><p>Ancient genomes, ancestry claims, and what genetic evidence can establish about the reported migrations.</p><span class="bf-case-link">Open the case →</span></a>
-<a class="bf-case" href="{escape(case_href(href, case_id='006'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 006 <span class="bf-new">New</span></span><h2>Priesthood Temples and Women</h2><p>The Relief Society records, healing blessings, temple participation, and the question of restored authority.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='005'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 005 · Read in the app</span><h2>The Book of Mormon and DNA</h2><p>Ancient genomes, ancestry claims, and what genetic evidence can establish about the reported migrations.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='006'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 006 · Read in the app</span><h2>Priesthood Temples and Women</h2><p>The Relief Society records, healing blessings, temple participation, and the question of restored authority.</p><span class="bf-case-link">Open the case →</span></a>
+<a class="bf-case" href="{escape(case_href(href, case_id='007'), quote=True)}" target="_self"><span class="bf-eyebrow">Case File 007 <span class="bf-new">New</span></span><h2>Mother in Heaven</h2><p>The early publications, later recollections, and the biblical questions behind the doctrine of heavenly parents.</p><span class="bf-case-link">Open the case →</span></a>
 </div>
 <div class="bf-library-note">The LDS collection: 00 introduction, 12 case files, and a separate closing Christian conversation guide. Follow the collection in order, or open the case you want to examine.</div>
-<details class="bf-contents"><summary>Planned case files · 007–012</summary><ol class="bf-plan" start="7">{planned}</ol><p class="bf-perspective">These studies are planned and will open as they are published. The Christian conversation guide follows Case 012; its draft is prepared and will be published separately.</p></details>
+<details class="bf-contents"><summary>Planned case files · 008–012</summary><ol class="bf-plan" start="8">{planned}</ol><p class="bf-perspective">These studies are planned and will open as they are published. The Christian conversation guide follows Case 012; its draft is prepared and will be published separately.</p></details>
 <div class="bf-library-note"><a href="{escape(public, quote=True)}" target="_blank" rel="noopener noreferrer">Explore the collection on our website →</a></div>
 <p class="bf-perspective">Historical findings and theological judgments are distinguished. Beyond the Message writes from an evangelical and Trinitarian Christian perspective.</p>
 </main>'''

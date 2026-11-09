@@ -20,6 +20,7 @@ RUNTIME_FILES = (
     "belief_case_004.md", "belief_case_004.pdf",
     "belief_case_005.md", "belief_case_005.pdf",
     "belief_case_006.md", "belief_case_006.pdf",
+    "belief_case_007.md", "belief_case_007.pdf",
     "app.py", "home_hub.py", "daily_encouragement.py", "daily_devotionals.json", "devotional_design.py", "email_subscription.py", "email_ui.py",
     "supabase_email_store.py", "hostinger_email.py", "email_worker.py",
     "email_scheduler.py", "app_runtime.py",

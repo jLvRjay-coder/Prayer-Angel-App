@@ -116,10 +116,10 @@ class BeliefCaseTests(unittest.TestCase):
     def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 7)
+        self.assertEqual(len(cards), 8)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006"])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006", "007"])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -183,7 +183,7 @@ class BeliefCaseTests(unittest.TestCase):
         doc = Document(library_html(href))
         self.assertIn("12 case files, and a separate closing Christian conversation guide", doc.text)
         self.assertIn("The Christian conversation guide follows Case 012", doc.text)
-        self.assertIn("007 Mother in Heaven", doc.text)
+        self.assertIn("008 Peace and Violence in the Nineteenth Century", doc.text)
         self.assertIn("012 Race and the Priesthood", doc.text)
         for tag, attrs in doc.elements:
             if tag == "a":
@@ -210,6 +210,19 @@ class BeliefCaseTests(unittest.TestCase):
         self.assertIn("Taylor said the earlier ordination did not confer priesthood", witnesses)
         self.assertIn("holding a portion of priesthood in connection with their husbands", witnesses)
         self.assertIn("Christians interpret them alongside", scripture)
+
+
+    def test_mother_reader_keeps_dates_revelation_and_biblical_context(self):
+        evidence = Document(reader_html(href, "evidence", case_id="007")).text
+        scripture = Document(reader_html(href, "scripture", case_id="007")).text
+        sources = Document(reader_html(href, "sources", case_id="007", source="5")).text
+        self.assertIn("published seventy-two years later", evidence)
+        self.assertIn("nor does it demonstrate that she waited seventy-two years to tell it", evidence)
+        self.assertIn("describes the doctrine as coming through revelation", evidence)
+        self.assertIn("not an original Smith-era record", Document(reader_html(href, "sources", case_id="007", source="9")).text)
+        self.assertIn("An image of motherly care and a distinct Heavenly Mother are different claims", scripture)
+        self.assertIn("A transmitted recollection", sources)
+        self.assertIn("All 19 sources", sources)
 
 
 class BeliefAppTests(unittest.TestCase):
@@ -306,7 +319,7 @@ class BeliefAppTests(unittest.TestCase):
 
     def test_new_cases_direct_entry_every_section_distinct_sources_and_pdf(self):
         with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
-            for case_id in ("005", "006"):
+            for case_id in ("005", "006", "007"):
                 case = CASE_FILES[case_id]
                 self.at.query_params.update({"v": "belief", "case": case_id})
                 for section, label, _ in case["chapters"]:
