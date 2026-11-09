@@ -12,7 +12,7 @@ The collection contains **00 introduction plus twelve numbered cases**, followed
 | 005 | The Book of Mormon and DNA | Published in Angel Chat |
 | 006 | Priesthood Temples and Women | Published in Angel Chat |
 | 007 | Mother in Heaven | Published in Angel Chat |
-| 008 | Peace and Violence in the Nineteenth Century | Planned; individual source review and preparation remain |
+| 008 | Peace and Violence in the Nineteenth Century | Published in Angel Chat |
 | 009 | Plural Marriage in Kirtland and Nauvoo | Planned; individual source review and preparation remain |
 | 010 | Plural Marriage and Families in Early Utah | Planned; individual source review and preparation remain |
 | 011 | The Manifesto and the End of Plural Marriage | Planned; individual source review and preparation remain |
@@ -35,6 +35,8 @@ Retain editable chapter manuscripts, numbered source registers, qualifications, 
 
 Updated November 8, 2026.
 
-Current release: Case 007 Mother in Heaven. The next case is 008 Peace and Violence in the Nineteenth Century. The source register for Case 005 includes selected 2025 and 2026 research; Case 006 distinguishes early records, retrospective accounts, current authority categories, and formal healing practice.
+Current release: Case 008 Peace and Violence in the Nineteenth Century. The next case is 009 Plural Marriage in Kirtland and Nauvoo. The source register for Case 005 includes selected 2025 and 2026 research; Case 006 distinguishes early records, retrospective accounts, current authority categories, and formal healing practice.
 
 Case 007 distinguishes 1845 publications, later recollections about Smith, institutional affirmation, and the difference between a claim of revelation and a surviving formal revelation document. Its biblical comparison retains maternal imagery, divine offspring language, and the context of adoption and marriage.
+
+Case 008 separates persecution, historical blood-atonement preaching, the Mountain Meadows crime, disputed responsibility and knowledge, Native testimony, and later acknowledgment. It distinguishes a published sermon from a proved execution, local LDS responsibility from an unproved direct order from Young, and historical teaching from the current Church position. The source register identifies the published letter transcription and the specific deposition page checked without claiming a full trial-file audit.

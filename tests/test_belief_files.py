@@ -116,10 +116,10 @@ class BeliefCaseTests(unittest.TestCase):
     def test_collection_order_intro_and_all_download_assets(self):
         doc = Document(library_html(href, "https://beyondthemessage.org/the-belief-files/?edition=1"))
         cards = [attrs for tag, attrs in doc.elements if tag == "a" and attrs.get("class", "").startswith("bf-case")]
-        self.assertEqual(len(cards), 8)
+        self.assertEqual(len(cards), 9)
         self.assertEqual([urlsplit(card["href"]).fragment for card in cards[:2]], ["tbf-intro", "tbf-first-vision"])
         self.assertTrue(all(parse_qs(urlsplit(card["href"]).query) == {"edition": ["1"]} for card in cards[:2]))
-        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006", "007"])
+        self.assertEqual([parse_qs(urlsplit(card["href"]).query)["case"][0] for card in cards[2:]], ["002", "003", "004", "005", "006", "007", "008"])
         self.assertTrue(all(card["target"] == "_self" for card in cards[2:]))
         for case in CASE_FILES.values():
             self.assertIn(case["markdown"].name, RUNTIME_FILES)
@@ -183,7 +183,7 @@ class BeliefCaseTests(unittest.TestCase):
         doc = Document(library_html(href))
         self.assertIn("12 case files, and a separate closing Christian conversation guide", doc.text)
         self.assertIn("The Christian conversation guide follows Case 012", doc.text)
-        self.assertIn("008 Peace and Violence in the Nineteenth Century", doc.text)
+        self.assertIn("009 Plural Marriage in Kirtland and Nauvoo", doc.text)
         self.assertIn("012 Race and the Priesthood", doc.text)
         for tag, attrs in doc.elements:
             if tag == "a":
@@ -223,6 +223,20 @@ class BeliefCaseTests(unittest.TestCase):
         self.assertIn("An image of motherly care and a distinct Heavenly Mother are different claims", scripture)
         self.assertIn("A transmitted recollection", sources)
         self.assertIn("All 19 sources", sources)
+
+    def test_violence_reader_retains_responsibility_and_native_evidence_limits(self):
+        evidence = Document(reader_html(href, "evidence", case_id="008")).text
+        explanations = Document(reader_html(href, "explanations", case_id="008")).text
+        scripture = Document(reader_html(href, "scripture", case_id="008")).text
+        self.assertIn("Sequence alone therefore does not prove", evidence)
+        self.assertIn("The missing incoming letter limits reconstruction", evidence)
+        self.assertIn("not newly discovered 1857 eyewitness depositions", evidence)
+        self.assertIn("does not establish that Mountain Meadows was a ritual execution", evidence)
+        self.assertIn("does not establish an authenticated direct order from Young", explanations)
+        self.assertIn("Civil punishment and the saving atonement of Christ are different categories", scripture)
+        sources = Document(reader_html(href, "sources", case_id="008", source="15")).text
+        self.assertIn("We Shall Remain: The Paiute", sources)
+        self.assertIn("All 22 sources", sources)
 
 
 class BeliefAppTests(unittest.TestCase):
@@ -319,7 +333,7 @@ class BeliefAppTests(unittest.TestCase):
 
     def test_new_cases_direct_entry_every_section_distinct_sources_and_pdf(self):
         with patch("openai.OpenAI") as api, patch("streamlit.download_button", wraps=st.download_button) as download:
-            for case_id in ("005", "006", "007"):
+            for case_id in ("005", "006", "007", "008"):
                 case = CASE_FILES[case_id]
                 self.at.query_params.update({"v": "belief", "case": case_id})
                 for section, label, _ in case["chapters"]:
