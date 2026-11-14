@@ -123,6 +123,7 @@ def goto(view_key: str):
     try:
         st.query_params["v"] = view_key
         if view_key != "belief":
+            st.query_params.pop("collection", None)
             st.query_params.pop("case", None)
             st.query_params.pop("section", None)
             st.query_params.pop("source", None)
@@ -1918,6 +1919,7 @@ def _build_href(view_key: str) -> str:
     qp.pop("token", None)
     qp.pop("action", None)
     # Case links are added explicitly by the reader, never carried into chat.
+    qp.pop("collection", None)
     qp.pop("case", None)
     qp.pop("section", None)
     qp.pop("source", None)

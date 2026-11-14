@@ -15,6 +15,9 @@ import tempfile
 SPACE_ID = "lvRJay18950/Prayer-Angel"
 PREVIEW_FLAGS = ("EMAIL_SIGNUPS_ENABLED", "EMAIL_DELIVERY_ENABLED")
 RUNTIME_FILES = (
+    "belief_islam.py", "belief_case_islam_00.md", "belief_case_islam_00.pdf",
+    "belief_case_islam_001.md", "belief_case_islam_001.pdf",
+    "belief_case_islam_001_research.pdf",
     "belief_files.py", "belief_case_002.md", "belief_case_002.pdf",
     "belief_case_003.md", "belief_case_003.pdf",
     "belief_case_004.md", "belief_case_004.pdf",
