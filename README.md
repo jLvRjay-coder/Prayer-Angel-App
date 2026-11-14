@@ -77,3 +77,14 @@ Test the draft with `python -m unittest discover -s tests -v` after installing `
 ## Run locally (optional)
 ```bash
 streamlit run app.py --server.port 7860 --server.address 0.0.0.0
+# The Belief Files collections
+
+The in-app library at `?v=belief` offers LDS and Islam collections in the existing Angel Chat navigation.
+
+- LDS landing: `?v=belief&collection=lds`. Existing unscoped LDS case and conversation-guide URLs retain their meaning.
+- Islam landing: `?v=belief&collection=islam`. Published readers are `case=00` (foundational comparison) and `case=001` (Muhammad and the Prophetic Claim).
+- Reader sections and focused sources use `section` and `source`. Islam source codes are scoped to their case; numerical LDS references continue to work.
+- The Islam landing offers the supporting Research Packet 001 separately from the historical case. The two reader PDFs and the research PDF are in the deployment allowlist.
+
+The introduction's Markdown is canonical. To rebuild its PDF, install the development-only `reportlab` package and run `python scripts/build_islam_intro_pdf.py` on a system with DejaVu fonts. The deployed app does not need ReportLab.
+

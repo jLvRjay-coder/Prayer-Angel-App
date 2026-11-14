@@ -133,7 +133,7 @@ def home_html(href, *, show_signup=False):
         return escape(href(view), quote=True)
 
     cards = (
-        ("belief", "The Belief Files", "Faith, history, and evidence. Start with the LDS comparison.", "Explore the files", href("belief"), False, True),
+        ("belief", "The Belief Files", "Explore religious claims through history, evidence, and Scripture.", "Explore the files", href("belief"), False, True),
         ("counsel", "King’s Counsel", "Biblical wisdom for the way you lead and the decisions you make.", "Find counsel", COUNSEL_URL, True, False),
         ("bible", "Bible Stories", "Step into Scripture with stories and questions for every age.", "Read a story", href("bible"), False, False),
         ("study", "Study Hub", "Go deeper with guided lessons, study notes, and daily readings.", "Open Study Hub", STUDY_URL, True, False),
