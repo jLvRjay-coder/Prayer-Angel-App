@@ -12,3 +12,5 @@ The [approved Season 2 roadmap](parables-series-roadmap.json) preserves the titl
 
 Record six Shorts per week across eight batches, with a target completion of December 13, 2026. This leaves time for editing, captions, covers, and upload checks before the January 16 launch. Full sessions remain outlines until developed and recorded; add their actual public links as they become available.
 
+
+Season 3, The Prophets: God's Call, Mercy, and Hope, was authorized on November 15, 2026 with flexibility to extend beyond 90 days. Its 126 complete devotionals run June 3 through October 6, 2027, following the Parables. Four introductory readings establish the historical and covenant setting; 65 readings explore the Major Prophets; 53 cover all twelve Minor Prophets; and four closing readings gather the promises around Christ and invite continued relationship with Him. The [Season 3 roadmap](prophets-series-roadmap.json) and [dated calendar](prophets-series-calendar.md) preserve the full sequence. The existing 229 calendar entries remain unchanged.

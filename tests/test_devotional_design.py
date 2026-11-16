@@ -129,7 +129,7 @@ class DevotionalDesignTests(unittest.TestCase):
 
     def test_calendar_appends_connected_series_after_original_ninety_one_days(self):
         dates = [date.fromisoformat(message["date"]) for message in DAILY_MESSAGES]
-        self.assertEqual(dates, [date(2026, 10, 17) + timedelta(days=index) for index in range(229)])
+        self.assertEqual(dates, [date(2026, 10, 17) + timedelta(days=index) for index in range(355)])
         self.assertTrue(all(message["approved_for_delivery"] is True for message in DAILY_MESSAGES))
         self.assertEqual(DAILY_MESSAGES[0]["id"], "compass-w01-god-sends")
         self.assertEqual(DAILY_MESSAGES[6]["id"], "angel-w01-rest")
@@ -137,7 +137,7 @@ class DevotionalDesignTests(unittest.TestCase):
         self.assertEqual(DAILY_MESSAGES[91]["date"], "2027-01-16")
         self.assertEqual(DAILY_MESSAGES[138]["date"], "2027-03-04")
         self.assertEqual(DAILY_MESSAGES[139]["date"], "2027-03-05")
-        self.assertEqual(DAILY_MESSAGES[-1]["date"], "2027-06-02")
+        self.assertEqual(DAILY_MESSAGES[-1]["date"], "2027-10-06")
         self.assertEqual(DAILY_MESSAGES[91]["previous_message_id"], DAILY_MESSAGES[90]["id"])
 
 

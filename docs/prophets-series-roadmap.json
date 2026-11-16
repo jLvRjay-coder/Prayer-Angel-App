@@ -1,0 +1,1286 @@
+{
+  "series_id": "whats-in-the-book-the-prophets",
+  "title": "The Prophets: God's Call, Mercy, and Hope",
+  "season": 3,
+  "total_days": 126,
+  "start_date": "2027-06-03",
+  "end_date": "2027-10-06",
+  "arrangement": "Major Prophets followed by Minor Prophets in English Bible order, with historical transitions. This is a selected-passage survey, not an exhaustive verse-by-verse commentary.",
+  "editorial_approach": "Full selected KJV readings, original setting, explanation, connections across Scripture, prayer, and an open personal question. Preserve historical promises to Israel and distinguish Christian application from their original setting.",
+  "scripture_source": "https://github.com/aruljohn/Bible-kjv",
+  "days": [
+    {
+      "day": 1,
+      "date": "2027-06-03",
+      "book": "Introduction",
+      "title": "Hearing the Voice Behind the Story",
+      "reading": "Luke 24:25-32",
+      "key_verse_reference": "Luke 24:27",
+      "connection_reference": "Hebrews 1:1-3",
+      "coverage": "From the Parables to the Prophets"
+    },
+    {
+      "day": 2,
+      "date": "2027-06-04",
+      "book": "Introduction",
+      "title": "The Relationship Behind the Warnings",
+      "reading": "Deuteronomy 30:15-20",
+      "key_verse_reference": "Deuteronomy 30:19",
+      "connection_reference": "Mark 12:28-34",
+      "coverage": "Covenant and the call to life"
+    },
+    {
+      "day": 3,
+      "date": "2027-06-05",
+      "book": "Introduction",
+      "title": "When a Divided People Stop Listening",
+      "reading": "2 Kings 17:7-15",
+      "key_verse_reference": "2 Kings 17:13",
+      "connection_reference": "Hebrews 3:7-15",
+      "coverage": "Israel, Judah, and repeated warnings"
+    },
+    {
+      "day": 4,
+      "date": "2027-06-06",
+      "book": "Introduction",
+      "title": "The Road Through Exile and Home Again",
+      "reading": "2 Chronicles 36:14-23",
+      "key_verse_reference": "2 Chronicles 36:15",
+      "connection_reference": "Luke 19:41-44",
+      "coverage": "Judah's exile and the return"
+    },
+    {
+      "day": 5,
+      "date": "2027-06-07",
+      "book": "Isaiah",
+      "title": "Worship That Reaches Our Neighbors",
+      "reading": "Isaiah 1:10-20",
+      "key_verse_reference": "Isaiah 1:18",
+      "connection_reference": "James 1:26-27",
+      "coverage": "Isaiah 1-5"
+    },
+    {
+      "day": 6,
+      "date": "2027-06-08",
+      "book": "Isaiah",
+      "title": "Cleansed Before Being Sent",
+      "reading": "Isaiah 6:1-8",
+      "key_verse_reference": "Isaiah 6:7",
+      "connection_reference": "John 12:37-41",
+      "coverage": "Isaiah 6"
+    },
+    {
+      "day": 7,
+      "date": "2027-06-09",
+      "book": "Isaiah",
+      "title": "A Sign in a Frightened King's World",
+      "reading": "Isaiah 7:10-16",
+      "key_verse_reference": "Isaiah 7:14",
+      "connection_reference": "Matthew 1:18-23",
+      "coverage": "Isaiah 7-8"
+    },
+    {
+      "day": 8,
+      "date": "2027-06-10",
+      "book": "Isaiah",
+      "title": "Light in the Land of Shadows",
+      "reading": "Isaiah 9:1-7",
+      "key_verse_reference": "Isaiah 9:6",
+      "connection_reference": "Luke 1:30-33",
+      "coverage": "Isaiah 9-10"
+    },
+    {
+      "day": 9,
+      "date": "2027-06-11",
+      "book": "Isaiah",
+      "title": "Life From the Cut-Down Tree",
+      "reading": "Isaiah 11:1-10",
+      "key_verse_reference": "Isaiah 11:2",
+      "connection_reference": "Romans 15:8-13",
+      "coverage": "Isaiah 11-12"
+    },
+    {
+      "day": 10,
+      "date": "2027-06-12",
+      "book": "Isaiah",
+      "title": "When Powerful Kingdoms Answer to God",
+      "reading": "Isaiah 13:6-13",
+      "key_verse_reference": "Isaiah 13:11",
+      "connection_reference": "Revelation 18:1-8",
+      "coverage": "Isaiah 13-23"
+    },
+    {
+      "day": 11,
+      "date": "2027-06-13",
+      "book": "Isaiah",
+      "title": "The Feast Beyond Our Tears",
+      "reading": "Isaiah 25:6-9",
+      "key_verse_reference": "Isaiah 25:8",
+      "connection_reference": "1 Corinthians 15:51-57",
+      "coverage": "Isaiah 24-27"
+    },
+    {
+      "day": 12,
+      "date": "2027-06-14",
+      "book": "Isaiah",
+      "title": "The Quiet Strength of Returning",
+      "reading": "Isaiah 30:15-22",
+      "key_verse_reference": "Isaiah 30:15",
+      "connection_reference": "Matthew 11:28-30",
+      "coverage": "Isaiah 28-35"
+    },
+    {
+      "day": 13,
+      "date": "2027-06-15",
+      "book": "Isaiah",
+      "title": "Spread the Letter Before the Lord",
+      "reading": "Isaiah 37:14-20",
+      "key_verse_reference": "Isaiah 37:20",
+      "connection_reference": "Philippians 4:4-7",
+      "coverage": "Isaiah 36-39"
+    },
+    {
+      "day": 14,
+      "date": "2027-06-16",
+      "book": "Isaiah",
+      "title": "Comfort With a Shepherd's Voice",
+      "reading": "Isaiah 40:1-11",
+      "key_verse_reference": "Isaiah 40:8",
+      "connection_reference": "Mark 1:1-8",
+      "coverage": "Isaiah 40"
+    },
+    {
+      "day": 15,
+      "date": "2027-06-17",
+      "book": "Isaiah",
+      "title": "Held by the God Who Calls His People",
+      "reading": "Isaiah 41:8-13",
+      "key_verse_reference": "Isaiah 41:10",
+      "connection_reference": "Romans 8:31-39",
+      "coverage": "Isaiah 41"
+    },
+    {
+      "day": 16,
+      "date": "2027-06-18",
+      "book": "Isaiah",
+      "title": "The Servant Who Cares for Bruised Reeds",
+      "reading": "Isaiah 42:1-9",
+      "key_verse_reference": "Isaiah 42:3",
+      "connection_reference": "Matthew 12:15-21",
+      "coverage": "Isaiah 42"
+    },
+    {
+      "day": 17,
+      "date": "2027-06-19",
+      "book": "Isaiah",
+      "title": "Named and Known in Deep Waters",
+      "reading": "Isaiah 43:1-7",
+      "key_verse_reference": "Isaiah 43:1",
+      "connection_reference": "John 10:27-30",
+      "coverage": "Isaiah 43-48"
+    },
+    {
+      "day": 18,
+      "date": "2027-06-20",
+      "book": "Isaiah",
+      "title": "A Light Reaching Beyond Israel",
+      "reading": "Isaiah 49:1-6",
+      "key_verse_reference": "Isaiah 49:6",
+      "connection_reference": "Luke 2:25-32",
+      "coverage": "Isaiah 49-50"
+    },
+    {
+      "day": 19,
+      "date": "2027-06-21",
+      "book": "Isaiah",
+      "title": "The Wounds That Bring Us Peace",
+      "reading": "Isaiah 53:1-12",
+      "key_verse_reference": "Isaiah 53:5",
+      "connection_reference": "1 Peter 2:21-25",
+      "coverage": "Isaiah 51-53"
+    },
+    {
+      "day": 20,
+      "date": "2027-06-22",
+      "book": "Isaiah",
+      "title": "An Invitation We Cannot Purchase",
+      "reading": "Isaiah 55:1-11",
+      "key_verse_reference": "Isaiah 55:6",
+      "connection_reference": "John 7:37-39",
+      "coverage": "Isaiah 54-55"
+    },
+    {
+      "day": 21,
+      "date": "2027-06-23",
+      "book": "Isaiah",
+      "title": "The Fast That Opens Our Hands",
+      "reading": "Isaiah 58:1-12",
+      "key_verse_reference": "Isaiah 58:6",
+      "connection_reference": "Matthew 25:34-40",
+      "coverage": "Isaiah 56-59"
+    },
+    {
+      "day": 22,
+      "date": "2027-06-24",
+      "book": "Isaiah",
+      "title": "The Future God Is Making",
+      "reading": "Isaiah 65:17-25",
+      "key_verse_reference": "Isaiah 65:19",
+      "connection_reference": "Revelation 21:1-5",
+      "coverage": "Isaiah 60-66"
+    },
+    {
+      "day": 23,
+      "date": "2027-06-25",
+      "book": "Jeremiah",
+      "title": "Known Before the First Difficult Word",
+      "reading": "Jeremiah 1:4-12",
+      "key_verse_reference": "Jeremiah 1:8",
+      "connection_reference": "2 Timothy 1:6-12",
+      "coverage": "Jeremiah 1"
+    },
+    {
+      "day": 24,
+      "date": "2027-06-26",
+      "book": "Jeremiah",
+      "title": "The Thirst Our Cisterns Cannot Satisfy",
+      "reading": "Jeremiah 2:9-13",
+      "key_verse_reference": "Jeremiah 2:13",
+      "connection_reference": "John 4:10-14",
+      "coverage": "Jeremiah 2-3"
+    },
+    {
+      "day": 25,
+      "date": "2027-06-27",
+      "book": "Jeremiah",
+      "title": "When Sacred Places Hide Unchanged Hearts",
+      "reading": "Jeremiah 7:1-11",
+      "key_verse_reference": "Jeremiah 7:5",
+      "connection_reference": "Mark 11:15-18",
+      "coverage": "Jeremiah 4-10"
+    },
+    {
+      "day": 26,
+      "date": "2027-06-28",
+      "book": "Jeremiah",
+      "title": "Made to Cling to God",
+      "reading": "Jeremiah 13:1-11",
+      "key_verse_reference": "Jeremiah 13:11",
+      "connection_reference": "John 15:1-8",
+      "coverage": "Jeremiah 11-15"
+    },
+    {
+      "day": 27,
+      "date": "2027-06-29",
+      "book": "Jeremiah",
+      "title": "Roots That Reach Beneath the Heat",
+      "reading": "Jeremiah 17:5-10",
+      "key_verse_reference": "Jeremiah 17:7",
+      "connection_reference": "Luke 6:43-45",
+      "coverage": "Jeremiah 16-17"
+    },
+    {
+      "day": 28,
+      "date": "2027-06-30",
+      "book": "Jeremiah",
+      "title": "The Potter's Call to Return",
+      "reading": "Jeremiah 18:1-12",
+      "key_verse_reference": "Jeremiah 18:6",
+      "connection_reference": "Romans 9:20-24",
+      "coverage": "Jeremiah 18-20"
+    },
+    {
+      "day": 29,
+      "date": "2027-07-01",
+      "book": "Jeremiah",
+      "title": "The King Who Will Shepherd Justly",
+      "reading": "Jeremiah 23:1-8",
+      "key_verse_reference": "Jeremiah 23:5",
+      "connection_reference": "John 10:11-18",
+      "coverage": "Jeremiah 21-25"
+    },
+    {
+      "day": 30,
+      "date": "2027-07-02",
+      "book": "Jeremiah",
+      "title": "A Difficult Word in a Hostile Room",
+      "reading": "Jeremiah 26:7-15",
+      "key_verse_reference": "Jeremiah 26:13",
+      "connection_reference": "Acts 4:13-20",
+      "coverage": "Jeremiah 26-28"
+    },
+    {
+      "day": 31,
+      "date": "2027-07-03",
+      "book": "Jeremiah",
+      "title": "Faithfulness While the Wait Is Long",
+      "reading": "Jeremiah 29:4-14",
+      "key_verse_reference": "Jeremiah 29:7",
+      "connection_reference": "1 Peter 2:11-17",
+      "coverage": "Jeremiah 29"
+    },
+    {
+      "day": 32,
+      "date": "2027-07-04",
+      "book": "Jeremiah",
+      "title": "The Covenant Written on the Heart",
+      "reading": "Jeremiah 31:27-34",
+      "key_verse_reference": "Jeremiah 31:33",
+      "connection_reference": "Luke 22:14-20",
+      "coverage": "Jeremiah 30-31"
+    },
+    {
+      "day": 33,
+      "date": "2027-07-05",
+      "book": "Jeremiah",
+      "title": "Buying a Field While the City Falls",
+      "reading": "Jeremiah 32:6-15",
+      "key_verse_reference": "Jeremiah 32:15",
+      "connection_reference": "Romans 8:18-25",
+      "coverage": "Jeremiah 32-33"
+    },
+    {
+      "day": 34,
+      "date": "2027-07-06",
+      "book": "Jeremiah",
+      "title": "The King Who Tried to Burn the Word",
+      "reading": "Jeremiah 36:20-32",
+      "key_verse_reference": "Jeremiah 36:23",
+      "connection_reference": "2 Timothy 4:1-5",
+      "coverage": "Jeremiah 34-36"
+    },
+    {
+      "day": 35,
+      "date": "2027-07-07",
+      "book": "Jeremiah",
+      "title": "The Courage of a Man With Old Rags",
+      "reading": "Jeremiah 38:7-13",
+      "key_verse_reference": "Jeremiah 38:13",
+      "connection_reference": "Matthew 10:40-42",
+      "coverage": "Jeremiah 37-38"
+    },
+    {
+      "day": 36,
+      "date": "2027-07-08",
+      "book": "Jeremiah",
+      "title": "Remembered in the City's Collapse",
+      "reading": "Jeremiah 39:15-18",
+      "key_verse_reference": "Jeremiah 39:18",
+      "connection_reference": "Hebrews 6:9-12",
+      "coverage": "Jeremiah 39-45"
+    },
+    {
+      "day": 37,
+      "date": "2027-07-09",
+      "book": "Jeremiah",
+      "title": "An Unfinished Hope in a Foreign Land",
+      "reading": "Jeremiah 52:27-34",
+      "key_verse_reference": "Jeremiah 52:31",
+      "connection_reference": "Romans 11:25-32",
+      "coverage": "Jeremiah 46-52"
+    },
+    {
+      "day": 38,
+      "date": "2027-07-10",
+      "book": "Lamentations",
+      "title": "When the City Sits Alone",
+      "reading": "Lamentations 1:1-9",
+      "key_verse_reference": "Lamentations 1:9",
+      "connection_reference": "Luke 19:41-44",
+      "coverage": "Lamentations 1"
+    },
+    {
+      "day": 39,
+      "date": "2027-07-11",
+      "book": "Lamentations",
+      "title": "Pour Out Your Heart Like Water",
+      "reading": "Lamentations 2:13-19",
+      "key_verse_reference": "Lamentations 2:19",
+      "connection_reference": "Psalm 62:5-8",
+      "coverage": "Lamentations 2"
+    },
+    {
+      "day": 40,
+      "date": "2027-07-12",
+      "book": "Lamentations",
+      "title": "Mercies in the Middle of the Ruins",
+      "reading": "Lamentations 3:19-33",
+      "key_verse_reference": "Lamentations 3:23",
+      "connection_reference": "2 Corinthians 4:7-18",
+      "coverage": "Lamentations 3"
+    },
+    {
+      "day": 41,
+      "date": "2027-07-13",
+      "book": "Lamentations",
+      "title": "When Gold Loses Its Shine",
+      "reading": "Lamentations 4:1-11",
+      "key_verse_reference": "Lamentations 4:1",
+      "connection_reference": "James 5:1-6",
+      "coverage": "Lamentations 4"
+    },
+    {
+      "day": 42,
+      "date": "2027-07-14",
+      "book": "Lamentations",
+      "title": "The Prayer With an Unfinished Ending",
+      "reading": "Lamentations 5:15-22",
+      "key_verse_reference": "Lamentations 5:21",
+      "connection_reference": "Romans 8:26-27",
+      "coverage": "Lamentations 5"
+    },
+    {
+      "day": 43,
+      "date": "2027-07-15",
+      "book": "Ezekiel",
+      "title": "God's Glory Beside an Exile's River",
+      "reading": "Ezekiel 1:22-28",
+      "key_verse_reference": "Ezekiel 1:28",
+      "connection_reference": "Revelation 4:1-11",
+      "coverage": "Ezekiel 1"
+    },
+    {
+      "day": 44,
+      "date": "2027-07-16",
+      "book": "Ezekiel",
+      "title": "Receive the Word You Are Sent to Speak",
+      "reading": "Ezekiel 2:1-10",
+      "key_verse_reference": "Ezekiel 2:7",
+      "connection_reference": "Acts 20:24-27",
+      "coverage": "Ezekiel 2-3"
+    },
+    {
+      "day": 45,
+      "date": "2027-07-17",
+      "book": "Ezekiel",
+      "title": "What Happens Behind Closed Doors",
+      "reading": "Ezekiel 8:5-12",
+      "key_verse_reference": "Ezekiel 8:12",
+      "connection_reference": "1 Corinthians 3:16-17",
+      "coverage": "Ezekiel 4-11"
+    },
+    {
+      "day": 46,
+      "date": "2027-07-18",
+      "book": "Ezekiel",
+      "title": "The Idols We Carry Inside",
+      "reading": "Ezekiel 14:1-8",
+      "key_verse_reference": "Ezekiel 14:3",
+      "connection_reference": "1 John 5:18-21",
+      "coverage": "Ezekiel 12-15"
+    },
+    {
+      "day": 47,
+      "date": "2027-07-19",
+      "book": "Ezekiel",
+      "title": "Remembered Mercy After Broken Promises",
+      "reading": "Ezekiel 16:59-63",
+      "key_verse_reference": "Ezekiel 16:60",
+      "connection_reference": "Titus 3:3-7",
+      "coverage": "Ezekiel 16-17"
+    },
+    {
+      "day": 48,
+      "date": "2027-07-20",
+      "book": "Ezekiel",
+      "title": "An Open Door to Turn and Live",
+      "reading": "Ezekiel 18:20-32",
+      "key_verse_reference": "Ezekiel 18:32",
+      "connection_reference": "Luke 13:1-5",
+      "coverage": "Ezekiel 18-19"
+    },
+    {
+      "day": 49,
+      "date": "2027-07-21",
+      "book": "Ezekiel",
+      "title": "The Holy Name Israel Could Not Protect",
+      "reading": "Ezekiel 20:33-44",
+      "key_verse_reference": "Ezekiel 20:41",
+      "connection_reference": "1 Peter 2:9-10",
+      "coverage": "Ezekiel 20-24"
+    },
+    {
+      "day": 50,
+      "date": "2027-07-22",
+      "book": "Ezekiel",
+      "title": "The Ruler Who Forgot He Was Human",
+      "reading": "Ezekiel 28:1-10",
+      "key_verse_reference": "Ezekiel 28:2",
+      "connection_reference": "Acts 12:20-24",
+      "coverage": "Ezekiel 25-32"
+    },
+    {
+      "day": 51,
+      "date": "2027-07-23",
+      "book": "Ezekiel",
+      "title": "A Watchman's Warning and God's Desire",
+      "reading": "Ezekiel 33:1-11",
+      "key_verse_reference": "Ezekiel 33:11",
+      "connection_reference": "Acts 20:26-31",
+      "coverage": "Ezekiel 33"
+    },
+    {
+      "day": 52,
+      "date": "2027-07-24",
+      "book": "Ezekiel",
+      "title": "The Shepherd Who Comes for His Sheep",
+      "reading": "Ezekiel 34:11-24",
+      "key_verse_reference": "Ezekiel 34:15",
+      "connection_reference": "John 10:11-16",
+      "coverage": "Ezekiel 34"
+    },
+    {
+      "day": 53,
+      "date": "2027-07-25",
+      "book": "Ezekiel",
+      "title": "A New Heart From the Faithful God",
+      "reading": "Ezekiel 36:22-28",
+      "key_verse_reference": "Ezekiel 36:26",
+      "connection_reference": "John 3:1-8",
+      "coverage": "Ezekiel 35-36"
+    },
+    {
+      "day": 54,
+      "date": "2027-07-26",
+      "book": "Ezekiel",
+      "title": "Can These Bones Live",
+      "reading": "Ezekiel 37:1-14",
+      "key_verse_reference": "Ezekiel 37:14",
+      "connection_reference": "Romans 8:9-11",
+      "coverage": "Ezekiel 37"
+    },
+    {
+      "day": 55,
+      "date": "2027-07-27",
+      "book": "Ezekiel",
+      "title": "The Nations Will Know His Name",
+      "reading": "Ezekiel 39:21-29",
+      "key_verse_reference": "Ezekiel 39:29",
+      "connection_reference": "Revelation 20:7-10",
+      "coverage": "Ezekiel 38-39"
+    },
+    {
+      "day": 56,
+      "date": "2027-07-28",
+      "book": "Ezekiel",
+      "title": "The Glory That Returns",
+      "reading": "Ezekiel 43:1-12",
+      "key_verse_reference": "Ezekiel 43:7",
+      "connection_reference": "John 1:14-18",
+      "coverage": "Ezekiel 40-46"
+    },
+    {
+      "day": 57,
+      "date": "2027-07-29",
+      "book": "Ezekiel",
+      "title": "A River Where Life Begins Again",
+      "reading": "Ezekiel 47:1-12",
+      "key_verse_reference": "Ezekiel 47:9",
+      "connection_reference": "Revelation 22:1-5",
+      "coverage": "Ezekiel 47-48"
+    },
+    {
+      "day": 58,
+      "date": "2027-07-30",
+      "book": "Daniel",
+      "title": "Faithfulness at a Foreign King's Table",
+      "reading": "Daniel 1:8-17",
+      "key_verse_reference": "Daniel 1:8",
+      "connection_reference": "Romans 12:1-2",
+      "coverage": "Daniel 1"
+    },
+    {
+      "day": 59,
+      "date": "2027-07-31",
+      "book": "Daniel",
+      "title": "A Kingdom No Empire Can Destroy",
+      "reading": "Daniel 2:31-45",
+      "key_verse_reference": "Daniel 2:44",
+      "connection_reference": "Hebrews 12:25-29",
+      "coverage": "Daniel 2"
+    },
+    {
+      "day": 60,
+      "date": "2027-08-01",
+      "book": "Daniel",
+      "title": "Faith That Leaves the Outcome With God",
+      "reading": "Daniel 3:13-18",
+      "key_verse_reference": "Daniel 3:18",
+      "connection_reference": "Hebrews 11:32-40",
+      "coverage": "Daniel 3"
+    },
+    {
+      "day": 61,
+      "date": "2027-08-02",
+      "book": "Daniel",
+      "title": "When a King Learns to Look Up",
+      "reading": "Daniel 4:28-37",
+      "key_verse_reference": "Daniel 4:37",
+      "connection_reference": "James 4:6-10",
+      "coverage": "Daniel 4"
+    },
+    {
+      "day": 62,
+      "date": "2027-08-03",
+      "book": "Daniel",
+      "title": "The Warning He Already Knew",
+      "reading": "Daniel 5:17-28",
+      "key_verse_reference": "Daniel 5:22",
+      "connection_reference": "Luke 12:16-21",
+      "coverage": "Daniel 5"
+    },
+    {
+      "day": 63,
+      "date": "2027-08-04",
+      "book": "Daniel",
+      "title": "The Window He Kept Opening",
+      "reading": "Daniel 6:10-23",
+      "key_verse_reference": "Daniel 6:10",
+      "connection_reference": "Acts 5:27-32",
+      "coverage": "Daniel 6"
+    },
+    {
+      "day": 64,
+      "date": "2027-08-05",
+      "book": "Daniel",
+      "title": "The Son of Man Receives the Kingdom",
+      "reading": "Daniel 7:9-14",
+      "key_verse_reference": "Daniel 7:14",
+      "connection_reference": "Mark 14:60-62",
+      "coverage": "Daniel 7"
+    },
+    {
+      "day": 65,
+      "date": "2027-08-06",
+      "book": "Daniel",
+      "title": "Faithfulness When Visions Are Troubling",
+      "reading": "Daniel 8:15-27",
+      "key_verse_reference": "Daniel 8:27",
+      "connection_reference": "2 Timothy 2:8-13",
+      "coverage": "Daniel 8"
+    },
+    {
+      "day": 66,
+      "date": "2027-08-07",
+      "book": "Daniel",
+      "title": "Prayer and the Promise Beyond Exile",
+      "reading": "Daniel 9:16-19,24-27",
+      "key_verse_reference": "Daniel 9:18",
+      "connection_reference": "Hebrews 9:24-28",
+      "coverage": "Daniel 9"
+    },
+    {
+      "day": 67,
+      "date": "2027-08-08",
+      "book": "Daniel",
+      "title": "Strength for the One Who Trembles",
+      "reading": "Daniel 10:10-19",
+      "key_verse_reference": "Daniel 10:19",
+      "connection_reference": "Ephesians 6:10-18",
+      "coverage": "Daniel 10"
+    },
+    {
+      "day": 68,
+      "date": "2027-08-09",
+      "book": "Daniel",
+      "title": "Knowing God Under Pressure",
+      "reading": "Daniel 11:29-35",
+      "key_verse_reference": "Daniel 11:32",
+      "connection_reference": "Revelation 2:8-11",
+      "coverage": "Daniel 11"
+    },
+    {
+      "day": 69,
+      "date": "2027-08-10",
+      "book": "Daniel",
+      "title": "A Hope That Reaches Beyond the Grave",
+      "reading": "Daniel 12:1-13",
+      "key_verse_reference": "Daniel 12:3",
+      "connection_reference": "John 5:24-29",
+      "coverage": "Daniel 12"
+    },
+    {
+      "day": 70,
+      "date": "2027-08-11",
+      "book": "Hosea",
+      "title": "The Promise Beneath a Broken Family's Names",
+      "reading": "Hosea 1:2-11",
+      "key_verse_reference": "Hosea 1:10",
+      "connection_reference": "Romans 9:22-26",
+      "coverage": "Hosea 1"
+    },
+    {
+      "day": 71,
+      "date": "2027-08-12",
+      "book": "Hosea",
+      "title": "The Wilderness Where God Speaks Tenderly",
+      "reading": "Hosea 2:14-23",
+      "key_verse_reference": "Hosea 2:19",
+      "connection_reference": "1 Peter 2:9-10",
+      "coverage": "Hosea 2"
+    },
+    {
+      "day": 72,
+      "date": "2027-08-13",
+      "book": "Hosea",
+      "title": "Love That Goes to Bring Someone Home",
+      "reading": "Hosea 3:1-5",
+      "key_verse_reference": "Hosea 3:5",
+      "connection_reference": "Mark 10:45",
+      "coverage": "Hosea 3"
+    },
+    {
+      "day": 73,
+      "date": "2027-08-14",
+      "book": "Hosea",
+      "title": "When Knowing God Slips Away",
+      "reading": "Hosea 4:1-6",
+      "key_verse_reference": "Hosea 4:6",
+      "connection_reference": "John 17:1-3",
+      "coverage": "Hosea 4-5"
+    },
+    {
+      "day": 74,
+      "date": "2027-08-15",
+      "book": "Hosea",
+      "title": "Mercy Deeper Than a Passing Feeling",
+      "reading": "Hosea 6:1-6",
+      "key_verse_reference": "Hosea 6:6",
+      "connection_reference": "Matthew 9:9-13",
+      "coverage": "Hosea 6-10"
+    },
+    {
+      "day": 75,
+      "date": "2027-08-16",
+      "book": "Hosea",
+      "title": "The Father Who Taught Israel to Walk",
+      "reading": "Hosea 11:1-11",
+      "key_verse_reference": "Hosea 11:8",
+      "connection_reference": "Matthew 2:13-15",
+      "coverage": "Hosea 11-13"
+    },
+    {
+      "day": 76,
+      "date": "2027-08-17",
+      "book": "Hosea",
+      "title": "Bring Your Words and Return",
+      "reading": "Hosea 14:1-9",
+      "key_verse_reference": "Hosea 14:4",
+      "connection_reference": "John 15:1-5",
+      "coverage": "Hosea 14"
+    },
+    {
+      "day": 77,
+      "date": "2027-08-18",
+      "book": "Joel",
+      "title": "Calling on God in a Devastated Land",
+      "reading": "Joel 1:13-20",
+      "key_verse_reference": "Joel 1:14",
+      "connection_reference": "James 5:13-18",
+      "coverage": "Joel 1"
+    },
+    {
+      "day": 78,
+      "date": "2027-08-19",
+      "book": "Joel",
+      "title": "The Return That Reaches the Heart",
+      "reading": "Joel 2:12-17",
+      "key_verse_reference": "Joel 2:13",
+      "connection_reference": "Luke 18:9-14",
+      "coverage": "Joel 2:1-20"
+    },
+    {
+      "day": 79,
+      "date": "2027-08-20",
+      "book": "Joel",
+      "title": "The Spirit Poured Out",
+      "reading": "Joel 2:21-32",
+      "key_verse_reference": "Joel 2:32",
+      "connection_reference": "Acts 2:14-21",
+      "coverage": "Joel 2:21-32"
+    },
+    {
+      "day": 80,
+      "date": "2027-08-21",
+      "book": "Joel",
+      "title": "The Lord Who Judges and Shelters",
+      "reading": "Joel 3:9-21",
+      "key_verse_reference": "Joel 3:16",
+      "connection_reference": "Revelation 14:14-20",
+      "coverage": "Joel 3"
+    },
+    {
+      "day": 81,
+      "date": "2027-08-22",
+      "book": "Amos",
+      "title": "The People Prosperity Left Behind",
+      "reading": "Amos 2:6-16",
+      "key_verse_reference": "Amos 2:6",
+      "connection_reference": "James 2:1-9",
+      "coverage": "Amos 1-2"
+    },
+    {
+      "day": 82,
+      "date": "2027-08-23",
+      "book": "Amos",
+      "title": "Known by God and Called to Account",
+      "reading": "Amos 3:1-8",
+      "key_verse_reference": "Amos 3:2",
+      "connection_reference": "Luke 12:47-48",
+      "coverage": "Amos 3-4"
+    },
+    {
+      "day": 83,
+      "date": "2027-08-24",
+      "book": "Amos",
+      "title": "The Worship That Lets Justice Flow",
+      "reading": "Amos 5:18-24",
+      "key_verse_reference": "Amos 5:24",
+      "connection_reference": "James 2:14-17",
+      "coverage": "Amos 5-6"
+    },
+    {
+      "day": 84,
+      "date": "2027-08-25",
+      "book": "Amos",
+      "title": "The Herdsman the Lord Sent",
+      "reading": "Amos 7:10-17",
+      "key_verse_reference": "Amos 7:15",
+      "connection_reference": "Acts 4:18-20",
+      "coverage": "Amos 7-8"
+    },
+    {
+      "day": 85,
+      "date": "2027-08-26",
+      "book": "Amos",
+      "title": "A Fallen House With an Open Door",
+      "reading": "Amos 9:11-15",
+      "key_verse_reference": "Amos 9:11",
+      "connection_reference": "Acts 15:12-18",
+      "coverage": "Amos 9"
+    },
+    {
+      "day": 86,
+      "date": "2027-08-27",
+      "book": "Obadiah",
+      "title": "The Pride That Watches a Brother Fall",
+      "reading": "Obadiah 1:1-14",
+      "key_verse_reference": "Obadiah 1:12",
+      "connection_reference": "Luke 10:25-37",
+      "coverage": "Obadiah 1:1-14"
+    },
+    {
+      "day": 87,
+      "date": "2027-08-28",
+      "book": "Obadiah",
+      "title": "The Kingdom Will Be the Lord's",
+      "reading": "Obadiah 1:15-21",
+      "key_verse_reference": "Obadiah 1:15",
+      "connection_reference": "Revelation 11:15-18",
+      "coverage": "Obadiah 1:15-21"
+    },
+    {
+      "day": 88,
+      "date": "2027-08-29",
+      "book": "Jonah",
+      "title": "The Prophet Running From Mercy",
+      "reading": "Jonah 1:1-10",
+      "key_verse_reference": "Jonah 1:9",
+      "connection_reference": "Mark 4:35-41",
+      "coverage": "Jonah 1"
+    },
+    {
+      "day": 89,
+      "date": "2027-08-30",
+      "book": "Jonah",
+      "title": "A Prayer From the Depths",
+      "reading": "Jonah 2:1-10",
+      "key_verse_reference": "Jonah 2:9",
+      "connection_reference": "Matthew 12:38-41",
+      "coverage": "Jonah 2"
+    },
+    {
+      "day": 90,
+      "date": "2027-08-31",
+      "book": "Jonah",
+      "title": "When an Enemy City Turns",
+      "reading": "Jonah 3:1-10",
+      "key_verse_reference": "Jonah 3:10",
+      "connection_reference": "Luke 11:29-32",
+      "coverage": "Jonah 3"
+    },
+    {
+      "day": 91,
+      "date": "2027-09-01",
+      "book": "Jonah",
+      "title": "The Question God Leaves Open",
+      "reading": "Jonah 4:1-11",
+      "key_verse_reference": "Jonah 4:11",
+      "connection_reference": "Luke 15:25-32",
+      "coverage": "Jonah 4"
+    },
+    {
+      "day": 92,
+      "date": "2027-09-02",
+      "book": "Micah",
+      "title": "When Someone Else Pays for Our Gain",
+      "reading": "Micah 2:1-5",
+      "key_verse_reference": "Micah 2:2",
+      "connection_reference": "James 5:1-6",
+      "coverage": "Micah 1-2"
+    },
+    {
+      "day": 93,
+      "date": "2027-09-03",
+      "book": "Micah",
+      "title": "Truth That Cannot Be Bought",
+      "reading": "Micah 3:5-12",
+      "key_verse_reference": "Micah 3:8",
+      "connection_reference": "Matthew 23:23-28",
+      "coverage": "Micah 3"
+    },
+    {
+      "day": 94,
+      "date": "2027-09-04",
+      "book": "Micah",
+      "title": "Learning Peace on God's Mountain",
+      "reading": "Micah 4:1-5",
+      "key_verse_reference": "Micah 4:4",
+      "connection_reference": "Ephesians 2:13-18",
+      "coverage": "Micah 4"
+    },
+    {
+      "day": 95,
+      "date": "2027-09-05",
+      "book": "Micah",
+      "title": "The Shepherd From Little Bethlehem",
+      "reading": "Micah 5:2-5",
+      "key_verse_reference": "Micah 5:2",
+      "connection_reference": "Matthew 2:1-6",
+      "coverage": "Micah 5"
+    },
+    {
+      "day": 96,
+      "date": "2027-09-06",
+      "book": "Micah",
+      "title": "What Can We Bring Before the Lord",
+      "reading": "Micah 6:6-8",
+      "key_verse_reference": "Micah 6:8",
+      "connection_reference": "Matthew 23:23",
+      "coverage": "Micah 6"
+    },
+    {
+      "day": 97,
+      "date": "2027-09-07",
+      "book": "Micah",
+      "title": "The God Who Delights in Mercy",
+      "reading": "Micah 7:7-20",
+      "key_verse_reference": "Micah 7:18",
+      "connection_reference": "Luke 1:68-75",
+      "coverage": "Micah 7"
+    },
+    {
+      "day": 98,
+      "date": "2027-09-08",
+      "book": "Nahum",
+      "title": "The Refuge Who Confronts Cruelty",
+      "reading": "Nahum 1:1-8",
+      "key_verse_reference": "Nahum 1:7",
+      "connection_reference": "Romans 12:17-21",
+      "coverage": "Nahum 1"
+    },
+    {
+      "day": 99,
+      "date": "2027-09-09",
+      "book": "Nahum",
+      "title": "The Lion's Den Will Not Last Forever",
+      "reading": "Nahum 2:8-13",
+      "key_verse_reference": "Nahum 2:13",
+      "connection_reference": "Revelation 18:9-19",
+      "coverage": "Nahum 2"
+    },
+    {
+      "day": 100,
+      "date": "2027-09-10",
+      "book": "Nahum",
+      "title": "What Becomes of a City Built on Blood",
+      "reading": "Nahum 3:1-7",
+      "key_verse_reference": "Nahum 3:1",
+      "connection_reference": "Luke 19:41-44",
+      "coverage": "Nahum 3"
+    },
+    {
+      "day": 101,
+      "date": "2027-09-11",
+      "book": "Habakkuk",
+      "title": "How Long Can I Keep Asking",
+      "reading": "Habakkuk 1:1-11",
+      "key_verse_reference": "Habakkuk 1:2",
+      "connection_reference": "Luke 18:1-8",
+      "coverage": "Habakkuk 1:1-11"
+    },
+    {
+      "day": 102,
+      "date": "2027-09-12",
+      "book": "Habakkuk",
+      "title": "Waiting for an Answer I Cannot Control",
+      "reading": "Habakkuk 1:12-17",
+      "key_verse_reference": "Habakkuk 1:13",
+      "connection_reference": "Psalm 73:16-28",
+      "coverage": "Habakkuk 1:12-17"
+    },
+    {
+      "day": 103,
+      "date": "2027-09-13",
+      "book": "Habakkuk",
+      "title": "The Righteous Shall Live by Faith",
+      "reading": "Habakkuk 2:1-5",
+      "key_verse_reference": "Habakkuk 2:4",
+      "connection_reference": "Romans 1:16-17",
+      "coverage": "Habakkuk 2"
+    },
+    {
+      "day": 104,
+      "date": "2027-09-14",
+      "book": "Habakkuk",
+      "title": "A Song When the Fields Are Empty",
+      "reading": "Habakkuk 3:16-19",
+      "key_verse_reference": "Habakkuk 3:18",
+      "connection_reference": "Philippians 4:10-13",
+      "coverage": "Habakkuk 3"
+    },
+    {
+      "day": 105,
+      "date": "2027-09-15",
+      "book": "Zephaniah",
+      "title": "Seek the Lord While the Day Approaches",
+      "reading": "Zephaniah 1:12-18",
+      "key_verse_reference": "Zephaniah 1:12",
+      "connection_reference": "1 Thessalonians 5:1-11",
+      "coverage": "Zephaniah 1"
+    },
+    {
+      "day": 106,
+      "date": "2027-09-16",
+      "book": "Zephaniah",
+      "title": "The Humility That Seeks Refuge",
+      "reading": "Zephaniah 2:1-7",
+      "key_verse_reference": "Zephaniah 2:3",
+      "connection_reference": "Matthew 5:1-5",
+      "coverage": "Zephaniah 2"
+    },
+    {
+      "day": 107,
+      "date": "2027-09-17",
+      "book": "Zephaniah",
+      "title": "The Lord in the Midst of His People",
+      "reading": "Zephaniah 3:12-20",
+      "key_verse_reference": "Zephaniah 3:17",
+      "connection_reference": "John 15:9-11",
+      "coverage": "Zephaniah 3"
+    },
+    {
+      "day": 108,
+      "date": "2027-09-18",
+      "book": "Haggai",
+      "title": "Consider the Life We Are Building",
+      "reading": "Haggai 1:1-11",
+      "key_verse_reference": "Haggai 1:5",
+      "connection_reference": "Matthew 6:19-24",
+      "coverage": "Haggai 1:1-11"
+    },
+    {
+      "day": 109,
+      "date": "2027-09-19",
+      "book": "Haggai",
+      "title": "I Am With You in the Unfinished Work",
+      "reading": "Haggai 1:12-15",
+      "key_verse_reference": "Haggai 1:13",
+      "connection_reference": "Matthew 28:18-20",
+      "coverage": "Haggai 1:12-15"
+    },
+    {
+      "day": 110,
+      "date": "2027-09-20",
+      "book": "Haggai",
+      "title": "Courage When the New Work Looks Small",
+      "reading": "Haggai 2:1-9",
+      "key_verse_reference": "Haggai 2:4",
+      "connection_reference": "Hebrews 12:25-29",
+      "coverage": "Haggai 2"
+    },
+    {
+      "day": 111,
+      "date": "2027-09-21",
+      "book": "Zechariah",
+      "title": "Return to Me",
+      "reading": "Zechariah 1:1-6",
+      "key_verse_reference": "Zechariah 1:3",
+      "connection_reference": "James 4:7-10",
+      "coverage": "Zechariah 1"
+    },
+    {
+      "day": 112,
+      "date": "2027-09-22",
+      "book": "Zechariah",
+      "title": "The City God Comes to Dwell In",
+      "reading": "Zechariah 2:6-13",
+      "key_verse_reference": "Zechariah 2:10",
+      "connection_reference": "John 1:14-18",
+      "coverage": "Zechariah 2"
+    },
+    {
+      "day": 113,
+      "date": "2027-09-23",
+      "book": "Zechariah",
+      "title": "The Accused Priest Receives Clean Clothes",
+      "reading": "Zechariah 3:1-10",
+      "key_verse_reference": "Zechariah 3:4",
+      "connection_reference": "Romans 8:31-34",
+      "coverage": "Zechariah 3"
+    },
+    {
+      "day": 114,
+      "date": "2027-09-24",
+      "book": "Zechariah",
+      "title": "By My Spirit in the Day of Small Things",
+      "reading": "Zechariah 4:1-10",
+      "key_verse_reference": "Zechariah 4:6",
+      "connection_reference": "2 Corinthians 4:5-7",
+      "coverage": "Zechariah 4"
+    },
+    {
+      "day": 115,
+      "date": "2027-09-25",
+      "book": "Zechariah",
+      "title": "The Question Beneath the Fast",
+      "reading": "Zechariah 7:8-14",
+      "key_verse_reference": "Zechariah 7:9",
+      "connection_reference": "James 1:26-27",
+      "coverage": "Zechariah 5-8"
+    },
+    {
+      "day": 116,
+      "date": "2027-09-26",
+      "book": "Zechariah",
+      "title": "The King Who Comes Riding a Donkey",
+      "reading": "Zechariah 9:9-17",
+      "key_verse_reference": "Zechariah 9:9",
+      "connection_reference": "Matthew 21:1-11",
+      "coverage": "Zechariah 9-11"
+    },
+    {
+      "day": 117,
+      "date": "2027-09-27",
+      "book": "Zechariah",
+      "title": "Looking on the One Who Was Pierced",
+      "reading": "Zechariah 12:10-14",
+      "key_verse_reference": "Zechariah 12:10",
+      "connection_reference": "John 19:31-37",
+      "coverage": "Zechariah 12-13"
+    },
+    {
+      "day": 118,
+      "date": "2027-09-28",
+      "book": "Zechariah",
+      "title": "The Lord Will Be King",
+      "reading": "Zechariah 14:6-11",
+      "key_verse_reference": "Zechariah 14:9",
+      "connection_reference": "Revelation 21:22-27",
+      "coverage": "Zechariah 14"
+    },
+    {
+      "day": 119,
+      "date": "2027-09-29",
+      "book": "Malachi",
+      "title": "When Worship Becomes Leftovers",
+      "reading": "Malachi 1:6-14",
+      "key_verse_reference": "Malachi 1:11",
+      "connection_reference": "Romans 12:1-2",
+      "coverage": "Malachi 1"
+    },
+    {
+      "day": 120,
+      "date": "2027-09-30",
+      "book": "Malachi",
+      "title": "Faithfulness in the Relationships God Sees",
+      "reading": "Malachi 2:10-16",
+      "key_verse_reference": "Malachi 2:14",
+      "connection_reference": "Ephesians 5:25-33",
+      "coverage": "Malachi 2"
+    },
+    {
+      "day": 121,
+      "date": "2027-10-01",
+      "book": "Malachi",
+      "title": "The Messenger and the Refiner's Fire",
+      "reading": "Malachi 3:1-12",
+      "key_verse_reference": "Malachi 3:3",
+      "connection_reference": "Luke 3:1-6",
+      "coverage": "Malachi 3"
+    },
+    {
+      "day": 122,
+      "date": "2027-10-02",
+      "book": "Malachi",
+      "title": "The Promise Before the Gospel Opens",
+      "reading": "Malachi 4:1-6",
+      "key_verse_reference": "Malachi 4:2",
+      "connection_reference": "Matthew 17:10-13",
+      "coverage": "Malachi 4"
+    },
+    {
+      "day": 123,
+      "date": "2027-10-03",
+      "book": "Reflection",
+      "title": "The Promises Meet Us in Jesus",
+      "reading": "Luke 4:16-21",
+      "key_verse_reference": "Luke 4:21",
+      "connection_reference": "Isaiah 61:1-3",
+      "coverage": "The prophets and Christ's mission"
+    },
+    {
+      "day": 124,
+      "date": "2027-10-04",
+      "book": "Reflection",
+      "title": "The Shepherd Who Brings Us Near",
+      "reading": "John 10:14-18",
+      "key_verse_reference": "John 10:16",
+      "connection_reference": "Ezekiel 34:11-16",
+      "coverage": "God's shepherd promises"
+    },
+    {
+      "day": 125,
+      "date": "2027-10-05",
+      "book": "Reflection",
+      "title": "The Future With God at Its Center",
+      "reading": "Revelation 21:1-7",
+      "key_verse_reference": "Revelation 21:3",
+      "connection_reference": "Isaiah 65:17-19",
+      "coverage": "Restoration and God's presence"
+    },
+    {
+      "day": 126,
+      "date": "2027-10-06",
+      "book": "Reflection",
+      "title": "What Will I Do With What I Have Heard",
+      "reading": "Hebrews 1:1-4",
+      "key_verse_reference": "Hebrews 1:2",
+      "connection_reference": "Hebrews 3:7-15",
+      "coverage": "A continuing response to God's Son"
+    }
+  ],
+  "scripture_verification": {
+    "primary": "https://github.com/aruljohn/Bible-kjv",
+    "independent": "https://github.com/scrollmapper/bible_databases/blob/master/formats/json/KJV.json",
+    "verses_checked_including_connections": 1787,
+    "review": "Eight transcription differences reviewed: seven proper-name spelling variants and Joel 2:24 vats/fats. Primary text retained; vats is also the KJV reading published by Bible Gateway.",
+    "published_kjv_check": "https://www.biblegateway.com/passage/?search=Joel+2%3A24%2CJoel+3%3A13&version=KJV"
+  },
+  "background_resources": [
+    {
+      "url": "https://bibleproject.com/guides/book-of-daniel/",
+      "use": "Historical orientation for Daniel 8 and 11; devotional exposition is original and grounded in the KJV passages."
+    }
+  ]
+}

@@ -37,7 +37,7 @@ class ParablesSeriesTests(unittest.TestCase):
         self.assertEqual(self.messages[-1]['date'], '2027-06-02')
         self.assertEqual(default_message(date(2027, 3, 4))['id'], 'witb-s1-day-48')
         self.assertEqual(default_message(date(2027, 3, 5))['id'], 'witb-s2-day-01')
-        self.assertEqual(default_message(date(2027, 6, 3))['id'], 'witb-s2-day-90')
+        self.assertEqual(default_message(date(2027, 6, 2))['id'], 'witb-s2-day-90')
 
     def test_approved_roadmap_order_and_passages_are_preserved(self):
         roadmap = json.loads((ROOT / 'docs/parables-series-roadmap.json').read_text())
